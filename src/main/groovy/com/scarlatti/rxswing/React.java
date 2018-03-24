@@ -56,5 +56,6 @@ public final class React {
 
         // if successful, now link child to parent
         child.setSwingParent(parent);
+        parent.revalidate();
     }
 }

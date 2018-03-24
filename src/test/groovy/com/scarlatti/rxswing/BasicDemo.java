@@ -3,6 +3,7 @@ package com.scarlatti.rxswing;
 import org.junit.Test;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -27,9 +28,25 @@ public class BasicDemo {
     }
 
     public static class SimpleButton extends ReactComponent {
+
+        public SimpleButton() {
+            state = "<|>";
+        }
+
         @Override
         public RxComponent render() {
-            return new RxJButton("hello");
+            RxJButton jButton = new RxJButton((String)state);
+            setupListeners(jButton);
+
+            return jButton;
+        }
+
+        private void setupListeners(JButton jButton) {
+            jButton.addActionListener(this::click);
+        }
+
+        private void click(ActionEvent e) {
+            setState(state + "<|>");
         }
     }
 }
