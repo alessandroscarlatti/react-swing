@@ -53,8 +53,8 @@ public class RxJPanel extends JPanel implements RxComponent {
     public Component add(Component child) {
         Objects.requireNonNull(child, "Cannot add null child");
 
-        if (child instanceof ReactComponent) {
-            reactComponentTraits.rxComponentChildren.add((ReactComponent) child);
+        if (child instanceof AbstractReactComponent) {
+            reactComponentTraits.rxComponentChildren.add((AbstractReactComponent) child);
         } else {
             super.add(child);
         }

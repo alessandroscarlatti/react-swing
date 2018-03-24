@@ -5,7 +5,6 @@ import org.junit.Test;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -47,7 +46,7 @@ public class BasicDemo {
     }
 
 
-    public static class SimpleButton extends ReactComponent<String> {
+    public static class SimpleButton extends ReactComponent<Object, String> {
 
         public SimpleButton() {
             state = "<|>";
@@ -70,7 +69,7 @@ public class BasicDemo {
         }
     }
 
-    public static class SimplePanel extends ReactComponent<Integer> {
+    public static class SimplePanel extends ReactComponent<Object, Integer> {
 
         public SimplePanel() {
             state = 34;

@@ -7,5 +7,11 @@ package com.scarlatti.rxswing;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Friday, 3/23/2018
  */
-public abstract class ReactComponent<P, S> extends AbstractReactComponent<P, S> {
+public abstract class PureComponent<P, S> extends AbstractReactComponent<P, S> {
+    @Override
+    public boolean componentShouldUpdate(P oldProps, P newProps) {
+        if (newProps == null) return false;
+
+        return oldProps.equals(newProps);
+    }
 }

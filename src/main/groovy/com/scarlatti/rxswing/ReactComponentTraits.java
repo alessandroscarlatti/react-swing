@@ -11,5 +11,5 @@ import java.util.List;
  * Friday, 3/23/2018
  */
 public class ReactComponentTraits {
-    protected List<ReactComponent> rxComponentChildren = new ArrayList<>();
+    protected List<AbstractReactComponent> rxComponentChildren = new ArrayList<>();
 }

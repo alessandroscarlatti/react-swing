@@ -31,7 +31,7 @@ public class NestedComponentsDemo {
         });
     }
 
-    public static class SimpleButton extends ReactComponent<String> {
+    public static class SimpleButton extends AbstractReactComponent<Object, String> {
 
         public SimpleButton() {
             state = "<|>";
@@ -54,7 +54,7 @@ public class NestedComponentsDemo {
         }
     }
 
-    public static class SimplePanel extends ReactComponent<Integer> {
+    public static class SimplePanel extends AbstractReactComponent<Void, Integer> {
 
         public SimplePanel() {
             state = 34;

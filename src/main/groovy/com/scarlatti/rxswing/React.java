@@ -36,14 +36,14 @@ public final class React {
      * @param parent the parent within which to render.
      * @param child the child to render in the parent.
      */
-    public static void render(Container parent, ReactComponent child) {
+    public static void render(Container parent, AbstractReactComponent child) {
         render(parent, child, React::renderReplace);
     }
 
-    public static void render(Container parent, List<ReactComponent> children) {
+    public static void render(Container parent, List<AbstractReactComponent> children) {
         clearParent(parent);
 
-        for (ReactComponent child : children) {
+        for (AbstractReactComponent child : children) {
             render(parent, child, React::renderAppend);
         }
     }
@@ -55,11 +55,11 @@ public final class React {
      * @param parent the parent within which to render.
      * @param child the child to render in the parent.
      */
-    public static void renderAppend(Container parent, ReactComponent child) {
+    public static void renderAppend(Container parent, AbstractReactComponent child) {
         render(parent, child, React::renderAppend);
     }
 
-    private static void render(Container parent, ReactComponent child, SwingRenderStrategy renderStrategy) {
+    private static void render(Container parent, AbstractReactComponent<?, ?> child, SwingRenderStrategy renderStrategy) {
         // so now we would have to read the actual swing component
         // from the child and insert it into the parent.
         //
@@ -70,7 +70,8 @@ public final class React {
         // any nested calls will ultimately wind up returning a single
         // rxComponent which we can use to get the actual swing component.
 
-        RxComponent rxComponent = child.render();
+        // TODO this seems naive: render must pass props like this?
+        RxComponent rxComponent = child.abstractRender(null);
         Component swingComponent = rxComponent.provideComponent();
 
         // now render the component into the parent
