@@ -38,13 +38,27 @@ public class RxJPanel extends JPanel implements RxComponent {
         return this;
     }
 
+    @Override
+    public String provideElementId() {
+        return null;
+    }
+
+    @Override
+    public int provideElementIndex() {
+        return 0;
+    }
+
     /**
-     * When adding the child to the list, if it is an RxComponent We specifically
+     * When adding the child to the list, if it is an RxComponent we specifically
      * DO NOT actually add it to the list of swing components
      * because it doesn't actually exist as a real component.
      *
      * However, if it is an RxComponent only then do we add it to the reactComponentTraits
      * list of children components.
+     *
+     * TODO Additionally, we will set the reactId on the new child.
+     *
+     * TODO should stop allowing the user to insert a non-React component?
      *
      * @param child the child
      * @return the child just added
@@ -54,6 +68,8 @@ public class RxJPanel extends JPanel implements RxComponent {
         Objects.requireNonNull(child, "Cannot add null child");
 
         if (child instanceof AbstractReactComponent) {
+            ((AbstractReactComponent) child).setParentReactId(provideElementId());
+            ((AbstractReactComponent) child).setElementIndex(provideElementIndex());
             reactComponentTraits.rxComponentChildren.add((AbstractReactComponent) child);
         } else {
             super.add(child);

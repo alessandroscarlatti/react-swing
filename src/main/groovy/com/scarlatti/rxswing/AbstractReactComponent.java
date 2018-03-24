@@ -15,10 +15,38 @@ import java.util.Objects;
  */
 public abstract class AbstractReactComponent<P, S> extends Component {
 
+    /**
+     * reactId is a string key that identifies this logical component
+     * instance to React from one render to another.
+     *
+     * The id is essentially a "fully-qualified" path name, where each
+     * piece of the path is a class name and an index.
+     *
+     * For example "/com.scarlatti.rxswing.RxJPanel(0)/com.scarlatti.rxswing.RxJButton(0)"
+     */
+    private String parentReactId;
+
+    /**
+     * The index of this component within the parent
+     * component's list of children.
+     */
+    private int elementIndex;
+
+    /**
+     * We need to store the Swing parent of this logical component
+     * once it is rendered so that we can rerender this component.
+     */
     private Container swingParent;
+
+    /**
+     * We need to cache the most recently rendered RxComponent
+     * so that in the case of a pure component we do not need
+     * to rerender.
+     */
+    private RxComponent mostRecentlyRenderedRxComponent;
+
     protected S state;
     protected P props;
-    private RxComponent mostRecentlyRenderedRxComponent;
 
     public AbstractReactComponent() {
     }
@@ -105,5 +133,21 @@ public abstract class AbstractReactComponent<P, S> extends Component {
         Objects.requireNonNull(swingParent, "Swing parent component must not be null");
         this.state = state;
         React.render(swingParent, this);
+    }
+
+    public String getParentReactId() {
+        return parentReactId;
+    }
+
+    public void setParentReactId(String parentReactId) {
+        this.parentReactId = parentReactId;
+    }
+
+    public int getElementIndex() {
+        return elementIndex;
+    }
+
+    public void setElementIndex(int elementIndex) {
+        this.elementIndex = elementIndex;
     }
 }

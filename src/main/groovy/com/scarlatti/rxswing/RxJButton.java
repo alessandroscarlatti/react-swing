@@ -29,4 +29,14 @@ public class RxJButton extends JButton implements RxComponent {
     public Component provideComponent() {
         return this;
     }
+
+    @Override
+    public String provideElementId() {
+        return null;
+    }
+
+    @Override
+    public int provideElementIndex() {
+        return 0;
+    }
 }

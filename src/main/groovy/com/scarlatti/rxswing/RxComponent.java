@@ -27,4 +27,20 @@ public interface RxComponent {
      * @return the actual Swing component to render
      */
     Component provideComponent();
+
+    /**
+     * Provide the reactId to the caller.
+     *
+     * @return the reactId for this component.
+     */
+    String provideElementId();
+
+    /**
+     * Provide the reactIndex to the caller.
+     * The reactIndex indicates the index of this child
+     * within the parent component's list of children.
+     *
+     * @return the reactIndex for this component.
+     */
+    int provideElementIndex();
 }
