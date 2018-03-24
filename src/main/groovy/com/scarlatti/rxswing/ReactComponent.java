@@ -13,7 +13,7 @@ import java.util.Objects;
  * This is the class that the developer will implement
  * to make RxSwing components.
  */
-public abstract class ReactComponent<T> {
+public abstract class ReactComponent<T> extends Component {
 
     private Container swingParent;
     protected T state;
