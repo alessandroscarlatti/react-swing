@@ -1,6 +1,7 @@
 package com.scarlatti.rxswing;
 
 import java.awt.*;
+import java.util.List;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -36,6 +37,29 @@ public final class React {
      * @param child the child to render in the parent.
      */
     public static void render(Container parent, ReactComponent child) {
+        render(parent, child, React::renderReplace);
+    }
+
+    public static void render(Container parent, List<ReactComponent> children) {
+        clearParent(parent);
+
+        for (ReactComponent child : children) {
+            render(parent, child, React::renderAppend);
+        }
+    }
+
+    /**
+     * Render another child into this parent, immediately following the
+     * last existing child.
+     *
+     * @param parent the parent within which to render.
+     * @param child the child to render in the parent.
+     */
+    public static void renderAppend(Container parent, ReactComponent child) {
+        render(parent, child, React::renderAppend);
+    }
+
+    private static void render(Container parent, ReactComponent child, SwingRenderStrategy renderStrategy) {
         // so now we would have to read the actual swing component
         // from the child and insert it into the parent.
         //
@@ -51,11 +75,29 @@ public final class React {
 
         // now render the component into the parent
         // after removing any existing children.
-        parent.removeAll();
-        parent.add(swingComponent);
+        renderStrategy.render(parent, swingComponent);
 
         // if successful, now link child to parent
         child.setSwingParent(parent);
         parent.revalidate();
+        parent.repaint();
+    }
+
+    private static void renderAppend(Container parent, Component child) {
+        parent.add(child);
+    }
+
+    private static void renderReplace(Container parent, Component child) {
+        parent.removeAll();
+        parent.add(child);
+    }
+
+    private static void clearParent(Container parent) {
+        parent.removeAll();
+    }
+
+    @FunctionalInterface
+    private interface SwingRenderStrategy {
+        void render(Container parent, Component child);
     }
 }

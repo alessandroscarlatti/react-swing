@@ -2,9 +2,7 @@ package com.scarlatti.rxswing;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Objects;
-import java.util.List;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -33,13 +31,9 @@ public class RxJPanel extends JPanel implements RxComponent {
      */
     @Override
     public Component provideComponent() {
-
-        List<Component> childComponents = new ArrayList<>();
-        for (RxComponent rxComponent : reactComponentTraits.rxComponentChildren) {
-            // instruct the child rxComponent to provide its Swing component
-            Component swingComponent = rxComponent.provideComponent();
-
-        }
+        // This is a bit naive of an implementation.
+        // We will eventually need to keep track of what has been rendered?
+        React.render(this, reactComponentTraits.rxComponentChildren);
 
         return this;
     }
@@ -59,12 +53,12 @@ public class RxJPanel extends JPanel implements RxComponent {
     public Component add(Component child) {
         Objects.requireNonNull(child, "Cannot add null child");
 
-        if (child instanceof RxComponent) {
-            reactComponentTraits.rxComponentChildren.add((RxComponent) child);
+        if (child instanceof ReactComponent) {
+            reactComponentTraits.rxComponentChildren.add((ReactComponent) child);
         } else {
             super.add(child);
         }
 
-        return this;
+        return child;
     }
 }
