@@ -9,7 +9,7 @@ import java.awt.*;
  * __/ __ |/ / -_|_-<(_-</ _ `/ _ \/ _  / __/ _ \  _\ \/ __/ _ `/ __/ / _ `/ __/ __/ /
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Friday, 3/23/2018
- *
+ * <p>
  * This would be the class that the developer uses.
  * It will be as if using a real JPanel.
  */
@@ -19,8 +19,14 @@ public class RxJButton extends JButton implements RxComponent {
         super(text);
     }
 
+    /**
+     * Returning this component for now.  Will implement a different
+     * strategy when we start performing diffs.
+     *
+     * @return the actual Swing component
+     */
     @Override
     public Component provideComponent() {
-        return null;
+        return this;
     }
 }

@@ -53,5 +53,8 @@ public final class React {
         // after removing any existing children.
         parent.removeAll();
         parent.add(swingComponent);
+
+        // if successful, now link child to parent
+        child.setSwingParent(parent);
     }
 }
