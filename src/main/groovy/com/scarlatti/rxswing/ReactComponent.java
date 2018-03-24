@@ -13,10 +13,10 @@ import java.util.Objects;
  * This is the class that the developer will implement
  * to make RxSwing components.
  */
-public abstract class ReactComponent {
+public abstract class ReactComponent<T> {
 
     private Container swingParent;
-    protected Object state;
+    protected T state;
 
     /**
      * This method may be called in two scenarios:
@@ -45,11 +45,10 @@ public abstract class ReactComponent {
      * Immediately initiates a new render chain starting at this component.
      *
      * TODO look at adding support for mutable state
-     * TODO look at adding generics
      *
      * @param state the new state for this component.
      */
-    protected void setState(Object state) {
+    protected void setState(T state) {
         Objects.requireNonNull(swingParent, "Swing parent component must not be null");
         this.state = state;
         React.render(swingParent, this);

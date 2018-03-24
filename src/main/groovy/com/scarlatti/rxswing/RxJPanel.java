@@ -15,8 +15,14 @@ import java.awt.*;
  */
 public class RxJPanel extends JPanel implements RxComponent {
 
+    /**
+     * Returning this component for now.  Will implement a different
+     * strategy when we start performing diffs.
+     *
+     * @return the actual Swing component
+     */
     @Override
     public Component provideComponent() {
-        return null;
+        return this;
     }
 }
