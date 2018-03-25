@@ -1,5 +1,7 @@
 package com.scarlatti.rxswing;
 
+import java.util.Objects;
+
 /**
  * ______    __                         __           ____             __     __  __  _
  * ___/ _ | / /__ ___ ___ ___ ____  ___/ /______    / __/______ _____/ /__ _/ /_/ /_(_)
@@ -10,8 +12,6 @@ package com.scarlatti.rxswing;
 public abstract class PureComponent<P, S> extends AbstractReactComponent<P, S> {
     @Override
     public boolean componentShouldUpdate(P oldProps, P newProps) {
-        if (newProps == null) return false;
-
-        return oldProps.equals(newProps);
+        return Objects.equals(oldProps, newProps);
     }
 }
