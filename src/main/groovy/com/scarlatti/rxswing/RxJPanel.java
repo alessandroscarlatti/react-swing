@@ -2,6 +2,7 @@ package com.scarlatti.rxswing;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Objects;
  * This would be the class that the developer uses.
  * It will be as if using a real JPanel.
  */
-public class RxJPanel extends JPanel implements RxComponent {
+public class RxJPanel extends JPanel implements RxElement {
 
     protected ReactComponentTraits reactComponentTraits = new ReactComponentTraits();
 
@@ -33,7 +34,8 @@ public class RxJPanel extends JPanel implements RxComponent {
     public Component provideComponent() {
         // This is a bit naive of an implementation.
         // We will eventually need to keep track of what has been rendered?
-        React.render(this, reactComponentTraits.rxComponentChildren);
+        // I think we will be doing this side effect somewhere in abstractRender()...
+        // React.render(this, reactComponentTraits.rxComponentChildren);
 
         return this;
     }
@@ -49,11 +51,11 @@ public class RxJPanel extends JPanel implements RxComponent {
     }
 
     /**
-     * When adding the child to the list, if it is an RxComponent we specifically
+     * When adding the child to the list, if it is an RxElement we specifically
      * DO NOT actually add it to the list of swing components
      * because it doesn't actually exist as a real component.
      *
-     * However, if it is an RxComponent only then do we add it to the reactComponentTraits
+     * However, if it is an RxElement only then do we add it to the reactComponentTraits
      * list of children components.
      *
      * TODO Additionally, we will set the reactId on the new child.
@@ -68,7 +70,7 @@ public class RxJPanel extends JPanel implements RxComponent {
         Objects.requireNonNull(child, "Cannot add null child");
 
         if (child instanceof AbstractReactComponent) {
-            ((AbstractReactComponent) child).setParentReactId(provideElementId());
+            ((AbstractReactComponent) child).setReactId(provideElementId());
             ((AbstractReactComponent) child).setElementIndex(provideElementIndex());
             reactComponentTraits.rxComponentChildren.add((AbstractReactComponent) child);
         } else {
@@ -76,5 +78,18 @@ public class RxJPanel extends JPanel implements RxComponent {
         }
 
         return child;
+    }
+
+    /**
+     * This would be able to provide all React components added
+     * to this panel during its rendering.
+     *
+     * @return any direct child React components.
+     */
+    @NotNull
+    @Override
+    public List<AbstractReactComponent> provideDirectChildren() {
+        // TODO would pull here from a list built earlier
+        return reactComponentTraits.rxComponentChildren;
     }
 }

@@ -2,6 +2,7 @@ package com.scarlatti.rxswing;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -13,7 +14,9 @@ import java.awt.*;
  * This would be the class that the developer uses.
  * It will be as if using a real JPanel.
  */
-public class RxJButton extends JButton implements RxComponent {
+public class RxJButton extends JButton implements RxElement {
+
+    protected ReactComponentTraits reactComponentTraits = new ReactComponentTraits();
 
     public RxJButton(String text) {
         super(text);
@@ -38,5 +41,17 @@ public class RxJButton extends JButton implements RxComponent {
     @Override
     public int provideElementIndex() {
         return 0;
+    }
+
+    /**
+     * This would be able to provide all React components added
+     * to this button during its rendering.
+     *
+     * @return any direct child React components.
+     */
+    @NotNull
+    @Override
+    public List<AbstractReactComponent> provideDirectChildren() {
+        return reactComponentTraits.rxComponentChildren;
     }
 }

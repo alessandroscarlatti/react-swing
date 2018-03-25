@@ -9,11 +9,17 @@ import java.util.List;
  * __/ __ |/ / -_|_-<(_-</ _ `/ _ \/ _  / __/ _ \  _\ \/ __/ _ `/ __/ / _ `/ __/ __/ /
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Friday, 3/23/2018
- *
+ * <p>
  * This is the base class that the user will call.
  * It is not intended to be instantiated.
  */
 public final class React {
+
+    /**
+     * This will not work if I have multiple windows using React...
+     * I will need to have a way to identify the root element.
+     */
+    private static AbstractReactComponent mostRecentReactComponent;
 
     /**
      * React class should not be instantiated.
@@ -26,21 +32,37 @@ public final class React {
 
     /**
      * Render the child component into the parent container as its only child.
-     *
+     * <p>
      * We assume that the parent is provided in a "clean" condition.
      * However, to support patterns such as the Redux pattern, for example,
      * we will need to be able to reset the parent to the "clean" condition.
      * Initially, we'll just remove any existing children before inserting
      * the given child.
      *
+     * OK for root level render.
+     *
      * @param parent the parent within which to render.
-     * @param child the child to render in the parent.
+     * @param child  the child to render in the parent.
      */
     public static void render(Container parent, AbstractReactComponent child) {
+
+        AbstractReactComponent childToUse = child;
+
+        // determine if we've seen this component before
+        if (mostRecentReactComponent == null) {
+            mostRecentReactComponent = child;
+        } else if (mostRecentReactComponent.getReactId().equals(child.getReactId())) {
+            childToUse = mostRecentReactComponent;
+        }
+
+        render(parent, childToUse, React::renderReplace);
+    }
+
+    static void renderOnStateChange(Container parent, AbstractReactComponent child) {
         render(parent, child, React::renderReplace);
     }
 
-    public static void render(Container parent, List<AbstractReactComponent> children) {
+    static void render(Container parent, List<AbstractReactComponent> children) {
         clearParent(parent);
 
         for (AbstractReactComponent child : children) {
@@ -53,7 +75,7 @@ public final class React {
      * last existing child.
      *
      * @param parent the parent within which to render.
-     * @param child the child to render in the parent.
+     * @param child  the child to render in the parent.
      */
     public static void renderAppend(Container parent, AbstractReactComponent child) {
         render(parent, child, React::renderAppend);
@@ -68,14 +90,22 @@ public final class React {
         // within the react component.
         //
         // any nested calls will ultimately wind up returning a single
-        // rxComponent which we can use to get the actual swing component.
+        // rxElement which we can use to get the actual swing component.
 
         // TODO this seems naive: render must pass props like this?
-        RxComponent rxComponent = child.abstractRender(null);
-        Component swingComponent = rxComponent.provideComponent();
+        // Could we pull the props from the child props?
+        //
+        // Now we need to make sure we are getting the right component
+        // if we already have a record in the components map for the id of the child
+        // we will not use the actual given child, but instead
+        // we will use the child from the components map
+        //
+        // TODO so now we would have the correct child
+        RxElement rxElement = child.abstractRender(null); // this line will set in motion all second level components...
+        Component swingComponent = rxElement.provideComponent();
 
         // now render the component into the parent
-        // after removing any existing children.
+        // using the strategy (replace/append)
         renderStrategy.render(parent, swingComponent);
 
         // if successful, now link child to parent

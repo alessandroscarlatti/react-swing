@@ -1,7 +1,8 @@
 package com.scarlatti.rxswing;
 
 import java.awt.*;
-import java.util.Objects;
+import java.util.*;
+import java.util.List;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -10,7 +11,8 @@ import java.util.Objects;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Friday, 3/23/2018
  * <p>
- * This is the class that the developer will implement
+ * This is the behind-the-scenes class which implements the bulk of
+ * React behavior for React components.
  * to make RxSwing components.
  */
 public abstract class AbstractReactComponent<P, S> extends Component {
@@ -19,12 +21,11 @@ public abstract class AbstractReactComponent<P, S> extends Component {
      * reactId is a string key that identifies this logical component
      * instance to React from one render to another.
      *
-     * The id is essentially a "fully-qualified" path name, where each
-     * piece of the path is a class name and an index.
+     * The id is essentially a "fully-qualified" path name.
      *
-     * For example "/com.scarlatti.rxswing.RxJPanel(0)/com.scarlatti.rxswing.RxJButton(0)"
+     * For example "com.scarlatti.components.MyCoolComponent"
      */
-    private String parentReactId;
+    private String reactId;
 
     /**
      * The index of this component within the parent
@@ -39,16 +40,28 @@ public abstract class AbstractReactComponent<P, S> extends Component {
     private Container swingParent;
 
     /**
-     * We need to cache the most recently rendered RxComponent
+     * We need to cache the most recently rendered RxElement
      * so that in the case of a pure component we do not need
      * to rerender.
      */
-    private RxComponent mostRecentlyRenderedRxComponent;
+    private RxElement mostRecentlyRenderedRxElement;
+
+    /**
+     * These are the rendered children for this component.
+     * Each child is identified by its "reactId".
+     *
+     * This allows us to use that ID to determine whether or not
+     * to use that component instance for rerendering, or if we
+     * need to create a new instance.
+     */
+    private List<AbstractReactComponent> children;
 
     protected S state;
     protected P props;
 
     public AbstractReactComponent() {
+        children = new ArrayList<>();
+        setDefaultReactId();
     }
 
     public AbstractReactComponent(P props) {
@@ -69,17 +82,43 @@ public abstract class AbstractReactComponent<P, S> extends Component {
      *
      * @return the component to be rendered.
      */
-    RxComponent abstractRender(P newProps) {
+    RxElement abstractRender(P newProps) {
 
-        if (mostRecentlyRenderedRxComponent == null) {
-            mostRecentlyRenderedRxComponent = render();
+        if (mostRecentlyRenderedRxElement == null) {
+            mostRecentlyRenderedRxElement = render();
         }
 
         if (componentShouldUpdate(props, newProps)) {
-            mostRecentlyRenderedRxComponent = render();
+            mostRecentlyRenderedRxElement = render();
         }
 
-        return mostRecentlyRenderedRxComponent;
+        List<AbstractReactComponent> currentChildren = new ArrayList<>(children);
+        List<AbstractReactComponent> newChildren = mostRecentlyRenderedRxElement.provideDirectChildren();
+
+        children.clear();
+
+        if (newChildren.size() > 0) {
+            // if there are children ReactComponents
+            // now render those, calling to React.render(),
+            // using this mostRecentlyRenderedRxElement as
+            // the parent container.
+
+            // but compare them to the list in current react children
+            for (int i = 0; i < newChildren.size(); i++) {
+                if (currentChildren.size() > i && currentChildren.get(i).getReactId().equals(newChildren.get(i).getReactId())) {
+                    // if the two elements are equivalent, use the existing one...
+                    children.add(currentChildren.get(i));
+                } else {
+                    children.add(newChildren.get(i));
+                }
+            }
+        }
+
+        // now <children> contains a list of children to render
+        // so we need to render each child into this component...
+        React.render((Container) mostRecentlyRenderedRxElement.provideComponent(), children);
+
+        return mostRecentlyRenderedRxElement;
     }
 
     public boolean componentShouldUpdate(P oldProps, P newProps) {
@@ -106,7 +145,7 @@ public abstract class AbstractReactComponent<P, S> extends Component {
      *
      * @return the component to be rendered.
      */
-    public abstract RxComponent render();
+    public abstract RxElement render();
 
     /**
      * Associate this React component to the actual Swing container
@@ -132,15 +171,23 @@ public abstract class AbstractReactComponent<P, S> extends Component {
     protected void setState(S state) {
         Objects.requireNonNull(swingParent, "Swing parent component must not be null");
         this.state = state;
-        React.render(swingParent, this);
+        React.renderOnStateChange(swingParent, this);
     }
 
-    public String getParentReactId() {
-        return parentReactId;
+    public String getReactId() {
+        return reactId;
     }
 
-    public void setParentReactId(String parentReactId) {
-        this.parentReactId = parentReactId;
+    protected void setDefaultReactId() {
+        setReactId(this.getClass().getName());
+    }
+
+    /**
+     * TODO could also do this in a withKey() method
+     * @param reactId the reactId to use
+     */
+    public void setReactId(String reactId) {
+        this.reactId = reactId;
     }
 
     public int getElementIndex() {

@@ -38,7 +38,7 @@ public class NestedComponentsDemo {
         }
 
         @Override
-        public RxComponent render() {
+        public RxElement render() {
             RxJButton jButton = new RxJButton(state);
             setupListeners(jButton);
 
@@ -61,7 +61,7 @@ public class NestedComponentsDemo {
         }
 
         @Override
-        public RxComponent render() {
+        public RxElement render() {
             RxJPanel jPanel = new RxJPanel();
             jPanel.setBackground(new Color(state, 34, 34));
 
