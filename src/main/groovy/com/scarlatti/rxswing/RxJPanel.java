@@ -17,7 +17,7 @@ import java.util.Objects;
  */
 public class RxJPanel extends JPanel implements RxElement {
 
-    protected ReactComponentTraits reactComponentTraits = new ReactComponentTraits();
+    protected ReactComponentTraits reactComponentTraits = new ReactComponentTraits(this);
 
     /**
      * Returning this component for now.  Will implement a different
@@ -68,15 +68,7 @@ public class RxJPanel extends JPanel implements RxElement {
     @Override
     public Component add(Component child) {
         Objects.requireNonNull(child, "Cannot add null child");
-
-        if (child instanceof AbstractReactComponent) {
-//            ((AbstractReactComponent) child).setReactId(provideElementId());
-//            ((AbstractReactComponent) child).setElementIndex(provideElementIndex());
-            reactComponentTraits.rxComponentChildren.add((AbstractReactComponent) child);
-        } else {
-            super.add(child);
-        }
-
+        reactComponentTraits.addChild(child);
         return child;
     }
 
@@ -91,5 +83,10 @@ public class RxJPanel extends JPanel implements RxElement {
     public List<AbstractReactComponent> provideDirectChildren() {
         // TODO would pull here from a list built earlier
         return reactComponentTraits.rxComponentChildren;
+    }
+
+    @Override
+    public void addSwingChild(Component child) {
+        super.add(child);
     }
 }

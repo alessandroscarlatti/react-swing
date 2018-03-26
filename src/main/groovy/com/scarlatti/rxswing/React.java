@@ -55,7 +55,7 @@ public final class React {
             childToUse = mostRecentReactComponent;
         }
 
-        render(parent, childToUse, React::renderReplace);
+        render(parent, childToUse, React::renderOnlyChild);
     }
 
     static void renderOnStateChange(Container parent, AbstractReactComponent child) {
@@ -66,7 +66,7 @@ public final class React {
         clearParent(parent);
 
         for (AbstractReactComponent child : children) {
-            render(parent, child, React::renderAppend);
+            render(parent, child, React::renderAppendChild);
         }
     }
 
@@ -78,7 +78,7 @@ public final class React {
      * @param child  the child to render in the parent.
      */
     public static void renderAppend(Container parent, AbstractReactComponent child) {
-        render(parent, child, React::renderAppend);
+        render(parent, child, React::renderAppendChild);
     }
 
     private static void render(Container parent, AbstractReactComponent<?, ?> child, SwingRenderStrategy renderStrategy) {
@@ -100,13 +100,10 @@ public final class React {
         // we will not use the actual given child, but instead
         // we will use the child from the components map
         //
-        // TODO so now we would have the correct child
-        RxElement rxElement = child.abstractRender(null); // this line will set in motion all second level components...
-        Component swingComponent = rxElement.provideComponent();
-
+        // TODO we would need to find the correct child, if any, to replace, if we are in replace mode
         // now render the component into the parent
         // using the strategy (replace/append)
-        renderStrategy.render(parent, swingComponent);
+        renderStrategy.render(parent, child);
 
         // if successful, now link child to parent
         child.setSwingParent(parent);
@@ -114,13 +111,24 @@ public final class React {
         parent.repaint();
     }
 
-    private static void renderAppend(Container parent, Component child) {
-        parent.add(child);
+    private static void renderAppendChild(Container parent, AbstractReactComponent<?, ?> child) {
+        RxElement rxElement = child.abstractRender(null); // this line will set in motion all second level components...
+        Component swingComponent = rxElement.provideComponent();
+        parent.add(swingComponent);
     }
 
-    private static void renderReplace(Container parent, Component child) {
+    private static void renderOnlyChild(Container parent, AbstractReactComponent<?, ?> child) {
         parent.removeAll();
-        parent.add(child);
+        RxElement rxElement = child.abstractRender(null); // this line will set in motion all second level components...
+        Component swingComponent = rxElement.provideComponent();
+        parent.add(swingComponent);
+    }
+
+    private static void renderReplace(Container parent, AbstractReactComponent<?, ?> child) {
+        parent.remove(child.getElementIndex());
+        RxElement rxElement = child.abstractRender(null); // this line will set in motion all second level components...
+        Component swingComponent = rxElement.provideComponent();
+        parent.add(swingComponent, child.getElementIndex());
     }
 
     private static void clearParent(Container parent) {
@@ -129,6 +137,6 @@ public final class React {
 
     @FunctionalInterface
     private interface SwingRenderStrategy {
-        void render(Container parent, Component child);
+        void render(Container parent, AbstractReactComponent child);
     }
 }

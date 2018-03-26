@@ -1,5 +1,6 @@
 package com.scarlatti.rxswing;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +13,30 @@ import java.util.List;
  */
 public class ReactComponentTraits {
     protected List<AbstractReactComponent> rxComponentChildren = new ArrayList<>();
+    protected int childCount = 0;
+    protected RxElement parent;
+
+    protected ReactComponentTraits(RxElement parent) {
+        this.parent = parent;
+    }
 
     /**
      * reactId is a string key that identifies the type of this component.
      * For example: "com.scarlatti.rxswing.RxJPanel"
      */
     protected String reactId;
+
+    protected void addChild(Component child) {
+        if (child instanceof AbstractReactComponent) {
+//            ((AbstractReactComponent) child).setReactId(provideElementId());
+            ((AbstractReactComponent) child).setElementIndex(childCount);
+            rxComponentChildren.add((AbstractReactComponent) child);
+        } else {
+            parent.addSwingChild(child);
+        }
+
+        childCount++;
+    }
+
+
 }

@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class RxJButton extends JButton implements RxElement {
 
-    protected ReactComponentTraits reactComponentTraits = new ReactComponentTraits();
+    protected ReactComponentTraits reactComponentTraits = new ReactComponentTraits(this);
 
     public RxJButton(String text) {
         super(text);
@@ -53,5 +53,10 @@ public class RxJButton extends JButton implements RxElement {
     @Override
     public List<AbstractReactComponent> provideDirectChildren() {
         return reactComponentTraits.rxComponentChildren;
+    }
+
+    @Override
+    public void addSwingChild(Component child) {
+
     }
 }

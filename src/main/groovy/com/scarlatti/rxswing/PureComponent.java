@@ -10,8 +10,17 @@ import java.util.Objects;
  * Friday, 3/23/2018
  */
 public abstract class PureComponent<P, S> extends AbstractReactComponent<P, S> {
+
+    public PureComponent() {
+        super();
+    }
+
+    public PureComponent(P props) {
+        this.props = props;
+    }
+
     @Override
     public boolean componentShouldUpdate(P oldProps, P newProps) {
-        return Objects.equals(oldProps, newProps);
+        return !Objects.equals(oldProps, newProps);
     }
 }

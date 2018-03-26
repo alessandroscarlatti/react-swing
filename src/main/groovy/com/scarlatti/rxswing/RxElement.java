@@ -52,4 +52,6 @@ public interface RxElement {
      * @return all direct React component children to this element.
      */
     List<AbstractReactComponent> provideDirectChildren();
+
+    void addSwingChild(Component child);
 }
