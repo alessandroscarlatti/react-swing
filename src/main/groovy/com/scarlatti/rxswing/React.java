@@ -1,7 +1,9 @@
 package com.scarlatti.rxswing;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -19,7 +21,10 @@ public final class React {
      * This will not work if I have multiple windows using React...
      * I will need to have a way to identify the root element.
      */
+    // TODO remove this...
     private static AbstractReactComponent mostRecentReactComponent;
+
+    private static Map<String, ReactContext> contexts;
 
     /**
      * React class should not be instantiated.
@@ -29,6 +34,40 @@ public final class React {
     private React() {
         throw new UnsupportedOperationException("React class should not be instantiated");
     }
+
+    public static void render(Container swingParent, AbstractReactComponent reactComponent) {
+        if (contexts == null) contexts = new HashMap<>();
+
+        // get the id of the caller from the stack
+        StackTraceElement frame = getRenderCallerInfo();
+
+        // example: "com.somebody.SomeApp:main:SomeApp.java:48"
+        String id = frame.getClassName() + ":" + frame.getMethodName() + ":" + frame.getFileName() + ":" + frame.getLineNumber();
+
+        ReactContext context = contexts.get(id);
+        if (context == null) {
+            context = new RootReactContext(id, swingParent);
+            contexts.put(id, context);
+        }
+
+        // now we have added the context to the list if it does not already exist.
+        // Time to use it!
+        context.render(reactComponent);
+    }
+
+    private static StackTraceElement getRenderCallerInfo() {
+        StackTraceElement[] frames = Thread.currentThread().getStackTrace();
+        for (int i = 0; i < frames.length; i++) {
+            if (frames[i].getClassName().equals(React.class.getName()) &&
+                frames[i].getMethodName().equals("render")) {
+                return frames[i + 1];
+            }
+        }
+
+        throw new IllegalStateException("React.render() not called in stacktrace.");
+    }
+
+    // TODO basically everything after here should go.
 
     /**
      * Render the child component into the parent container as its only child.
@@ -44,7 +83,7 @@ public final class React {
      * @param parent the parent within which to render.
      * @param child  the child to render in the parent.
      */
-    public static void render(Container parent, AbstractReactComponent child) {
+    public static void renderOld(Container parent, AbstractReactComponent child) {
 
         AbstractReactComponent childToUse = child;
 
@@ -133,6 +172,18 @@ public final class React {
 
     private static void clearParent(Container parent) {
         parent.removeAll();
+    }
+
+    private void renderFromOutside(Container swingParent, AbstractReactComponent component) {
+        // take the component, render it as new, and replace all nodes in the parent with that component's rendered swing component
+    }
+
+    private void renderOnStateChangeRoot(AbstractReactComponent root) {
+        // we would have to call
+    }
+
+    private void renderOnStateChangeChild(AbstractReactComponent root) {
+
     }
 
     @FunctionalInterface

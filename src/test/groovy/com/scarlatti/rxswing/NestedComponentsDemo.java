@@ -25,7 +25,7 @@ public class NestedComponentsDemo {
             // now render an RxSwing component
             // this would simulate the root render statement
 
-            React.render(jPanel, new SimplePanel());
+            React.renderOld(jPanel, new SimplePanel());
 
             return jPanel;
         });
@@ -39,7 +39,7 @@ public class NestedComponentsDemo {
             // now render an RxSwing component
             // this would simulate the root render statement
 
-            React.render(jPanel, new ComplexPanel());
+            React.renderOld(jPanel, new ComplexPanel());
 
             return jPanel;
         });
@@ -53,7 +53,7 @@ public class NestedComponentsDemo {
             // now render an RxSwing component
             // this would simulate the root render statement
 
-            React.render(jPanel, new DynamicPanel());
+            React.renderOld(jPanel, new DynamicPanel());
 
             return jPanel;
         });

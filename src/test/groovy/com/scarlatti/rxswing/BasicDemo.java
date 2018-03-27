@@ -25,7 +25,7 @@ public class BasicDemo {
             // now render an RxSwing component
             // this would simulate the root render statement
 
-            React.render(jPanel, new SimpleButton());
+            React.renderOld(jPanel, new SimpleButton());
 
             return jPanel;
         });
@@ -39,7 +39,7 @@ public class BasicDemo {
             // now render an RxSwing component
             // this would simulate the root render statement
 
-            React.render(jPanel, new SimplePanel());
+            React.renderOld(jPanel, new SimplePanel());
 
             return jPanel;
         });

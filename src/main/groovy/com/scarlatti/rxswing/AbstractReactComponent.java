@@ -56,6 +56,8 @@ public abstract class AbstractReactComponent<P, S> extends Component {
      */
     private List<AbstractReactComponent> children;
 
+    private ReactContext reactContext;
+
     protected S state;
     protected P props;
 
@@ -81,6 +83,8 @@ public abstract class AbstractReactComponent<P, S> extends Component {
      * rendered component.
      *
      * @return the component to be rendered.
+     *
+     * TODO may not need to take in props, but instead a virtual self
      */
     RxElement abstractRender(P newProps) {
 
@@ -97,6 +101,8 @@ public abstract class AbstractReactComponent<P, S> extends Component {
 
         children.clear();
 
+        List<RenderingPair> renderingPairs = new ArrayList<>();
+
         if (newChildren.size() > 0) {
             // if there are children ReactComponents
             // now render those, calling to React.render(),
@@ -108,8 +114,10 @@ public abstract class AbstractReactComponent<P, S> extends Component {
                 if (currentChildren.size() > i && currentChildren.get(i).getReactId().equals(newChildren.get(i).getReactId())) {
                     // if the two elements are equivalent, use the existing one...
                     children.add(currentChildren.get(i));
+                    renderingPairs.add(new RenderingPair(newChildren.get(i), currentChildren.get(i)));
                 } else {
                     children.add(newChildren.get(i));
+                    renderingPairs.add(new RenderingPair(null, newChildren.get(i)));
                 }
             }
         }
@@ -151,7 +159,7 @@ public abstract class AbstractReactComponent<P, S> extends Component {
      * Associate this React component to the actual Swing container
      * into which it has been injected.
      *
-     * This should be called when {@link React#render(Container, AbstractReactComponent)} is connecting components.
+     * This should be called when {@link React#renderOld(Container, AbstractReactComponent)} is connecting components.
      *
      * @param swingParent the actual swing parent container to
      *                    this component's actual Swing component
@@ -172,6 +180,10 @@ public abstract class AbstractReactComponent<P, S> extends Component {
         Objects.requireNonNull(swingParent, "Swing parent component must not be null");
         this.state = state;
         React.renderOnStateChange(swingParent, this);
+    }
+
+    boolean virtualEquals(AbstractReactComponent component) {
+        return Objects.equals(this.reactId, component.reactId);
     }
 
     public String getReactId() {
@@ -196,5 +208,36 @@ public abstract class AbstractReactComponent<P, S> extends Component {
 
     public void setElementIndex(int elementIndex) {
         this.elementIndex = elementIndex;
+    }
+
+    public ReactContext getReactContext() {
+        return reactContext;
+    }
+
+    public void setReactContext(ReactContext reactContext) {
+        this.reactContext = reactContext;
+    }
+
+    private static class Pair<X, Y> {
+        final X x;
+        final Y y;
+        Pair(X virtualComponent, Y actualComponent) {
+            this.x = virtualComponent;
+            this.y = actualComponent;
+        }
+    }
+
+    private static class RenderingPair extends Pair<AbstractReactComponent, AbstractReactComponent> {
+        RenderingPair(AbstractReactComponent virtualComponent, AbstractReactComponent actualComponent) {
+            super(virtualComponent, actualComponent);
+        }
+
+        AbstractReactComponent getVirtual() {
+            return x;
+        }
+
+        AbstractReactComponent getActual() {
+            return y;
+        }
     }
 }
