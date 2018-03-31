@@ -1,6 +1,4 @@
-package com.scarlatti.rxswing;
-
-import java.util.List;
+package com.scarlatti.rxswing1;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -11,6 +9,6 @@ import java.util.List;
  */
 public interface ReactContext {
     String getId();
-    AbstractReactComponent getRenderedComponent();
-    void render(AbstractReactComponent component);
+    RxSwingComponent getRenderedComponent();
+    void render(RxSwingComponent component);
 }

@@ -1,4 +1,4 @@
-package com.scarlatti.rxswing;
+package com.scarlatti.rxswing1;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -22,7 +22,7 @@ public final class React {
      * I will need to have a way to identify the root element.
      */
     // TODO remove this...
-    private static AbstractReactComponent mostRecentReactComponent;
+    private static RxSwingComponent mostRecentReactComponent;
 
     private static Map<String, ReactContext> contexts;
 
@@ -35,7 +35,7 @@ public final class React {
         throw new UnsupportedOperationException("React class should not be instantiated");
     }
 
-    public static void render(Container swingParent, AbstractReactComponent reactComponent) {
+    public static void render(Container swingParent, RxSwingComponent reactComponent) {
         if (contexts == null) contexts = new HashMap<>();
 
         // get the id of the caller from the stack
@@ -83,9 +83,9 @@ public final class React {
      * @param parent the parent within which to render.
      * @param child  the child to render in the parent.
      */
-    public static void renderOld(Container parent, AbstractReactComponent child) {
+    public static void renderOld(Container parent, RxSwingComponent child) {
 
-        AbstractReactComponent childToUse = child;
+        RxSwingComponent childToUse = child;
 
         // determine if we've seen this component before
         if (mostRecentReactComponent == null) {
@@ -97,14 +97,14 @@ public final class React {
         render(parent, childToUse, React::renderOnlyChild);
     }
 
-    static void renderOnStateChange(Container parent, AbstractReactComponent child) {
+    static void renderOnStateChange(Container parent, RxSwingComponent child) {
         render(parent, child, React::renderReplace);
     }
 
-    static void render(Container parent, List<AbstractReactComponent> children) {
+    static void render(Container parent, List<RxSwingComponent> children) {
         clearParent(parent);
 
-        for (AbstractReactComponent child : children) {
+        for (RxSwingComponent child : children) {
             render(parent, child, React::renderAppendChild);
         }
     }
@@ -116,11 +116,11 @@ public final class React {
      * @param parent the parent within which to render.
      * @param child  the child to render in the parent.
      */
-    public static void renderAppend(Container parent, AbstractReactComponent child) {
+    public static void renderAppend(Container parent, RxSwingComponent child) {
         render(parent, child, React::renderAppendChild);
     }
 
-    private static void render(Container parent, AbstractReactComponent<?, ?> child, SwingRenderStrategy renderStrategy) {
+    private static void render(Container parent, RxSwingComponent<?, ?> child, SwingRenderStrategy renderStrategy) {
         // so now we would have to read the actual swing component
         // from the child and insert it into the parent.
         //
@@ -150,20 +150,20 @@ public final class React {
         parent.repaint();
     }
 
-    private static void renderAppendChild(Container parent, AbstractReactComponent<?, ?> child) {
+    private static void renderAppendChild(Container parent, RxSwingComponent<?, ?> child) {
         RxElement rxElement = child.abstractRender(null); // this line will set in motion all second level components...
         Component swingComponent = rxElement.provideComponent();
         parent.add(swingComponent);
     }
 
-    private static void renderOnlyChild(Container parent, AbstractReactComponent<?, ?> child) {
+    private static void renderOnlyChild(Container parent, RxSwingComponent<?, ?> child) {
         parent.removeAll();
         RxElement rxElement = child.abstractRender(null); // this line will set in motion all second level components...
         Component swingComponent = rxElement.provideComponent();
         parent.add(swingComponent);
     }
 
-    private static void renderReplace(Container parent, AbstractReactComponent<?, ?> child) {
+    private static void renderReplace(Container parent, RxSwingComponent<?, ?> child) {
         parent.remove(child.getElementIndex());
         RxElement rxElement = child.abstractRender(null); // this line will set in motion all second level components...
         Component swingComponent = rxElement.provideComponent();
@@ -174,20 +174,20 @@ public final class React {
         parent.removeAll();
     }
 
-    private void renderFromOutside(Container swingParent, AbstractReactComponent component) {
+    private void renderFromOutside(Container swingParent, RxSwingComponent component) {
         // take the component, render it as new, and replace all nodes in the parent with that component's rendered swing component
     }
 
-    private void renderOnStateChangeRoot(AbstractReactComponent root) {
+    private void renderOnStateChangeRoot(RxSwingComponent root) {
         // we would have to call
     }
 
-    private void renderOnStateChangeChild(AbstractReactComponent root) {
+    private void renderOnStateChangeChild(RxSwingComponent root) {
 
     }
 
     @FunctionalInterface
     private interface SwingRenderStrategy {
-        void render(Container parent, AbstractReactComponent child);
+        void render(Container parent, RxSwingComponent child);
     }
 }

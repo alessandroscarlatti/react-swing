@@ -1,4 +1,4 @@
-package com.scarlatti.rxswing;
+package com.scarlatti.rxswing1;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.scarlatti.rxswing;
+package com.scarlatti.rxswing1;
 
 import java.awt.*;
 import java.util.Objects;
@@ -14,7 +14,7 @@ public class RootReactContext implements ReactContext {
 
     private String id;
     private Container swingParent;
-    private AbstractReactComponent renderedComponent;
+    private RxSwingComponent renderedComponent;
 
     RootReactContext(String id, Container swingParent) {
         Objects.requireNonNull(id, "React Context ID cannot be null.");
@@ -29,7 +29,7 @@ public class RootReactContext implements ReactContext {
     }
 
     @Override
-    public AbstractReactComponent getRenderedComponent() {
+    public RxSwingComponent getRenderedComponent() {
         return renderedComponent;
     }
 
@@ -38,7 +38,7 @@ public class RootReactContext implements ReactContext {
      * @param component the component to render.
      */
     @Override
-    public void render(AbstractReactComponent component) {
+    public void render(RxSwingComponent component) {
         component.setReactContext(this);
 
         // render this child in the parent
@@ -51,11 +51,20 @@ public class RootReactContext implements ReactContext {
         }
     }
 
-    private void renderComponentAsExisting(AbstractReactComponent virtual, AbstractReactComponent actual) {
-
+    @SuppressWarnings("unchecked")
+    private void renderComponentAsExisting(RxSwingComponent virtual, RxSwingComponent actual) {
+        swingParent.remove(actual.getElementIndex());
+        RxElement rxElement = actual.abstractRerender(virtual); // this line will set in motion all second level components...
+        Component swingComponent = rxElement.provideComponent();
+        swingParent.add(swingComponent, actual.getElementIndex());
+        renderedComponent = actual;
     }
 
-    private void renderComponentAsNew(AbstractReactComponent actual) {
-
+    private void renderComponentAsNew(RxSwingComponent actual) {
+        swingParent.removeAll();  // TODO this probably shouldn't be here
+        RxElement rxElement = actual.abstractRender(); // this line will set in motion all second level components...
+        Component swingComponent = rxElement.provideComponent();
+        swingParent.add(swingComponent, actual.getElementIndex());
+        renderedComponent = actual;
     }
 }

@@ -1,4 +1,4 @@
-package com.scarlatti.rxswing;
+package com.scarlatti.rxswing1;
 
 import java.awt.*;
 import java.util.List;
@@ -51,7 +51,7 @@ public interface RxElement {
      * Provide all direct React component children to this element.
      * @return all direct React component children to this element.
      */
-    List<AbstractReactComponent> provideDirectChildren();
+    List<RxSwingComponent> provideDirectChildren();
 
     void addSwingChild(Component child);
 }

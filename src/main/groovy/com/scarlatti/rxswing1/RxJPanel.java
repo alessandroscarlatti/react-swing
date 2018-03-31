@@ -1,4 +1,4 @@
-package com.scarlatti.rxswing;
+package com.scarlatti.rxswing1;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,7 +80,7 @@ public class RxJPanel extends JPanel implements RxElement {
      */
     @NotNull
     @Override
-    public List<AbstractReactComponent> provideDirectChildren() {
+    public List<RxSwingComponent> provideDirectChildren() {
         // TODO would pull here from a list built earlier
         return reactComponentTraits.rxComponentChildren;
     }

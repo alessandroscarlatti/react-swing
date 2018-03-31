@@ -1,4 +1,4 @@
-package com.scarlatti.rxswing;
+package com.scarlatti.rxswing1;
 
 import java.awt.*;
 import java.util.*;
@@ -15,7 +15,7 @@ import java.util.List;
  * React behavior for React components.
  * to make RxSwing components.
  */
-public abstract class AbstractReactComponent<P, S> extends Component {
+public abstract class RxSwingComponent<P, S> extends Component implements RxComponent<P, S> {
 
     /**
      * reactId is a string key that identifies this logical component
@@ -39,34 +39,19 @@ public abstract class AbstractReactComponent<P, S> extends Component {
      */
     private Container swingParent;
 
-    /**
-     * We need to cache the most recently rendered RxElement
-     * so that in the case of a pure component we do not need
-     * to rerender.
-     */
-    private RxElement mostRecentlyRenderedRxElement;
-
-    /**
-     * These are the rendered children for this component.
-     * Each child is identified by its "reactId".
-     *
-     * This allows us to use that ID to determine whether or not
-     * to use that component instance for rerendering, or if we
-     * need to create a new instance.
-     */
-    private List<AbstractReactComponent> children;
-
     private ReactContext reactContext;
+
+    private ReactComponentContext selfContext;
 
     protected S state;
     protected P props;
 
-    public AbstractReactComponent() {
-        children = new ArrayList<>();
+    public RxSwingComponent() {
         setDefaultReactId();
+        selfContext = new SimpleReactComponentContext();
     }
 
-    public AbstractReactComponent(P props) {
+    public RxSwingComponent(P props) {
         this.props = props;
     }
 
@@ -75,61 +60,45 @@ public abstract class AbstractReactComponent<P, S> extends Component {
      * - through an ancestor render chain
      * - through a state change render
      *
-     * This method has the responsibility of determining
-     * if we should update the component.
+     * N.B. This method will only be called if this component has never previously been rendered.
      *
-     * If we will update the component, we return the new rendering.
-     * If we will not update the component, we return the most recently
-     * rendered component.
-     *
-     * @return the component to be rendered.
-     *
-     * TODO may not need to take in props, but instead a virtual self
+     * @return the component to be rendered (for the first time)
      */
-    RxElement abstractRender(P newProps) {
+    @Override
+    public RxElement abstractRender() {
 
-        if (mostRecentlyRenderedRxElement == null) {
-            mostRecentlyRenderedRxElement = render();
-        }
+        selfContext = new SimpleReactComponentContext(render());
 
-        if (componentShouldUpdate(props, newProps)) {
-            mostRecentlyRenderedRxElement = render();
-        }
+        // before returning, render the children (which will render their children)
 
-        List<AbstractReactComponent> currentChildren = new ArrayList<>(children);
-        List<AbstractReactComponent> newChildren = mostRecentlyRenderedRxElement.provideDirectChildren();
-
-        children.clear();
-
-        List<RenderingPair> renderingPairs = new ArrayList<>();
-
-        if (newChildren.size() > 0) {
-            // if there are children ReactComponents
-            // now render those, calling to React.render(),
-            // using this mostRecentlyRenderedRxElement as
-            // the parent container.
-
-            // but compare them to the list in current react children
-            for (int i = 0; i < newChildren.size(); i++) {
-                if (currentChildren.size() > i && currentChildren.get(i).getReactId().equals(newChildren.get(i).getReactId())) {
-                    // if the two elements are equivalent, use the existing one...
-                    children.add(currentChildren.get(i));
-                    renderingPairs.add(new RenderingPair(newChildren.get(i), currentChildren.get(i)));
-                } else {
-                    children.add(newChildren.get(i));
-                    renderingPairs.add(new RenderingPair(null, newChildren.get(i)));
-                }
-            }
-        }
-
-        // now <children> contains a list of children to render
-        // so we need to render each child into this component...
-        React.render((Container) mostRecentlyRenderedRxElement.provideComponent(), children);
-
-        return mostRecentlyRenderedRxElement;
+        return selfContext.getRenderedRxElement();
     }
 
-    public boolean componentShouldUpdate(P oldProps, P newProps) {
+    @Override
+    public RxElement abstractRerender(RxComponent<P, S> virtual) {
+        if (componentShouldUpdate(props, virtual.getProps())) {
+            ReactComponentContext virtualSelfContext = new SimpleReactComponentContext(render());
+
+            List<RxSwingComponent> newVirtualChildren = virtualSelfContext.getRenderedRxElement().provideDirectChildren();
+
+            // now go through the virtual component's new children
+            // and compare to the currentChildren
+            for (RxSwingComponent component : newVirtualChildren) {
+                if (selfContext.virtuallyContains(component)) {
+                    // this child has already existed
+
+                } else {
+                    // this child is brand new
+                }
+            }
+
+            selfContext.close();
+            selfContext = virtualSelfContext;  // now replace the old context with the new one.
+        }
+    }
+
+    @Override
+    public boolean componentShouldUpdate(P newProps) {
         return true;
     }
 
@@ -140,6 +109,7 @@ public abstract class AbstractReactComponent<P, S> extends Component {
      *
      * @param newProps the new props for the component.
      */
+    @Override
     public void componentWillReceiveProps(P newProps) {
         // encourage user to implement this method
     }
@@ -153,13 +123,13 @@ public abstract class AbstractReactComponent<P, S> extends Component {
      *
      * @return the component to be rendered.
      */
-    public abstract RxElement render();
+    public abstract Object render();
 
     /**
      * Associate this React component to the actual Swing container
      * into which it has been injected.
      *
-     * This should be called when {@link React#renderOld(Container, AbstractReactComponent)} is connecting components.
+     * This should be called when {@link React#renderOld(Container, RxSwingComponent)} is connecting components.
      *
      * @param swingParent the actual swing parent container to
      *                    this component's actual Swing component
@@ -176,14 +146,29 @@ public abstract class AbstractReactComponent<P, S> extends Component {
      *
      * @param state the new state for this component.
      */
-    protected void setState(S state) {
+    public void setState(S state) {
         Objects.requireNonNull(swingParent, "Swing parent component must not be null");
         this.state = state;
-        React.renderOnStateChange(swingParent, this);
+        reactContext.render(this);
     }
 
-    boolean virtualEquals(AbstractReactComponent component) {
-        return Objects.equals(this.reactId, component.reactId);
+    boolean virtualEquals(RxSwingComponent component) {
+        return Objects.equals(this.reactId, component.reactId)
+            && Objects.equals(this.elementIndex, component.elementIndex);
+    }
+
+    @Override
+    public S getState() {
+        return state;
+    }
+
+    @Override
+    public P getProps() {
+        return props;
+    }
+
+    public void setProps(P props) {
+        this.props = props;
     }
 
     public String getReactId() {
@@ -227,16 +212,16 @@ public abstract class AbstractReactComponent<P, S> extends Component {
         }
     }
 
-    private static class RenderingPair extends Pair<AbstractReactComponent, AbstractReactComponent> {
-        RenderingPair(AbstractReactComponent virtualComponent, AbstractReactComponent actualComponent) {
+    private static class RenderingPair extends Pair<RxSwingComponent, RxSwingComponent> {
+        RenderingPair(RxSwingComponent virtualComponent, RxSwingComponent actualComponent) {
             super(virtualComponent, actualComponent);
         }
 
-        AbstractReactComponent getVirtual() {
+        RxSwingComponent getVirtual() {
             return x;
         }
 
-        AbstractReactComponent getActual() {
+        RxSwingComponent getActual() {
             return y;
         }
     }

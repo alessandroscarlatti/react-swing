@@ -1,4 +1,4 @@
-package com.scarlatti.rxswing;
+package com.scarlatti.rxswing2;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

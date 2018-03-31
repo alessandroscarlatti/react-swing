@@ -1,4 +1,4 @@
-package com.scarlatti.rxswing;
+package com.scarlatti.rxswing1;
 
 import java.util.Objects;
 
@@ -9,7 +9,7 @@ import java.util.Objects;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Friday, 3/23/2018
  */
-public abstract class PureComponent<P, S> extends AbstractReactComponent<P, S> {
+public abstract class PureComponent<P, S> extends RxSwingComponent<P, S> {
 
     public PureComponent() {
         super();

@@ -1,4 +1,4 @@
-package com.scarlatti.rxswing;
+package com.scarlatti.rxswing1;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,7 +51,7 @@ public class RxJButton extends JButton implements RxElement {
      */
     @NotNull
     @Override
-    public List<AbstractReactComponent> provideDirectChildren() {
+    public List<RxSwingComponent> provideDirectChildren() {
         return reactComponentTraits.rxComponentChildren;
     }
 

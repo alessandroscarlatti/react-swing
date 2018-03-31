@@ -1,4 +1,4 @@
-package com.scarlatti.rxswing;
+package com.scarlatti.rxswing1;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,12 +12,12 @@ import java.util.List;
  * Friday, 3/23/2018
  */
 public class ReactComponentTraits {
-    protected List<AbstractReactComponent> rxComponentChildren = new ArrayList<>();
+    protected List<RxSwingComponent> rxComponentChildren = new ArrayList<>();
     protected int childCount = 0;
-    protected RxElement parent;
+    protected RxElement self;
 
-    protected ReactComponentTraits(RxElement parent) {
-        this.parent = parent;
+    protected ReactComponentTraits(RxElement self) {
+        this.self = self;
     }
 
     /**
@@ -27,12 +27,12 @@ public class ReactComponentTraits {
     protected String reactId;
 
     protected void addChild(Component child) {
-        if (child instanceof AbstractReactComponent) {
-//            ((AbstractReactComponent) child).setReactId(provideElementId());
-            ((AbstractReactComponent) child).setElementIndex(childCount);
-            rxComponentChildren.add((AbstractReactComponent) child);
+        if (child instanceof RxSwingComponent) {
+//            ((RxSwingComponent) child).setReactId(provideElementId());
+            ((RxSwingComponent) child).setElementIndex(childCount);
+            rxComponentChildren.add((RxSwingComponent) child);
         } else {
-            parent.addSwingChild(child);
+            self.addSwingChild(child);
         }
 
         childCount++;
