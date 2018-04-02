@@ -1,4 +1,4 @@
-package com.scarlatti.rxswing3;
+package com.scarlatti.rxswing3.render;
 
 import com.scarlatti.rxswing2.NotNull;
 

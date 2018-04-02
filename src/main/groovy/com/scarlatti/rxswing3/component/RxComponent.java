@@ -1,4 +1,4 @@
-package com.scarlatti.rxswing3;
+package com.scarlatti.rxswing3.component;
 
 import com.scarlatti.rxswing1.RxElement;
 
@@ -22,7 +22,6 @@ public interface RxComponent<P, S> {
     void setState(S state);
 
     void render(Consumer<Component> consumer);
-    RxElement abstractRerender(RxComponent<P, S> virtual);
 
     Object render();
 

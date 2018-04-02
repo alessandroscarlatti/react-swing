@@ -19,8 +19,8 @@ public abstract class PureComponent<P, S> extends RxSwingComponent<P, S> {
         this.props = props;
     }
 
-    @Override
-    public boolean componentShouldUpdate(P oldProps, P newProps) {
-        return !Objects.equals(oldProps, newProps);
-    }
+//    @Override
+//    public boolean componentShouldUpdate(P oldProps, P newProps) {
+//        return !Objects.equals(oldProps, newProps);
+//    }
 }

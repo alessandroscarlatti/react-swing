@@ -62,7 +62,7 @@ public class RootReactContext implements ReactContext {
 
     private void renderComponentAsNew(RxSwingComponent actual) {
         swingParent.removeAll();  // TODO this probably shouldn't be here
-        RxElement rxElement = actual.abstractRender(); // this line will set in motion all second level components...
+        RxElement rxElement = actual.abstractRender(null); // this line will set in motion all second level components...
         Component swingComponent = rxElement.provideComponent();
         swingParent.add(swingComponent, actual.getElementIndex());
         renderedComponent = actual;

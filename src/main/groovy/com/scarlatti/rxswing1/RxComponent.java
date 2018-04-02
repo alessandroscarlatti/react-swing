@@ -16,7 +16,7 @@ public interface RxComponent<P, S> {
 
     void setState(S state);
 
-    RxElement abstractRender();
+    RxElement abstractRender(Object props);
     RxElement abstractRerender(RxComponent<P, S> virtual);
 
     Object render();

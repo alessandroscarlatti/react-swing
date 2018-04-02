@@ -63,21 +63,23 @@ public class ComponentRenderingInterface implements RenderingInterface {
         if (getSelf() instanceof RxComponent) return buildChildrenFromRxComponent();
 
         List<RenderingInterface> interfaces = buildChildrenFromContainer();
+
+        return Collections.emptyList();
     }
 
     private List<RenderingInterface> buildChildrenFromRxComponent() {
-
+        return Collections.emptyList();
     }
 
     private List<RenderingInterface> buildChildrenFromContainer() {
-        if (!(getSelf() instanceof Container)) return Collections.emptyList();
+//        if (!(getSelf() instanceof Container)) return Collections.emptyList();
+//
+//        Component[] components = ((Container) getSelf()).getComponents();
+//        List<RenderingInterface> interfaces = new ArrayList<>(components.length);
+//        for (Component component : components) {
+//            interfaces.add(new ComponentRenderingInterface(parent, component));
+//        }
 
-        Component[] components = ((Container) getSelf()).getComponents();
-        List<RenderingInterface> interfaces = new ArrayList<>(components.length);
-        for (Component component : components) {
-            interfaces.add(new ComponentRenderingInterface(parent, component));
-        }
-
-        return interfaces;
+        return Collections.emptyList();
     }
 }

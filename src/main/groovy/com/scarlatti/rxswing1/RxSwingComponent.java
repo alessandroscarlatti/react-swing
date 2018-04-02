@@ -65,9 +65,9 @@ public abstract class RxSwingComponent<P, S> extends Component implements RxComp
      * @return the component to be rendered (for the first time)
      */
     @Override
-    public RxElement abstractRender() {
+    public RxElement abstractRender(Object props) {
 
-        selfContext = new SimpleReactComponentContext(render());
+        selfContext = new SimpleReactComponentContext();
 
         // before returning, render the children (which will render their children)
 
@@ -76,25 +76,27 @@ public abstract class RxSwingComponent<P, S> extends Component implements RxComp
 
     @Override
     public RxElement abstractRerender(RxComponent<P, S> virtual) {
-        if (componentShouldUpdate(props, virtual.getProps())) {
-            ReactComponentContext virtualSelfContext = new SimpleReactComponentContext(render());
+//        if (componentShouldUpdate(props, virtual.getProps())) {
+//            ReactComponentContext virtualSelfContext = new SimpleReactComponentContext(render());
+//
+//            List<RxSwingComponent> newVirtualChildren = virtualSelfContext.getRenderedRxElement().provideDirectChildren();
+//
+//            // now go through the virtual component's new children
+//            // and compare to the currentChildren
+//            for (RxSwingComponent component : newVirtualChildren) {
+//                if (selfContext.virtuallyContains(component)) {
+//                    // this child has already existed
+//
+//                } else {
+//                    // this child is brand new
+//                }
+//            }
+//
+//            selfContext.close();
+//            selfContext = virtualSelfContext;  // now replace the old context with the new one.
+//        }
 
-            List<RxSwingComponent> newVirtualChildren = virtualSelfContext.getRenderedRxElement().provideDirectChildren();
-
-            // now go through the virtual component's new children
-            // and compare to the currentChildren
-            for (RxSwingComponent component : newVirtualChildren) {
-                if (selfContext.virtuallyContains(component)) {
-                    // this child has already existed
-
-                } else {
-                    // this child is brand new
-                }
-            }
-
-            selfContext.close();
-            selfContext = virtualSelfContext;  // now replace the old context with the new one.
-        }
+        return null;
     }
 
     @Override
