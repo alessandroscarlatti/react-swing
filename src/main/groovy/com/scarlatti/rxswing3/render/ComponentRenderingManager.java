@@ -25,9 +25,14 @@ public class ComponentRenderingManager {
     private Object self;
     private List<ComponentRenderingManager> children;
 
+    private ReactComponent associatedComponent;
+
+    private Component mostRecentRendering;
+
     private boolean firstRender = true;
 
-    public ComponentRenderingManager(String id, Supplier<Object> selfSupplier) {
+    public ComponentRenderingManager(ReactComponent associatedComponent, String id, Supplier<Object> selfSupplier) {
+        this.associatedComponent = associatedComponent;
         this.id = id;
         this.selfSupplier = selfSupplier;
         children = new ArrayList<>();
@@ -46,17 +51,23 @@ public class ComponentRenderingManager {
         children = new ArrayList<>();
     }
 
-    public void render() {
+    public Component render() {
         // decide between first and second times...
 
+        Component renderedComponent;
+
         if (firstRender) {
-            firstRender();
+            renderedComponent = firstRender();
         } else {
-            secondRender();
+            renderedComponent = secondRender();
         }
+
+        mostRecentRendering = renderedComponent;
+        return renderedComponent;
     }
 
-    public void firstRender() {
+    public Component firstRender() {
+        firstRender = false;
         Object self = selfSupplier.get();
 
         // interpret the self correctly to get the swing component.
@@ -64,7 +75,7 @@ public class ComponentRenderingManager {
             // pass on this parent render strategy to the component
             // and render this component
             this.self = self;
-            ((RxComponent) self).render(swingParentRenderStrategy);
+            return ((RxComponent) self).render(swingParentRenderStrategy);
 
         } else if (self instanceof Container) {
             // we need to look for children and render them
@@ -76,17 +87,19 @@ public class ComponentRenderingManager {
             }
 
             swingParentRenderStrategy.accept((Container) self);
+
+            return (Container) self;
         } else if (self instanceof Component) {
             // we only need to render this component in the parent, using the strategy
             swingParentRenderStrategy.accept((Component) self);
+
+            return (Component) self;
         } else {
             throw new RuntimeException("Unexpected Component type: " + self.getClass().getName());
         }
-
-        firstRender = false;
     }
 
-    public void secondRender() {
+    public Component secondRender() {
 
         Object self = selfSupplier.get();
 
@@ -94,8 +107,25 @@ public class ComponentRenderingManager {
         if (self instanceof RxComponent) {
             // pass on this parent render strategy to the component
             // and render this component
-            this.self = self;
-            ((RxComponent) self).render(swingParentRenderStrategy);
+
+
+            // check if we are going to use this component or not
+            ReactComponent selfComponent = (ReactComponent) self;
+
+            if (((RxComponent) self).getKey().equals(id)) {
+                // now check for updating props since we're using an existing component
+                if (((ReactComponent) self).componentShouldUpdate(selfComponent.getProps())) {
+                    selfComponent.getRenderingManager().associatedComponent.componentWillReceiveProps(selfComponent.getProps());
+                    return selfComponent.render(swingParentRenderStrategy);
+                } else {
+                    swingParentRenderStrategy.accept(mostRecentRendering);
+                    return mostRecentRendering;
+                }
+            } else {
+                this.self = self;
+            }
+
+            return ((RxComponent) self).render(swingParentRenderStrategy);
 
         } else if (self instanceof Container) {
             // we need to look for children and render them
@@ -107,9 +137,13 @@ public class ComponentRenderingManager {
             }
 
             swingParentRenderStrategy.accept((Container) self);
+
+            return (Container) self;
         } else if (self instanceof Component) {
             // we only need to render this component in the parent, using the strategy
             swingParentRenderStrategy.accept((Component) self);
+
+            return (Component) self;
         } else {
             throw new RuntimeException("Unexpected Component type: " + self.getClass().getName());
         }
@@ -208,6 +242,13 @@ public class ComponentRenderingManager {
             };
 
             existingManager.setSwingParentRenderStrategy(swingParentRenderStrategy);
+
+            // now check for updating props since we're using an existing component
+            if (existingManager.associatedComponent.componentShouldUpdate(component.getProps())) {
+                existingManager.associatedComponent.componentWillReceiveProps(component.getProps());
+            } else {
+                existingManager.setSelfSupplier(() -> existingManager.mostRecentRendering);
+            }
 
             return existingManager;
         }

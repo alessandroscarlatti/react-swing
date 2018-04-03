@@ -4,6 +4,7 @@ import com.scarlatti.rxswing1.TestUtils;
 import com.scarlatti.rxswing3.component.ReactComponent;
 import com.scarlatti.rxswing3.util.ClickListener;
 import com.scarlatti.rxswing3.util.SimpleButton;
+import com.scarlatti.rxswing3.util.SnazzyButton;
 import org.junit.Test;
 
 import javax.swing.*;
@@ -17,10 +18,10 @@ import java.awt.*;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Friday, 3/23/2018
  */
-public class NestedComponentsDemo {
+public class DynamicComponentsDemo {
 
     @Test
-    public void dynamicChildDemo() {
+    public void dynamicSnazzyChildDemo() {
         TestUtils.displayJPanel(() -> {
             JPanel jPanel = new JPanel();
 
@@ -33,20 +34,25 @@ public class NestedComponentsDemo {
         });
     }
 
-    public static class DynamicPanel extends ReactComponent<Void, Integer> {
+    public static class DynamicPanel extends ReactComponent<Void, DynamicPanel.State> {
 
         public DynamicPanel(String key) {
             super(key);
-            state = 34;
+            state = new State();
         }
 
         @Override
         public Object render() {
             JPanel jPanel = new JPanel();
             jPanel.setBorder(new EmptyBorder(50, 50, 50, 50));
-            jPanel.setBackground(new Color(state, 34, 34));
+            jPanel.setBackground(new Color(state.red, 34, 34));
+
             jPanel.add(new SimpleButton("button1"));
             jPanel.add(new SimpleButton("button2"));
+
+            if (state.showThirdButton) {
+                jPanel.add(new SnazzyButton("button3"));
+            }
 
             setupListeners(jPanel);
 
@@ -58,7 +64,20 @@ public class NestedComponentsDemo {
         }
 
         private void click() {
-            setState(state + 10);
+            setState(new State(state.red + 10, !state.showThirdButton));
+        }
+
+        public static class State {
+            int red;
+            boolean showThirdButton;
+
+            public State() {
+            }
+
+            public State(int red, boolean showThirdButton) {
+                this.red = red;
+                this.showThirdButton = showThirdButton;
+            }
         }
     }
 }

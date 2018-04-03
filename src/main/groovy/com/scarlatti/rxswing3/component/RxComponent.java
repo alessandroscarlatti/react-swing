@@ -21,7 +21,7 @@ public interface RxComponent<P, S> {
 
     void setState(S state);
 
-    void render(Consumer<Component> consumer);
+    Component render(Consumer<Component> consumer);
 
     Object render();
 

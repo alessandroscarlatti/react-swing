@@ -23,7 +23,13 @@ public abstract class ReactComponent<P, S> extends Container implements RxCompon
 
     public ReactComponent(String key) {
         this.key = key;
-        renderingManager = new ComponentRenderingManager(key, this::render);
+        renderingManager = new ComponentRenderingManager(this, key, this::render);
+    }
+
+    public ReactComponent(String key, P props) {
+        this.key = key;
+        this.props = props;
+        renderingManager = new ComponentRenderingManager(this, key, this::render);
     }
 
     @Override
@@ -40,13 +46,14 @@ public abstract class ReactComponent<P, S> extends Container implements RxCompon
     public void setState(S state) {
         this.state = state;
 
+        renderingManager.setSelfSupplier(this::render);
         renderingManager.render();
     }
 
     @Override
-    public void render(Consumer<Component> consumer) {
+    public Component render(Consumer<Component> consumer) {
         renderingManager.setSwingParentRenderStrategy(consumer);
-        renderingManager.render();
+        return renderingManager.render();
     }
 
     @Override
