@@ -166,6 +166,7 @@ public class ComponentRenderingManager {
         return ((ReactComponent) component).getRenderingManager();
     }
 
+    @SuppressWarnings("unchecked")
     private ComponentRenderingManager generateManagerForRxComponentSecondTime(Container container, RxComponent component, int index) {
 
         ComponentRenderingManager existingManager = getExistingManager(component);
