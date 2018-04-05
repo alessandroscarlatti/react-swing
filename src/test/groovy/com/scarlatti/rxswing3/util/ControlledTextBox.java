@@ -34,7 +34,7 @@ public class ControlledTextBox extends ReactComponent<String, String> {
     }
 
     private void onTextChanged(String text) {
-        setState(text + "s");
+        setState(text);
     }
 
     private static class OnTextChanged implements DocumentListener {

@@ -21,14 +21,9 @@ public class ComponentRenderingManager {
     private Consumer<Component> swingParentRenderStrategy;
     private Supplier<Object> selfSupplier;
     private String id;
-
-    private Object self;
     private List<ComponentRenderingManager> children;
-
     private ReactComponent associatedComponent;
-
     private Component mostRecentRendering;
-
     private boolean firstRender = true;
 
     public ComponentRenderingManager(ReactComponent associatedComponent, String id, Supplier<Object> selfSupplier) {
@@ -74,19 +69,19 @@ public class ComponentRenderingManager {
         if (self instanceof RxComponent) {
             // pass on this parent render strategy to the component
             // and render this component
-            this.self = self;
             return ((RxComponent) self).render(swingParentRenderStrategy);
 
         } else if (self instanceof Container) {
             // we need to look for children and render them
 
-            List<ComponentRenderingManager> managers = generateRenderingManagersFirstTime((Container) self);
-            children = managers;
-            for (ComponentRenderingManager manager : managers) {
-                manager.render();
-            }
-
-            swingParentRenderStrategy.accept((Container) self);
+            handleContainer((Container) self, true);
+//            List<ComponentRenderingManager> managers = generateRenderingManagersFirstTime((Container) self);
+//            children = managers;
+//            for (ComponentRenderingManager manager : managers) {
+//                manager.render();
+//            }
+//
+//            swingParentRenderStrategy.accept((Container) self);
 
             return (Container) self;
         } else if (self instanceof Component) {
@@ -108,64 +103,87 @@ public class ComponentRenderingManager {
             // pass on this parent render strategy to the component
             // and render this component
 
+            return handleRxComponentSecondTime((ReactComponent) self);
 
-            // check if we are going to use this component or not
-            ReactComponent selfComponent = (ReactComponent) self;
-
-            if (((RxComponent) self).getKey().equals(id)) {
-                // now check for updating props since we're using an existing component
-                if (((ReactComponent) self).componentShouldUpdate(selfComponent.getProps())) {
-                    selfComponent.getRenderingManager().associatedComponent.componentWillReceiveProps(selfComponent.getProps());
-                    return selfComponent.render(swingParentRenderStrategy);
-                } else {
-                    swingParentRenderStrategy.accept(mostRecentRendering);
-                    return mostRecentRendering;
-                }
-            } else {
-                this.self = self;
-            }
-
-            return ((RxComponent) self).render(swingParentRenderStrategy);
+//            // check if we are going to use this component or not
+//            ReactComponent selfComponent = (ReactComponent) self;
+//
+//            if (((RxComponent) self).getKey().equals(id)) {
+//                // now check for updating props since we're using an existing component
+//                if (((ReactComponent) self).componentShouldUpdate(selfComponent.getProps())) {
+//                    selfComponent.getRenderingManager().associatedComponent.componentWillReceiveProps(selfComponent.getProps());
+//                    return selfComponent.render(swingParentRenderStrategy);
+//                } else {
+//                    swingParentRenderStrategy.accept(mostRecentRendering);
+//                    return mostRecentRendering;
+//                }
+//            }
+//
+//            return ((RxComponent) self).render(swingParentRenderStrategy);
 
         } else if (self instanceof Container) {
             // we need to look for children and render them
-
-            List<ComponentRenderingManager> managers = generateRenderingManagersSecondTime((Container) self);
-            children = managers;
-            for (ComponentRenderingManager manager : managers) {
-                manager.render();
-            }
-
-            swingParentRenderStrategy.accept((Container) self);
-
+            handleContainer((Container) self, false);
             return (Container) self;
         } else if (self instanceof Component) {
             // we only need to render this component in the parent, using the strategy
             swingParentRenderStrategy.accept((Component) self);
-
             return (Component) self;
         } else {
             throw new RuntimeException("Unexpected Component type: " + self.getClass().getName());
         }
+    }
 
+    private void handleContainer(Container self, boolean firstRender) {
+        List<ComponentRenderingManager> managers = firstRender ?
+            generateRenderingManagers(self, true):
+            generateRenderingManagers(self, false);
+        children = managers;
+        for (ComponentRenderingManager manager : managers) {
+            manager.render();
+        }
 
-//        Object self = selfSupplier.get();
-//
-//        // interpret the self correctly to get the swing component.
-//        if (self instanceof RxComponent) {
-//            // pass on this parent render strategy to the component
-//            // and render this component
-//            // ... need to check if this component is the currently rendered component
-//
-//
-//        } else if (self instanceof Container) {
-//            // we need to look for children and render them
-//        } else if (self instanceof Component) {
-//            // we only need to render this component in the parent, using the strategy
-//            swingParentRenderStrategy.accept((Component) self);
-//        } else {
-//            throw new RuntimeException("Unexpected Component type: " + self.getClass().getName());
-//        }
+        swingParentRenderStrategy.accept(self);
+    }
+
+    private Component handleRxComponentSecondTime(ReactComponent self) {
+        // check if we are going to use this component or not
+        if (self.getKey().equals(id)) {
+            // now check for updating props since we're using an existing component
+            if (self.componentShouldUpdate(self.getProps())) {
+                self.getRenderingManager().associatedComponent.componentWillReceiveProps(self.getProps());
+                return self.render(swingParentRenderStrategy);
+            } else {
+                swingParentRenderStrategy.accept(mostRecentRendering);
+                return mostRecentRendering;
+            }
+        }
+
+        return self.render(swingParentRenderStrategy);
+    }
+
+    private List<ComponentRenderingManager> generateRenderingManagers(Container container, boolean firstRender) {
+        Component[] components = container.getComponents();
+        List<ComponentRenderingManager> managers = new ArrayList<>(components.length);
+
+        for (int i = 0; i < components.length; i++) {
+
+            Component component = components[i];
+
+            ComponentRenderingManager manager;
+            if (component instanceof RxComponent) {
+                manager = firstRender ?
+                    generateManagerForRxComponentFirstTime(container, (RxComponent) component, i):
+                    generateManagerForRxComponentSecondTime(container, (RxComponent) component, i);
+
+            } else {
+                manager = generateManagerForSwingComponent(container, component, i);
+            }
+
+            managers.add(manager);
+        }
+
+        return managers;
     }
 
     private List<ComponentRenderingManager> generateRenderingManagersFirstTime(Container container) {
@@ -213,17 +231,7 @@ public class ComponentRenderingManager {
 
     // HAS SIDE EFFECT!!!
     private ComponentRenderingManager generateManagerForRxComponentFirstTime(Container container, RxComponent component, int index) {
-
-//        if (managerAlreadyExists(virtualComponent))
-//            return ((ReactComponent) virtualComponent).getRenderingManager();
-
-        Consumer<Component> swingParentRenderStrategy = (Component newComponent) -> {
-            container.remove(index);
-            container.add(newComponent, index);
-            container.revalidate();
-            container.repaint();
-        };
-
+        Consumer<Component> swingParentRenderStrategy = swingParentRenderStrategy(container, index);
         ((ReactComponent) component).getRenderingManager().setSwingParentRenderStrategy(swingParentRenderStrategy);
 
         return ((ReactComponent) component).getRenderingManager();
@@ -234,13 +242,7 @@ public class ComponentRenderingManager {
         ComponentRenderingManager existingManager = getExistingManager(component);
         if (existingManager != null) {
 
-            Consumer<Component> swingParentRenderStrategy = (Component newComponent) -> {
-                container.remove(index);
-                container.add(newComponent, index);
-                container.revalidate();
-                container.repaint();
-            };
-
+            Consumer<Component> swingParentRenderStrategy = swingParentRenderStrategy(container, index);
             existingManager.setSwingParentRenderStrategy(swingParentRenderStrategy);
 
             // now check for updating props since we're using an existing component
@@ -257,17 +259,25 @@ public class ComponentRenderingManager {
     }
 
     private ComponentRenderingManager generateManagerForSwingComponent(Container container, Component virtualComponent, int index) {
-
         Supplier<Object> selfSupplier = () -> virtualComponent;
+        Consumer<Component> swingParentRenderStrategy = swingParentRenderStrategy(container, index);
+        return new ComponentRenderingManager(swingParentRenderStrategy, selfSupplier);
+    }
 
-        Consumer<Component> swingParentRenderStrategy = (Component newComponent) -> {
-            container.remove(index);
+    private Consumer<Component> swingParentRenderStrategy(Container container, int index) {
+        return (Component newComponent) -> {
+            boolean restoreFocus = container.getComponent(index).hasFocus();
+
             container.add(newComponent, index);
+
+            if (restoreFocus) {
+                newComponent.requestFocus();
+            }
+
+            container.remove(index + 1);
             container.revalidate();
             container.repaint();
         };
-
-        return new ComponentRenderingManager(swingParentRenderStrategy, selfSupplier);
     }
 
     private ComponentRenderingManager getExistingManager(RxComponent rxComponent) {
