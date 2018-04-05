@@ -70,19 +70,9 @@ public class ComponentRenderingManager {
             // pass on this parent render strategy to the component
             // and render this component
             return ((RxComponent) self).render(swingParentRenderStrategy);
-
         } else if (self instanceof Container) {
             // we need to look for children and render them
-
             handleContainer((Container) self, true);
-//            List<ComponentRenderingManager> managers = generateRenderingManagersFirstTime((Container) self);
-//            children = managers;
-//            for (ComponentRenderingManager manager : managers) {
-//                manager.render();
-//            }
-//
-//            swingParentRenderStrategy.accept((Container) self);
-
             return (Container) self;
         } else if (self instanceof Component) {
             // we only need to render this component in the parent, using the strategy
@@ -102,25 +92,7 @@ public class ComponentRenderingManager {
         if (self instanceof RxComponent) {
             // pass on this parent render strategy to the component
             // and render this component
-
             return handleRxComponentSecondTime((ReactComponent) self);
-
-//            // check if we are going to use this component or not
-//            ReactComponent selfComponent = (ReactComponent) self;
-//
-//            if (((RxComponent) self).getKey().equals(id)) {
-//                // now check for updating props since we're using an existing component
-//                if (((ReactComponent) self).componentShouldUpdate(selfComponent.getProps())) {
-//                    selfComponent.getRenderingManager().associatedComponent.componentWillReceiveProps(selfComponent.getProps());
-//                    return selfComponent.render(swingParentRenderStrategy);
-//                } else {
-//                    swingParentRenderStrategy.accept(mostRecentRendering);
-//                    return mostRecentRendering;
-//                }
-//            }
-//
-//            return ((RxComponent) self).render(swingParentRenderStrategy);
-
         } else if (self instanceof Container) {
             // we need to look for children and render them
             handleContainer((Container) self, false);
@@ -176,49 +148,6 @@ public class ComponentRenderingManager {
                     generateManagerForRxComponentFirstTime(container, (RxComponent) component, i):
                     generateManagerForRxComponentSecondTime(container, (RxComponent) component, i);
 
-            } else {
-                manager = generateManagerForSwingComponent(container, component, i);
-            }
-
-            managers.add(manager);
-        }
-
-        return managers;
-    }
-
-    private List<ComponentRenderingManager> generateRenderingManagersFirstTime(Container container) {
-        Component[] components = container.getComponents();
-        List<ComponentRenderingManager> managers = new ArrayList<>(components.length);
-
-        for (int i = 0; i < components.length; i++) {
-
-            Component component = components[i];
-
-            ComponentRenderingManager manager;
-            if (component instanceof RxComponent) {
-                manager = generateManagerForRxComponentFirstTime(container, (RxComponent) component, i);
-
-            } else {
-                manager = generateManagerForSwingComponent(container, component, i);
-            }
-
-            managers.add(manager);
-        }
-
-        return managers;
-    }
-
-    private List<ComponentRenderingManager> generateRenderingManagersSecondTime(Container container) {
-        Component[] components = container.getComponents();
-        List<ComponentRenderingManager> managers = new ArrayList<>(components.length);
-
-        for (int i = 0; i < components.length; i++) {
-
-            Component component = components[i];
-
-            ComponentRenderingManager manager;
-            if (component instanceof RxComponent) {
-                manager = generateManagerForRxComponentSecondTime(container, (RxComponent) component, i);
             } else {
                 manager = generateManagerForSwingComponent(container, component, i);
             }
