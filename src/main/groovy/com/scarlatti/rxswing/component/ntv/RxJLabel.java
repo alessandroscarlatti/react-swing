@@ -1,4 +1,4 @@
-package com.scarlatti.rxswing.component;
+package com.scarlatti.rxswing.component.ntv;
 
 import javax.swing.*;
 import java.util.HashMap;

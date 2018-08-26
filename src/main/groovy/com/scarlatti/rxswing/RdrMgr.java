@@ -1,7 +1,8 @@
 package com.scarlatti.rxswing;
 
-import com.scarlatti.rxswing.change.JLabelChgMgr;
-import com.scarlatti.rxswing.component.RxJLabel;
+import com.scarlatti.rxswing.change.RxJLabelChgMgr;
+import com.scarlatti.rxswing.component.MyCoolComponent;
+import com.scarlatti.rxswing.component.ntv.RxJLabel;
 
 import java.util.List;
 
@@ -31,12 +32,12 @@ public class RdrMgr {
     }
 
     // tmp limitation, only accept jLabel as a change strategy...
-    public void pleaseRdr(TestCmp comp, RxJLabel crntJLabel) {
+    public void pleaseRdr(MyCoolComponent comp) {
         // get the maps...
         RxJLabel newJLabel = comp.render();
 
         // now compare the maps...
-        List<Runnable> changes = JLabelChgMgr.getInstance(crntJLabel, newJLabel).pleaseCreateChgPkt();
+        List<Runnable> changes = RxJLabelChgMgr.getInstance(comp.getRdrdComp(), newJLabel).pleaseCreateChgPkt();
 
         for (Runnable change : changes) {
             change.run();

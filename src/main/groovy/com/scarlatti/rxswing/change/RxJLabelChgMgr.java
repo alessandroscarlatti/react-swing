@@ -1,12 +1,12 @@
 package com.scarlatti.rxswing.change;
 
-import com.scarlatti.rxswing.component.RxJLabel;
+import com.scarlatti.rxswing.component.ntv.RxJLabel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.scarlatti.rxswing.component.RxJLabel.TEXT;
+import static com.scarlatti.rxswing.component.ntv.RxJLabel.TEXT;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -15,15 +15,15 @@ import static com.scarlatti.rxswing.component.RxJLabel.TEXT;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Sunday, 8/26/2018
  */
-public class JLabelChgMgr {
+public class RxJLabelChgMgr {
     private RxJLabel master;
     private RxJLabel other;
 
-    public static JLabelChgMgr getInstance(RxJLabel master, RxJLabel other) {
-        return new JLabelChgMgr(master, other);
+    public static RxJLabelChgMgr getInstance(RxJLabel master, RxJLabel other) {
+        return new RxJLabelChgMgr(master, other);
     }
 
-    private JLabelChgMgr(RxJLabel master, RxJLabel other) {
+    private RxJLabelChgMgr(RxJLabel master, RxJLabel other) {
         this.master = master;
         this.other = other;
     }

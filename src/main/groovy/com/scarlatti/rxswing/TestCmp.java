@@ -1,6 +1,7 @@
 package com.scarlatti.rxswing;
 
-import com.scarlatti.rxswing.component.RxJLabel;
+import com.scarlatti.rxswing.component.MyCoolComponent;
+import com.scarlatti.rxswing.component.ntv.RxJLabel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,35 +17,18 @@ public class TestCmp {
     private JPanel panel;
     private JButton upButton;
     private JButton downButton;
-    private RxJLabel label;
-    private int count = 0; // this is the single object in the state.
+    private MyCoolComponent coolComponent;
 
     public TestCmp() {
-        addLabel();
-        upButton.addActionListener(e -> setState(count + 1));
-        downButton.addActionListener(e -> setState(count - 1));
-    }
-
-    // count is the single object in the state.
-    public void setState(int count) {
-        this.count = count;
-
-        // now initiate render.
-        RdrMgr.getInstance().pleaseRdr(this, label);
-    }
-
-    public RxJLabel render() {
-        return new RxJLabel(String.valueOf(count));
+        coolComponent = new MyCoolComponent();
+        coolComponent.tmpRdrFirstTime();
+        panel.add(coolComponent.getRdrdComp());
+        upButton.addActionListener(e -> coolComponent.setState(coolComponent.getCount() + 1));
+        downButton.addActionListener(e -> coolComponent.setState(coolComponent.getCount() - 1));
     }
 
     public JPanel getPanel() {
         return panel;
-    }
-
-    // this is the tmp one-time creation...
-    private void addLabel() {
-        label = new RxJLabel("0");
-        panel.add(label);
     }
 
     {
