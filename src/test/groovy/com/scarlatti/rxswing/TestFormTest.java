@@ -17,4 +17,11 @@ public class TestFormTest {
             return new TestCmp().getPanel();
         });
     }
+
+    @Test
+    public void runTestFormWithTwoComponents() {
+        TestUtils.displayJPanel(() -> {
+            return new TestCmp2().getPanel();
+        });
+    }
 }

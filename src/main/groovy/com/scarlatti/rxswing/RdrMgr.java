@@ -4,7 +4,9 @@ import com.scarlatti.rxswing.change.RxJLabelChgMgr;
 import com.scarlatti.rxswing.component.MyCoolComponent;
 import com.scarlatti.rxswing.component.ntv.RxJLabel;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -17,21 +19,12 @@ public class RdrMgr {
     private static RdrMgr ourInstance = new RdrMgr();
 
     // this would be replaced by a comprehensive dictionary of all maps???
-//    private RxJLabel tmpRxJLabel;
+    private Map<String, RxJLabel> rdrdComps = new HashMap<>();
 
     public static RdrMgr getInstance() {
         return ourInstance;
     }
 
-    private RdrMgr() {
-        tmpInitMap();
-    }
-
-    private void tmpInitMap() {
-//        tmpRxJLabel = new RxJLabel("0");
-    }
-
-    // tmp limitation, only accept jLabel as a change strategy...
     public void pleaseRdr(MyCoolComponent comp) {
         // get the maps...
         RxJLabel newJLabel = comp.render();
