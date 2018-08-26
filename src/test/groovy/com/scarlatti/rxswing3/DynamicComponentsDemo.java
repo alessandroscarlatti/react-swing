@@ -28,6 +28,8 @@ public class DynamicComponentsDemo {
             // now render an RxSwing component
             // this would simulate the root render statement
 
+            jPanel.getLayout().addLayoutComponent(););
+
             ReactSwing.render(jPanel, new DynamicPanel("panel1"));
 
             return jPanel;

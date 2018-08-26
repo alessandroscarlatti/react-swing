@@ -4,11 +4,13 @@ import com.scarlatti.rxswing3.component.ReactComponent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Map;
 
-public class PropsStaticButton extends ReactComponent<String, Integer> {
+public class PropsStaticButton extends ReactComponent<PropsStaticButton.Props, Integer> {
 
-    public PropsStaticButton(String key, String props) {
-        super(key, props);
+    public PropsStaticButton(String key, String text) {
+        super(key);
+        props = new Props(text);
         state = 0;
     }
 
@@ -17,7 +19,7 @@ public class PropsStaticButton extends ReactComponent<String, Integer> {
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < state; i++) {
-            sb.append(props);
+            sb.append(props.text);
         }
 
         JButton jButton = new JButton(sb.toString());
@@ -27,12 +29,12 @@ public class PropsStaticButton extends ReactComponent<String, Integer> {
     }
 
     @Override
-    public void componentWillReceiveProps(String props) {
+    public void componentWillReceiveProps(Props props) {
         this.props = props;
     }
 
     @Override
-    public boolean componentShouldUpdate(String newProps) {
+    public boolean componentShouldUpdate(Props newProps) {
         return false;
     }
 
@@ -42,5 +44,13 @@ public class PropsStaticButton extends ReactComponent<String, Integer> {
 
     private void click(ActionEvent e) {
         setState(state + 1);
+    }
+
+    static class Props {
+        String text;
+
+        public Props(String text) {
+            this.text = text;
+        }
     }
 }

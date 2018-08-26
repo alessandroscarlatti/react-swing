@@ -3,6 +3,7 @@ package com.scarlatti.rxswing3.render;
 import com.scarlatti.rxswing3.component.ReactComponent;
 import com.scarlatti.rxswing3.component.RxComponent;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,18 @@ public class ComponentRenderingManager {
         this.id = id;
         this.selfSupplier = selfSupplier;
         children = new ArrayList<>();
+
+        JPanel jPanel = new JPanel();
+
+        jPanel.setLayout(new BorderLayout());
+
+        jPanel.add(new JButton("1"));
+        jPanel.add(new JButton("2"));
+
+        jPanel.getComponents();
+
+        jPanel.getComponent(0);
+
     }
 
     public ComponentRenderingManager(Consumer<Component> swingParentRenderStrategy, Supplier<Object> selfSupplier) {
@@ -62,8 +75,11 @@ public class ComponentRenderingManager {
     }
 
     public Component firstRender() {
-        firstRender = false;
         Object self = selfSupplier.get();
+        firstRender = false;
+
+        // TODO try to swap the render strategy
+        Consumer<Component> swingParentRenderStrategy = this.swingParentRenderStrategy;
 
         // interpret the self correctly to get the swing component.
         if (self instanceof RxComponent) {
@@ -149,7 +165,7 @@ public class ComponentRenderingManager {
                     generateManagerForRxComponentSecondTime(container, (RxComponent) component, i);
 
             } else {
-                manager = generateManagerForSwingComponent(container, component, i);
+                manager = generateManagerForSwingComponent(container, component, i, firstRender);
             }
 
             managers.add(manager);
@@ -160,7 +176,7 @@ public class ComponentRenderingManager {
 
     // HAS SIDE EFFECT!!!
     private ComponentRenderingManager generateManagerForRxComponentFirstTime(Container container, RxComponent component, int index) {
-        Consumer<Component> swingParentRenderStrategy = swingParentRenderStrategy(container, index);
+        Consumer<Component> swingParentRenderStrategy = swingParentRenderStrategyFirstTime(container, index);
         ((ReactComponent) component).getRenderingManager().setSwingParentRenderStrategy(swingParentRenderStrategy);
 
         return ((ReactComponent) component).getRenderingManager();
@@ -172,7 +188,7 @@ public class ComponentRenderingManager {
         ComponentRenderingManager existingManager = getExistingManager(component);
         if (existingManager != null) {
 
-            Consumer<Component> swingParentRenderStrategy = swingParentRenderStrategy(container, index);
+            Consumer<Component> swingParentRenderStrategy = swingParentRenderStrategyFirstTime(container, index);
             existingManager.setSwingParentRenderStrategy(swingParentRenderStrategy);
 
             // now check for updating props since we're using an existing component
@@ -188,13 +204,23 @@ public class ComponentRenderingManager {
         return generateManagerForRxComponentFirstTime(container, component, index);
     }
 
-    private ComponentRenderingManager generateManagerForSwingComponent(Container container, Component virtualComponent, int index) {
+    private ComponentRenderingManager generateManagerForSwingComponent(Container container, Component virtualComponent, int index, boolean firstRender) {
         Supplier<Object> selfSupplier = () -> virtualComponent;
-        Consumer<Component> swingParentRenderStrategy = swingParentRenderStrategy(container, index);
+        Consumer<Component> swingParentRenderStrategy = firstRender ?
+            swingParentRenderStrategyFirstTime(container, index) :
+            swingParentRenderStrategySecondTime(container, index);
         return new ComponentRenderingManager(swingParentRenderStrategy, selfSupplier);
     }
 
-    private Consumer<Component> swingParentRenderStrategy(Container container, int index) {
+    private Consumer<Component> swingParentRenderStrategyFirstTime(Container container, int index) {
+        return (Component newComponent) -> {
+            container.add(newComponent, index);
+            container.revalidate();
+            container.repaint();
+        };
+    }
+
+    private Consumer<Component> swingParentRenderStrategySecondTime(Container container, int index) {
         return (Component newComponent) -> {
             boolean restoreFocus = container.getComponent(index).hasFocus();
 
