@@ -1,9 +1,9 @@
 package com.scarlatti.rxswing;
 
-import javax.swing.*;
-import java.util.HashMap;
+import com.scarlatti.rxswing.change.JLabelChgMgr;
+import com.scarlatti.rxswing.component.RxJLabel;
+
 import java.util.List;
-import java.util.Map;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -16,7 +16,7 @@ public class RdrMgr {
     private static RdrMgr ourInstance = new RdrMgr();
 
     // this would be replaced by a comprehensive dictionary of all maps???
-    private Map<String, Object> tmpMap = new HashMap<>();
+//    private RxJLabel tmpRxJLabel;
 
     public static RdrMgr getInstance() {
         return ourInstance;
@@ -27,28 +27,19 @@ public class RdrMgr {
     }
 
     private void tmpInitMap() {
-        tmpMap.put("text", "0");
+//        tmpRxJLabel = new RxJLabel("0");
     }
 
-    // tmp limitation, only accept jLabel.
-    public void pleaseRdr(TestCmp comp, JLabel jLabel) {
+    // tmp limitation, only accept jLabel as a change strategy...
+    public void pleaseRdr(TestCmp comp, RxJLabel crntJLabel) {
         // get the maps...
-        Map<String, Object> crntMap = tmpMap;
-        Map<String, Object> newMap = comp.render();
+        RxJLabel newJLabel = comp.render();
 
         // now compare the maps...
-        List<Runnable> runnables = NtvUiChgMgr.getInstance().pleaseCreateChgPkt(jLabel, crntMap, newMap);
+        List<Runnable> changes = JLabelChgMgr.getInstance(crntJLabel, newJLabel).pleaseCreateChgPkt();
 
-        for (Runnable runnable : runnables) {
-            runnable.run();
+        for (Runnable change : changes) {
+            change.run();
         }
-
-        // now replace the old map with the new map.
-        tmpMap = newMap;
-    }
-
-    // the component will ask the the mgr for the rdrMap.
-    public Map<String, Object> getRdrMap() {
-        return tmpMap;
     }
 }

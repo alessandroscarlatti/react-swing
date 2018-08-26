@@ -1,9 +1,9 @@
 package com.scarlatti.rxswing;
 
+import com.scarlatti.rxswing.component.RxJLabel;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -16,7 +16,7 @@ public class TestCmp {
     private JPanel panel;
     private JButton upButton;
     private JButton downButton;
-    private JLabel label;
+    private RxJLabel label;
     private int count = 0; // this is the single object in the state.
 
     public TestCmp() {
@@ -33,13 +33,8 @@ public class TestCmp {
         RdrMgr.getInstance().pleaseRdr(this, label);
     }
 
-    public Map<String, Object> render() {
-
-        // return something that RxSwing can use as a RenderMap
-        // these are the "properties" of the "dom"
-        Map<String, Object> map = new HashMap<>();
-        map.put("text", count);
-        return map;
+    public RxJLabel render() {
+        return new RxJLabel(String.valueOf(count));
     }
 
     public JPanel getPanel() {
@@ -48,7 +43,7 @@ public class TestCmp {
 
     // this is the tmp one-time creation...
     private void addLabel() {
-        label = new JLabel("what");
+        label = new RxJLabel("0");
         panel.add(label);
     }
 
