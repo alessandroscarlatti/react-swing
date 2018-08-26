@@ -9,7 +9,7 @@ import org.junit.Test;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Saturday, 8/25/2018
  */
-public class TestFormTest {
+public class Tests {
 
     @Test
     public void runTestForm() {

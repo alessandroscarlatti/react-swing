@@ -1,6 +1,7 @@
 package com.scarlatti.rxswing;
 
-import com.scarlatti.rxswing.component.MyCoolComponent;
+import com.scarlatti.rxswing.component.usr.MyCoolComponent;
+import com.scarlatti.rxswing.component.ntv.RxJLabel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,13 +19,15 @@ public class TestCmp2 {
     private JButton downButton;
 
     public TestCmp2() {
-        MyCoolComponent coolComponent1 = new MyCoolComponent();
-        coolComponent1.tmpRdrFirstTime();
-        panel.add(coolComponent1.getRdrdComp());
+        MyCoolComponent coolComponent1 = new MyCoolComponent("comp1");
+        RxJLabel label1 = coolComponent1.tmpRdrFirstTime();
+        panel.add(label1);
+        RdrMgr.getInstance().putNtvComp(coolComponent1.getRenderId(), label1);
 
-        MyCoolComponent coolComponent2 = new MyCoolComponent();
-        coolComponent2.tmpRdrFirstTime();
-        panel.add(coolComponent2.getRdrdComp());
+        MyCoolComponent coolComponent2 = new MyCoolComponent("comp2");
+        RxJLabel label2 = coolComponent2.tmpRdrFirstTime();
+        RdrMgr.getInstance().putNtvComp(coolComponent2.getRenderId(), label2);
+        panel.add(label2);
 
         // go in opposite directions!!!
         upButton.addActionListener(e -> {

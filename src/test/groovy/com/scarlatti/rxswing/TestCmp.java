@@ -1,6 +1,6 @@
 package com.scarlatti.rxswing;
 
-import com.scarlatti.rxswing.component.MyCoolComponent;
+import com.scarlatti.rxswing.component.usr.MyCoolComponent;
 import com.scarlatti.rxswing.component.ntv.RxJLabel;
 
 import javax.swing.*;
@@ -20,9 +20,10 @@ public class TestCmp {
     private MyCoolComponent coolComponent;
 
     public TestCmp() {
-        coolComponent = new MyCoolComponent();
-        coolComponent.tmpRdrFirstTime();
-        panel.add(coolComponent.getRdrdComp());
+        coolComponent = new MyCoolComponent("comp1");
+        RxJLabel label1 = coolComponent.tmpRdrFirstTime();
+        panel.add(label1);
+        RdrMgr.getInstance().putNtvComp(coolComponent.getRenderId(), label1);
         upButton.addActionListener(e -> coolComponent.setState(coolComponent.getCount() + 1));
         downButton.addActionListener(e -> coolComponent.setState(coolComponent.getCount() - 1));
     }

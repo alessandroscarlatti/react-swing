@@ -1,4 +1,4 @@
-package com.scarlatti.rxswing.component;
+package com.scarlatti.rxswing.component.usr;
 
 import com.scarlatti.rxswing.RdrMgr;
 import com.scarlatti.rxswing.component.ntv.RxJLabel;
@@ -15,10 +15,14 @@ import com.scarlatti.rxswing.component.ntv.RxJLabel;
 public class MyCoolComponent {
 
     private int count = 0;  // this is the state...
-    private RxJLabel rdrdComp;
+    private String myNtvRdrId;
 
-    public void tmpRdrFirstTime() {
-        rdrdComp = new RxJLabel("0");
+    public MyCoolComponent(String myNtvRdrId) {
+        this.myNtvRdrId = myNtvRdrId;
+    }
+
+    public RxJLabel tmpRdrFirstTime() {
+        return new RxJLabel("0");
     }
 
     public void setState(int count) {
@@ -32,11 +36,11 @@ public class MyCoolComponent {
         return new RxJLabel(String.valueOf(count));
     }
 
-    public RxJLabel getRdrdComp() {
-        return rdrdComp;
-    }
-
     public int getCount() {
         return count;
+    }
+
+    public String getRenderId() {
+        return myNtvRdrId;
     }
 }

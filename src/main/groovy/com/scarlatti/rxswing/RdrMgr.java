@@ -1,7 +1,7 @@
 package com.scarlatti.rxswing;
 
 import com.scarlatti.rxswing.change.RxJLabelChgMgr;
-import com.scarlatti.rxswing.component.MyCoolComponent;
+import com.scarlatti.rxswing.component.usr.MyCoolComponent;
 import com.scarlatti.rxswing.component.ntv.RxJLabel;
 
 import java.util.HashMap;
@@ -19,10 +19,15 @@ public class RdrMgr {
     private static RdrMgr ourInstance = new RdrMgr();
 
     // this would be replaced by a comprehensive dictionary of all maps???
-    private Map<String, RxJLabel> rdrdComps = new HashMap<>();
+    // this is a map by the renderedInstanceId
+    private Map<String, RxJLabel> myRdrdNtvs = new HashMap<>();
 
     public static RdrMgr getInstance() {
         return ourInstance;
+    }
+
+    public void putNtvComp(String id, RxJLabel label) {
+        myRdrdNtvs.put(id, label);
     }
 
     public void pleaseRdr(MyCoolComponent comp) {
@@ -30,7 +35,8 @@ public class RdrMgr {
         RxJLabel newJLabel = comp.render();
 
         // now compare the maps...
-        List<Runnable> changes = RxJLabelChgMgr.getInstance(comp.getRdrdComp(), newJLabel).pleaseCreateChgPkt();
+        RxJLabel label = myRdrdNtvs.get(comp.getRenderId());
+        List<Runnable> changes = RxJLabelChgMgr.getInstance(label, newJLabel).pleaseCreateChgPkt();
 
         for (Runnable change : changes) {
             change.run();
