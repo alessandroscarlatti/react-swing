@@ -2,6 +2,8 @@ package com.scarlatti.rxswing;
 
 import com.scarlatti.rxswing.component.ntv.RxJButton;
 import com.scarlatti.rxswing.component.ntv.RxJLabel;
+import com.scarlatti.rxswing.component.ntv.RxJPanel;
+import com.scarlatti.rxswing.component.usr.LottoComponent;
 import com.scarlatti.rxswing.component.usr.MyCoolComponent;
 import com.scarlatti.rxswing.component.usr.MyCoolComponent2;
 
@@ -15,30 +17,24 @@ import java.awt.*;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Saturday, 8/25/2018
  */
-public class TestCmp3 {
+public class TestCmp4 {
     private JPanel panel;
     private JButton upButton;
     private JButton downButton;
 
-    public TestCmp3() {
-        MyCoolComponent coolComponent1 = new MyCoolComponent();
-        RxJLabel label1 = coolComponent1.render();
+    public TestCmp4() {
+        LottoComponent coolComponent1 = new LottoComponent();
+        RxJPanel label1 = coolComponent1.render();
         panel.add(label1);
         RdrMger.getInstance().putNtvComp(coolComponent1.getNtvRndId(), label1);
-
-        MyCoolComponent2 coolComponent2 = new MyCoolComponent2();
-        RxJButton label2 = coolComponent2.render();
-        RdrMger.getInstance().putNtvComp(coolComponent2.getNtvRndId(), label2);
-        panel.add(label2);
 
         // go in opposite directions!!!
         upButton.addActionListener(e -> {
             coolComponent1.setState(coolComponent1.getState() + 1);
-            coolComponent2.setState(coolComponent2.getState() - 1);
         });
+
         downButton.addActionListener(e -> {
             coolComponent1.setState(coolComponent1.getState() - 1);
-            coolComponent2.setState(coolComponent2.getState() + 1);
         });
     }
 

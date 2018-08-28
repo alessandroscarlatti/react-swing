@@ -31,4 +31,11 @@ public class Tests {
             return new TestCmp3().getPanel();
         });
     }
+
+    @Test
+    public void runTestFormWithWrappedComponent() {
+        TestUtils.displayJPanel(() -> {
+            return new TestCmp4().getPanel();
+        });
+    }
 }

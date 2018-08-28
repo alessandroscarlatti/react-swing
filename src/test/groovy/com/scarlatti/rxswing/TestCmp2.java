@@ -20,12 +20,12 @@ public class TestCmp2 {
 
     public TestCmp2() {
         MyCoolComponent coolComponent1 = new MyCoolComponent();
-        RxJLabel label1 = coolComponent1.tmpRndFirstTime();
+        RxJLabel label1 = coolComponent1.render();
         panel.add(label1);
         RdrMger.getInstance().putNtvComp(coolComponent1.getNtvRndId(), label1);
 
         MyCoolComponent coolComponent2 = new MyCoolComponent();
-        RxJLabel label2 = coolComponent2.tmpRndFirstTime();
+        RxJLabel label2 = coolComponent2.render();
         RdrMger.getInstance().putNtvComp(coolComponent2.getNtvRndId(), label2);
         panel.add(label2);
 

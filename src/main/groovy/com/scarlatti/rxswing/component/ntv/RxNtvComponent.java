@@ -1,4 +1,6 @@
-package com.scarlatti.rxswing.component;
+package com.scarlatti.rxswing.component.ntv;
+
+import java.util.Map;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -7,15 +9,6 @@ package com.scarlatti.rxswing.component;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Tuesday, 8/28/2018
  */
-public interface RxComponent extends TmpComponent {
-
-    String obtainNtvRndId();
-
-    int getState();
-
-    void setState(int count);
-
-    Object render();
-
-    String getNtvRndId();
+public interface RxNtvComponent {
+    Map<String, Object> getData();
 }

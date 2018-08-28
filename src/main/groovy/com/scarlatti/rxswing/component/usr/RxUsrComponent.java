@@ -1,6 +1,4 @@
-package com.scarlatti.rxswing.component;
-
-import java.util.Map;
+package com.scarlatti.rxswing.component.usr;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -9,6 +7,15 @@ import java.util.Map;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Tuesday, 8/28/2018
  */
-public interface RxNtvComponent {
-    Map<String, Object> getData();
+public interface RxUsrComponent {
+
+    String obtainNtvRndId();
+
+    int getState();
+
+    void setState(int count);
+
+    Object render();
+
+    String getNtvRndId();
 }

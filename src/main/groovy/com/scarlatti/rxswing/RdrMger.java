@@ -2,8 +2,8 @@ package com.scarlatti.rxswing;
 
 import com.scarlatti.rxswing.change.RxJButtonChgMger;
 import com.scarlatti.rxswing.change.RxJLabelChgMger;
-import com.scarlatti.rxswing.component.RxComponent;
-import com.scarlatti.rxswing.component.RxNtvComponent;
+import com.scarlatti.rxswing.component.usr.RxUsrComponent;
+import com.scarlatti.rxswing.component.ntv.RxNtvComponent;
 import com.scarlatti.rxswing.component.ntv.RxJButton;
 import com.scarlatti.rxswing.component.ntv.RxJLabel;
 
@@ -40,7 +40,7 @@ public class RdrMger {
         myRdrdNtvs.put(id, label);
     }
 
-    public void pleaseRdr(RxComponent comp) {
+    public void pleaseRdr(RxUsrComponent comp) {
         // get the maps...
         RxNtvComponent newNtvComponent = (RxNtvComponent) comp.render();
 

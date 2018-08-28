@@ -1,7 +1,6 @@
 package com.scarlatti.rxswing.component.usr;
 
 import com.scarlatti.rxswing.RdrMger;
-import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.ntv.RxJLabel;
 
 /**
@@ -13,7 +12,7 @@ import com.scarlatti.rxswing.component.ntv.RxJLabel;
  */
 // this will eventually include the control buttons AND the label, but for now, just the label.
 // everything else will be simulated from the outside.
-public class MyCoolComponent implements RxComponent {
+public class MyCoolComponent implements RxUsrComponent {
 
     private int count = 0;  // this is the state...
     private String myNtvRndId;
@@ -30,10 +29,6 @@ public class MyCoolComponent implements RxComponent {
     @Override
     public String obtainNtvRndId() {
         return RdrMger.getInstance().getNextNtvRndId();
-    }
-
-    public RxJLabel tmpRndFirstTime() {
-        return new RxJLabel("0");
     }
 
     public void setState(int count) {

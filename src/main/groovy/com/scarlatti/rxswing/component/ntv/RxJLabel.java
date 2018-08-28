@@ -1,7 +1,5 @@
 package com.scarlatti.rxswing.component.ntv;
 
-import com.scarlatti.rxswing.component.RxNtvComponent;
-
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
