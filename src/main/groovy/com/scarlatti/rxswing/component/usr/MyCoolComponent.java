@@ -15,10 +15,16 @@ import com.scarlatti.rxswing.component.ntv.RxJLabel;
 public class MyCoolComponent {
 
     private int count = 0;  // this is the state...
-    private String myNtvRdrId;
+    private String myNtvRndrId;
+    private static int ntvRndrId = 0;
 
-    public MyCoolComponent(String myNtvRdrId) {
-        this.myNtvRdrId = myNtvRdrId;
+    public MyCoolComponent() {
+        this(String.valueOf(ntvRndrId));
+        ntvRndrId++;
+    }
+
+    public MyCoolComponent(String myNtvRndrId) {
+        this.myNtvRndrId = myNtvRndrId;
     }
 
     public RxJLabel tmpRdrFirstTime() {
@@ -41,6 +47,6 @@ public class MyCoolComponent {
     }
 
     public String getRenderId() {
-        return myNtvRdrId;
+        return myNtvRndrId;
     }
 }

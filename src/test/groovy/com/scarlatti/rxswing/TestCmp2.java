@@ -19,12 +19,12 @@ public class TestCmp2 {
     private JButton downButton;
 
     public TestCmp2() {
-        MyCoolComponent coolComponent1 = new MyCoolComponent("comp1");
+        MyCoolComponent coolComponent1 = new MyCoolComponent();
         RxJLabel label1 = coolComponent1.tmpRdrFirstTime();
         panel.add(label1);
         RdrMgr.getInstance().putNtvComp(coolComponent1.getRenderId(), label1);
 
-        MyCoolComponent coolComponent2 = new MyCoolComponent("comp2");
+        MyCoolComponent coolComponent2 = new MyCoolComponent();
         RxJLabel label2 = coolComponent2.tmpRdrFirstTime();
         RdrMgr.getInstance().putNtvComp(coolComponent2.getRenderId(), label2);
         panel.add(label2);

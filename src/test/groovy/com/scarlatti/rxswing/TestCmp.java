@@ -20,7 +20,7 @@ public class TestCmp {
     private MyCoolComponent coolComponent;
 
     public TestCmp() {
-        coolComponent = new MyCoolComponent("comp1");
+        coolComponent = new MyCoolComponent();
         RxJLabel label1 = coolComponent.tmpRdrFirstTime();
         panel.add(label1);
         RdrMgr.getInstance().putNtvComp(coolComponent.getRenderId(), label1);
