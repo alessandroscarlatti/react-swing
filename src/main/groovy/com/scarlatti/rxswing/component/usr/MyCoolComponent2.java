@@ -9,21 +9,20 @@ import com.scarlatti.rxswing.component.ntv.RxJLabel;
  * ___/ _ | / /__ ___ ___ ___ ____  ___/ /______    / __/______ _____/ /__ _/ /_/ /_(_)
  * __/ __ |/ / -_|_-<(_-</ _ `/ _ \/ _  / __/ _ \  _\ \/ __/ _ `/ __/ / _ `/ __/ __/ /
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
- * Sunday, 8/26/2018
+ * Tuesday, 8/28/2018
+ *
+ * the same as the other component, just using a button, not a label.
  */
-// this will eventually include the control buttons AND the label, but for now, just the label.
-// everything else will be simulated from the outside.
-public class MyCoolComponent implements RxComponent {
-
+public class MyCoolComponent2 implements RxComponent {
     private int count = 0;  // this is the state...
     private String myNtvRndId;
     private static int ntvRndId = 0;
 
-    public MyCoolComponent() {
+    public MyCoolComponent2() {
         this.myNtvRndId = obtainNtvRndId();
     }
 
-    public MyCoolComponent(String myNtvRndId) {
+    public MyCoolComponent2(String myNtvRndId) {
         this.myNtvRndId = myNtvRndId;
     }
 

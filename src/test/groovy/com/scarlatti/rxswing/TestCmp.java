@@ -21,11 +21,11 @@ public class TestCmp {
 
     public TestCmp() {
         coolComponent = new MyCoolComponent();
-        RxJLabel label1 = coolComponent.tmpRdrFirstTime();
+        RxJLabel label1 = coolComponent.tmpRndFirstTime();
         panel.add(label1);
-        RdrMgr.getInstance().putNtvComp(coolComponent.getRenderId(), label1);
-        upButton.addActionListener(e -> coolComponent.setState(coolComponent.getCount() + 1));
-        downButton.addActionListener(e -> coolComponent.setState(coolComponent.getCount() - 1));
+        RdrMger.getInstance().putNtvComp(coolComponent.getNtvRndId(), label1);
+        upButton.addActionListener(e -> coolComponent.setState(coolComponent.getState() + 1));
+        downButton.addActionListener(e -> coolComponent.setState(coolComponent.getState() - 1));
     }
 
     public JPanel getPanel() {

@@ -1,12 +1,13 @@
 package com.scarlatti.rxswing.change;
 
+import com.scarlatti.rxswing.component.ntv.RxJButton;
 import com.scarlatti.rxswing.component.ntv.RxJLabel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.scarlatti.rxswing.component.ntv.RxJLabel.TEXT;
+import static com.scarlatti.rxswing.component.ntv.RxJLabel.TEXT_PROPERTY;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -15,15 +16,15 @@ import static com.scarlatti.rxswing.component.ntv.RxJLabel.TEXT;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Sunday, 8/26/2018
  */
-public class RxJLabelChgMgr {
-    private RxJLabel master;
-    private RxJLabel other;
+public class RxJButtonChgMger implements RxNtvChgMger {
+    private RxJButton master;
+    private RxJButton other;
 
-    public static RxJLabelChgMgr getInstance(RxJLabel master, RxJLabel other) {
-        return new RxJLabelChgMgr(master, other);
+    public static RxJButtonChgMger getInstance(RxJButton master, RxJButton other) {
+        return new RxJButtonChgMger(master, other);
     }
 
-    private RxJLabelChgMgr(RxJLabel master, RxJLabel other) {
+    private RxJButtonChgMger(RxJButton master, RxJButton other) {
         this.master = master;
         this.other = other;
     }
@@ -40,7 +41,7 @@ public class RxJLabelChgMgr {
             if (otherMap.containsKey(key)) {
                 if (!crntMap.get(key).equals(otherMap.get(key))) {
                     switch (key) {
-                        case TEXT:
+                        case TEXT_PROPERTY:
                             chgPkt.add(() -> {
                                 master.setText(String.valueOf(otherMap.get(key)));
                                 master.getParent().invalidate();
