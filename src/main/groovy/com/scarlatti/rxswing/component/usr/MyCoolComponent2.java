@@ -2,6 +2,7 @@ package com.scarlatti.rxswing.component.usr;
 
 import com.scarlatti.rxswing.RdrMger;
 import com.scarlatti.rxswing.component.RxComponent;
+import com.scarlatti.rxswing.component.ntv.RxJButton;
 import com.scarlatti.rxswing.component.ntv.RxJLabel;
 
 /**
@@ -10,13 +11,12 @@ import com.scarlatti.rxswing.component.ntv.RxJLabel;
  * __/ __ |/ / -_|_-<(_-</ _ `/ _ \/ _  / __/ _ \  _\ \/ __/ _ `/ __/ / _ `/ __/ __/ /
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Tuesday, 8/28/2018
- *
+ * <p>
  * the same as the other component, just using a button, not a label.
  */
 public class MyCoolComponent2 implements RxComponent {
     private int count = 0;  // this is the state...
     private String myNtvRndId;
-    private static int ntvRndId = 0;
 
     public MyCoolComponent2() {
         this.myNtvRndId = obtainNtvRndId();
@@ -28,12 +28,11 @@ public class MyCoolComponent2 implements RxComponent {
 
     @Override
     public String obtainNtvRndId() {
-        ntvRndId++;
-        return String.valueOf(ntvRndId);
+        return RdrMger.getInstance().getNextNtvRndId();
     }
 
-    public RxJLabel tmpRndFirstTime() {
-        return new RxJLabel("0");
+    public RxJButton tmpRndFirstTime() {
+        return new RxJButton("0");
     }
 
     public void setState(int count) {
@@ -43,8 +42,8 @@ public class MyCoolComponent2 implements RxComponent {
         RdrMger.getInstance().pleaseRdr(this);
     }
 
-    public RxJLabel render() {
-        return new RxJLabel(String.valueOf(count));
+    public RxJButton render() {
+        return new RxJButton(String.valueOf(count));
     }
 
     public int getState() {

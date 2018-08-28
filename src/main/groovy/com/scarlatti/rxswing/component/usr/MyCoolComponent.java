@@ -29,8 +29,7 @@ public class MyCoolComponent implements RxComponent {
 
     @Override
     public String obtainNtvRndId() {
-        ntvRndId++;
-        return String.valueOf(ntvRndId);
+        return RdrMger.getInstance().getNextNtvRndId();
     }
 
     public RxJLabel tmpRndFirstTime() {

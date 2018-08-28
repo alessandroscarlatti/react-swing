@@ -24,4 +24,11 @@ public class Tests {
             return new TestCmp2().getPanel();
         });
     }
+
+    @Test
+    public void runTestFormWithTwoTypesOfComponents() {
+        TestUtils.displayJPanel(() -> {
+            return new TestCmp3().getPanel();
+        });
+    }
 }

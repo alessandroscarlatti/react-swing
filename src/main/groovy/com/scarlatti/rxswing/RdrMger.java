@@ -21,6 +21,7 @@ import java.util.Map;
  */
 public class RdrMger {
     private static RdrMger ourInstance = new RdrMger();
+    private static int ntvRndId = 0;
 
     // this would be replaced by a comprehensive dictionary of all maps???
     // this is a map by the renderedInstanceId
@@ -30,24 +31,29 @@ public class RdrMger {
         return ourInstance;
     }
 
+    public String getNextNtvRndId() {
+        ntvRndId++;
+        return String.valueOf(ntvRndId);
+    }
+
     public void putNtvComp(String id, RxNtvComponent label) {
         myRdrdNtvs.put(id, label);
     }
 
     public void pleaseRdr(RxComponent comp) {
         // get the maps...
-        RxNtvComponent newJLabel = (RxNtvComponent) comp.render();
+        RxNtvComponent newNtvComponent = (RxNtvComponent) comp.render();
 
         // now compare the maps...
-        RxNtvComponent label = myRdrdNtvs.get(comp.getNtvRndId());
+        RxNtvComponent prevNtvComponent = myRdrdNtvs.get(comp.getNtvRndId());
 
         List<Runnable> changes = new ArrayList<>();
 
-        if (label instanceof RxJLabel)
-            changes = RxJLabelChgMger.getInstance((RxJLabel)label, (RxJLabel)newJLabel).pleaseCreateChgPkt();
+        if (prevNtvComponent instanceof RxJLabel)
+            changes = RxJLabelChgMger.getInstance((RxJLabel)prevNtvComponent, (RxJLabel)newNtvComponent).pleaseCreateChgPkt();
 
-        if (label instanceof RxJButton)
-            changes = RxJButtonChgMger.getInstance((RxJButton)label, (RxJButton)newJLabel).pleaseCreateChgPkt();
+        if (prevNtvComponent instanceof RxJButton)
+            changes = RxJButtonChgMger.getInstance((RxJButton)prevNtvComponent, (RxJButton)newNtvComponent).pleaseCreateChgPkt();
 
         for (Runnable change : changes) {
             change.run();
