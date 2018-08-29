@@ -48,6 +48,15 @@ public class RdrMger {
     public void pleaseRdr(RxUsrComponent comp) {
         RxNtvComponent prevNtvComponent = myRdrdNtvs.get(comp.getNtvRndId());
         RxNtvComponent newNtvComponent = (RxNtvComponent) comp.render();
+
+        // todo don't I need to update the "virtualDom" associated to the
+        // rendered native component?
+        // it's working now, just because I am happening to not suddenly
+        // replace the data. (the state had been 1, and then the text
+        // got changed to 2 (Because there was a difference).  Then the
+        // state gets changed back to 1, and there is no text change
+        // because that's not a different state than the last saved
+        // virtual dom this manager had).
         List<Runnable> changes = pleaseMakeChgPktFromAToB(prevNtvComponent, newNtvComponent);
         for (Runnable change : changes) {
             change.run();

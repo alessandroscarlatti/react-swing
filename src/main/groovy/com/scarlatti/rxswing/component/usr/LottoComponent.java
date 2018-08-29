@@ -4,8 +4,6 @@ import com.scarlatti.rxswing.RdrMger;
 import com.scarlatti.rxswing.component.ntv.RxJButton;
 import com.scarlatti.rxswing.component.ntv.RxJPanel;
 
-import javax.swing.border.CompoundBorder;
-
 /**
  * ______    __                         __           ____             __     __  __  _
  * ___/ _ | / /__ ___ ___ ___ ____  ___/ /______    / __/______ _____/ /__ _/ /_/ /_(_)
