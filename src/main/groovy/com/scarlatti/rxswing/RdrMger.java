@@ -2,10 +2,12 @@ package com.scarlatti.rxswing;
 
 import com.scarlatti.rxswing.change.RxJButtonChgMger;
 import com.scarlatti.rxswing.change.RxJLabelChgMger;
-import com.scarlatti.rxswing.component.usr.RxUsrComponent;
-import com.scarlatti.rxswing.component.ntv.RxNtvComponent;
+import com.scarlatti.rxswing.change.RxJPanelChgMger;
 import com.scarlatti.rxswing.component.ntv.RxJButton;
 import com.scarlatti.rxswing.component.ntv.RxJLabel;
+import com.scarlatti.rxswing.component.ntv.RxJPanel;
+import com.scarlatti.rxswing.component.ntv.RxNtvComponent;
+import com.scarlatti.rxswing.component.usr.RxUsrComponent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +33,9 @@ public class RdrMger {
         return ourInstance;
     }
 
+    private RdrMger() {
+    }
+
     public String getNextNtvRndId() {
         ntvRndId++;
         return String.valueOf(ntvRndId);
@@ -41,24 +46,27 @@ public class RdrMger {
     }
 
     public void pleaseRdr(RxUsrComponent comp) {
-        // get the maps...
-        RxNtvComponent newNtvComponent = (RxNtvComponent) comp.render();
-
-        // now compare the maps...
         RxNtvComponent prevNtvComponent = myRdrdNtvs.get(comp.getNtvRndId());
-
-        List<Runnable> changes = new ArrayList<>();
-
-        if (prevNtvComponent instanceof RxJLabel)
-            changes = RxJLabelChgMger.getInstance((RxJLabel)prevNtvComponent, (RxJLabel)newNtvComponent).pleaseCreateChgPkt();
-
-        if (prevNtvComponent instanceof RxJButton)
-            changes = RxJButtonChgMger.getInstance((RxJButton)prevNtvComponent, (RxJButton)newNtvComponent).pleaseCreateChgPkt();
-
+        RxNtvComponent newNtvComponent = (RxNtvComponent) comp.render();
+        List<Runnable> changes = pleaseMakeChgPktFromAToB(prevNtvComponent, newNtvComponent);
         for (Runnable change : changes) {
             change.run();
         }
     }
 
+    public List<Runnable> pleaseMakeChgPktFromAToB(RxNtvComponent a, RxNtvComponent b) {
+        List<Runnable> changes = new ArrayList<>();
+
+        if (a instanceof RxJLabel)
+            changes = RxJLabelChgMger.getInstance((RxJLabel) a, (RxJLabel) b).pleaseCreateChgPkt();
+
+        if (a instanceof RxJButton)
+            changes = RxJButtonChgMger.getInstance((RxJButton) a, (RxJButton) b).pleaseCreateChgPkt();
+
+        if (a instanceof RxJPanel)
+            changes = RxJPanelChgMger.getInstance((RxJPanel) a, (RxJPanel) b).pleaseCreateChgPkt();
+
+        return changes;
+    }
 
 }

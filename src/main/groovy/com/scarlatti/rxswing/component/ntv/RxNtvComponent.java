@@ -1,5 +1,7 @@
 package com.scarlatti.rxswing.component.ntv;
 
+import com.scarlatti.rxswing.component.NtvBoundComponent;
+
 import java.util.Map;
 
 /**
@@ -9,6 +11,11 @@ import java.util.Map;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Tuesday, 8/28/2018
  */
-public interface RxNtvComponent {
+public interface RxNtvComponent extends NtvBoundComponent {
+    @Override
+    default String getType() {
+        return RxNtvComponent.class.getSimpleName();
+    }
+
     Map<String, Object> getData();
 }

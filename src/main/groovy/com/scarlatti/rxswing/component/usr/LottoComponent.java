@@ -19,6 +19,16 @@ public class LottoComponent implements RxUsrComponent {
 
     private int count = 0;  // this is the state...
     private String myNtvRndId;
+    private ChildIdIncrementer idIncrementer = new ChildIdIncrementer();
+
+    public LottoComponent() {
+        this.myNtvRndId = obtainNtvRndId();
+    }
+
+    @Override
+    public String getNextChildNtvRndId() {
+        return idIncrementer.getNextId();
+    }
 
     @Override
     public String obtainNtvRndId() {
@@ -43,11 +53,17 @@ public class LottoComponent implements RxUsrComponent {
         RxJPanel panel = new RxJPanel();
         panel.setBorder(new CompoundBorder());
         panel.add(new RxJButton(String.valueOf(count)));
+        panel.add(new MyCoolComponent());
         return panel;
     }
 
     @Override
     public String getNtvRndId() {
         return myNtvRndId;
+    }
+
+    @Override
+    public void setNtvRndId(String id) {
+        myNtvRndId = id;
     }
 }

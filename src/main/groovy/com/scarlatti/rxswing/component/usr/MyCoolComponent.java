@@ -16,7 +16,7 @@ public class MyCoolComponent implements RxUsrComponent {
 
     private int count = 0;  // this is the state...
     private String myNtvRndId;
-    private static int ntvRndId = 0;
+    private ChildIdIncrementer idIncrementer = new ChildIdIncrementer();
 
     public MyCoolComponent() {
         this.myNtvRndId = obtainNtvRndId();
@@ -29,6 +29,11 @@ public class MyCoolComponent implements RxUsrComponent {
     @Override
     public String obtainNtvRndId() {
         return RdrMger.getInstance().getNextNtvRndId();
+    }
+
+    @Override
+    public String getNextChildNtvRndId() {
+        return idIncrementer.getNextId();
     }
 
     public void setState(int count) {
@@ -48,5 +53,10 @@ public class MyCoolComponent implements RxUsrComponent {
 
     public String getNtvRndId() {
         return myNtvRndId;
+    }
+
+    @Override
+    public void setNtvRndId(String id) {
+        myNtvRndId = id;
     }
 }

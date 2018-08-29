@@ -15,6 +15,8 @@ public class RxJLabel extends JLabel implements RxNtvComponent {
 
     public static final String TEXT_PROPERTY = "text";
     private Map<String, Object> data;
+    private String ntvRndId;
+    private ChildIdIncrementer idIncrementer = new ChildIdIncrementer();
 
     public RxJLabel(String text, Icon icon, int horizontalAlignment) {
         super(text, icon, horizontalAlignment);
@@ -37,6 +39,21 @@ public class RxJLabel extends JLabel implements RxNtvComponent {
     }
 
     public RxJLabel() {
+    }
+
+    @Override
+    public String getNextChildNtvRndId() {
+        return idIncrementer.getNextId();
+    }
+
+    @Override
+    public String getNtvRndId() {
+        return ntvRndId;
+    }
+
+    @Override
+    public void setNtvRndId(String id) {
+        ntvRndId = id;
     }
 
     public Map<String, Object> getData() {

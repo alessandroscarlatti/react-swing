@@ -15,6 +15,7 @@ import com.scarlatti.rxswing.component.ntv.RxJButton;
 public class MyCoolComponent2 implements RxUsrComponent {
     private int count = 0;  // this is the state...
     private String myNtvRndId;
+    private ChildIdIncrementer idIncrementer = new ChildIdIncrementer();
 
     public MyCoolComponent2() {
         this.myNtvRndId = obtainNtvRndId();
@@ -27,6 +28,11 @@ public class MyCoolComponent2 implements RxUsrComponent {
     @Override
     public String obtainNtvRndId() {
         return RdrMger.getInstance().getNextNtvRndId();
+    }
+
+    @Override
+    public String getNextChildNtvRndId() {
+        return idIncrementer.getNextId();
     }
 
     public void setState(int count) {
@@ -46,5 +52,10 @@ public class MyCoolComponent2 implements RxUsrComponent {
 
     public String getNtvRndId() {
         return myNtvRndId;
+    }
+
+    @Override
+    public void setNtvRndId(String id) {
+        myNtvRndId = id;
     }
 }

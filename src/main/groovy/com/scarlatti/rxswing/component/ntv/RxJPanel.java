@@ -1,10 +1,13 @@
 package com.scarlatti.rxswing.component.ntv;
 
+import com.scarlatti.rxswing.component.NtvBoundComponent;
 import com.scarlatti.rxswing.component.usr.RxUsrComponent;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,6 +18,11 @@ import java.util.Map;
  * Tuesday, 8/28/2018
  */
 public class RxJPanel extends JPanel implements RxNtvComponent {
+
+    private String ntvRndId;
+    private ChildIdIncrementer idIncrementer = new ChildIdIncrementer();
+
+    private List<NtvBoundComponent> children = new ArrayList<>();
 
     public RxJPanel(LayoutManager layout, boolean isDoubleBuffered) {
         super(layout, isDoubleBuffered);
@@ -31,9 +39,36 @@ public class RxJPanel extends JPanel implements RxNtvComponent {
     public RxJPanel() {
     }
 
+    @Override
+    public String getNextChildNtvRndId() {
+        return idIncrementer.getNextId();
+    }
+
+    @Override
+    public String getNtvRndId() {
+        return ntvRndId;
+    }
+
+    @Override
+    public void setNtvRndId(String id) {
+        ntvRndId = id;
+    }
+
+    @Override
+    public Component add(Component component) {
+        if (component instanceof NtvBoundComponent) {
+            markComponentAsNextChild((NtvBoundComponent) component);
+            children.add((NtvBoundComponent) component);
+        }
+
+        return super.add(component);
+    }
+
     public Component add(RxUsrComponent comp) {
-        // todo this is where we would need to use first-time-rendering features.
-        return null;
+        NtvBoundComponent renderedComponent = (NtvBoundComponent) comp.render();
+        markComponentAsNextChild(renderedComponent);
+        children.add(renderedComponent);
+        return super.add((Component) renderedComponent);
     }
 
     private Map<String, Object> data = new HashMap<>();
@@ -41,5 +76,10 @@ public class RxJPanel extends JPanel implements RxNtvComponent {
     @Override
     public Map<String, Object> getData() {
         return data;
+    }
+
+    @Override
+    public List<NtvBoundComponent> getChildren() {
+        return children;
     }
 }

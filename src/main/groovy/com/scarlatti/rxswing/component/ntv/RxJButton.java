@@ -15,6 +15,9 @@ public class RxJButton extends JButton implements RxNtvComponent {
 
     public static final String TEXT_PROPERTY = "text";
     private Map<String, Object> data;
+    private String ntvRndId;
+    private ChildIdIncrementer idIncrementer = new ChildIdIncrementer();
+
 
     public RxJButton() {
     }
@@ -34,6 +37,22 @@ public class RxJButton extends JButton implements RxNtvComponent {
     public RxJButton(String text, Icon icon) {
         super(text, icon);
     }
+
+    @Override
+    public String getNextChildNtvRndId() {
+        return idIncrementer.getNextId();
+    }
+
+    @Override
+    public String getNtvRndId() {
+        return ntvRndId;
+    }
+
+    @Override
+    public void setNtvRndId(String id) {
+        ntvRndId = id;
+    }
+
 
     public Map<String, Object> getData() {
         return data;
