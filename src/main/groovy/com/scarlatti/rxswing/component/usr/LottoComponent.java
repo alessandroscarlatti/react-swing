@@ -51,10 +51,20 @@ public class LottoComponent implements RxUsrComponent {
     @Override
     public RxJPanel render() {
         RxJPanel panel = new RxJPanel();
-        panel.setBorder(new CompoundBorder());
         panel.add(new RxJButton(String.valueOf(count)));
+        panel.add(new RxJButton(String.valueOf(count + 1)));
         panel.add(new MyCoolComponent());
+        panel.add(new MyCoolComponent());
+        panel.add(this::innerPanel);
         return panel;
+    }
+
+    private RxJPanel innerPanel() {
+        RxJPanel innerPanel = new RxJPanel();
+        innerPanel.add(new RxJButton(String.valueOf(count)));
+        innerPanel.add(new RxJButton(String.valueOf(count + 1)));
+        innerPanel.add(new MyCoolComponent());
+        return innerPanel;
     }
 
     @Override

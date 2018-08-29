@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -66,6 +67,13 @@ public class RxJPanel extends JPanel implements RxNtvComponent {
 
     public Component add(RxUsrComponent comp) {
         NtvBoundComponent renderedComponent = (NtvBoundComponent) comp.render();
+        markComponentAsNextChild(renderedComponent);
+        children.add(renderedComponent);
+        return super.add((Component) renderedComponent);
+    }
+
+    public Component add(Supplier<NtvBoundComponent> supplier) {
+        NtvBoundComponent renderedComponent = supplier.get();
         markComponentAsNextChild(renderedComponent);
         children.add(renderedComponent);
         return super.add((Component) renderedComponent);
