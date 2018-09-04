@@ -38,4 +38,11 @@ public class Tests {
             return new TestCmp4().getPanel();
         });
     }
+
+    @Test
+    public void runTestFormUsingRxCreateElement() {
+        TestUtils.displayJPanel(() -> {
+            return new TestCmp5().getPanel();
+        });
+    }
 }

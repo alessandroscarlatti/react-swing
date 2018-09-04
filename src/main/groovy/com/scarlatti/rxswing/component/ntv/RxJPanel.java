@@ -1,5 +1,6 @@
 package com.scarlatti.rxswing.component.ntv;
 
+import com.scarlatti.rxswing.Rx;
 import com.scarlatti.rxswing.component.NtvBoundComponent;
 import com.scarlatti.rxswing.component.usr.RxUsrComponent;
 
@@ -65,6 +66,26 @@ public class RxJPanel extends JPanel implements RxNtvComponent {
         return super.add(component);
     }
 
+    public Component add(Rx.RxSwCompDef def) {
+        // do something with the element definition...
+        // perhaps...
+        // what is this definition's class/class-index key?
+        // once we have the key...
+        // use the key to ask if we have a previously rendered
+        // component to use to re-render.
+        // if so, use it.  If not, create a new component
+        // and ask it to render itself.
+
+        // just create a new instance for now; that's equivalent to what's already being done.
+        try {
+            RxUsrComponent component = def.getClazz().newInstance();
+            return add(component);
+        } catch (Exception e) {
+            throw new RuntimeException("Error instantiating component of class " + def.getClazz(), e);
+        }
+    }
+
+    // todo this will need to get more generic...later...
     public Component add(RxUsrComponent comp) {
         NtvBoundComponent renderedComponent = (NtvBoundComponent) comp.render();
         markComponentAsNextChild(renderedComponent);

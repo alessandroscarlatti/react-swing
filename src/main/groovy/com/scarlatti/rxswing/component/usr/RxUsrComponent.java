@@ -1,5 +1,6 @@
 package com.scarlatti.rxswing.component.usr;
 
+import com.scarlatti.rxswing.Rx;
 import com.scarlatti.rxswing.component.NtvBoundComponent;
 
 /**
@@ -18,9 +19,28 @@ public interface RxUsrComponent extends NtvBoundComponent {
 
     String obtainNtvRndId();
 
+    // Map<String, List<RxUsrComponent>> getUsrComps();
+
+    /**
+     * May not call this twice!
+     * @return the class/class-index key for this usr component
+     */
+    default String obtainCompDefKey(Rx.RxSwCompDef def) {
+           // need to access a render-time running list of defs...
+        return null;
+    }
+
     int getState();
 
     void setState(int count);
+
+    // needs to be synchronized...
+    default Object internalWrapRender() {
+
+        // build running list of defs...
+
+        return render();
+    }
 
     Object render();
 }

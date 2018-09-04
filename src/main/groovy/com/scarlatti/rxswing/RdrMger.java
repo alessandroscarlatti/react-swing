@@ -49,6 +49,7 @@ public class RdrMger {
         RxNtvComponent prevNtvComponent = myRdrdNtvs.get(comp.getNtvRndId());
         RxNtvComponent newNtvComponent = (RxNtvComponent) comp.render();
 
+        // todo yes...this is real!
         // todo don't I need to update the "virtualDom" associated to the
         // rendered native component?
         // it's working now, just because I am happening to not suddenly
@@ -57,6 +58,9 @@ public class RdrMger {
         // state gets changed back to 1, and there is no text change
         // because that's not a different state than the last saved
         // virtual dom this manager had).
+        // ACTUALLY (9.2.2018) this is not an issue, because the myRdrdNtvs.get() is returning
+        // the ACTUAL swing instance, which, as an RxJLabel, is keeping a map of its Rx data,
+        // which will be updated atomically as the render manager performs the change packet updates.
         List<Runnable> changes = pleaseMakeChgPktFromAToB(prevNtvComponent, newNtvComponent);
         for (Runnable change : changes) {
             change.run();
