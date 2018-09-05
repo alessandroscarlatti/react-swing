@@ -1,11 +1,7 @@
 package com.scarlatti.rxswing;
 
-import com.scarlatti.rxswing.component.ntv.RxJButton;
-import com.scarlatti.rxswing.component.ntv.RxJLabel;
 import com.scarlatti.rxswing.component.ntv.RxJPanel;
 import com.scarlatti.rxswing.component.usr.LottoComponent;
-import com.scarlatti.rxswing.component.usr.MyCoolComponent;
-import com.scarlatti.rxswing.component.usr.MyCoolComponent2;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +22,7 @@ public class TestCmp4 {
         LottoComponent coolComponent1 = new LottoComponent();
         RxJPanel label1 = coolComponent1.render();
         panel.add(label1);
-        RdrMger.getInstance().putNtvComp(coolComponent1.getNtvRndId(), label1);
+        RdrMger.getInstance().mountComponent(coolComponent1.getNtvRndId(), label1);
 
         // go in opposite directions!!!
         upButton.addActionListener(e -> {

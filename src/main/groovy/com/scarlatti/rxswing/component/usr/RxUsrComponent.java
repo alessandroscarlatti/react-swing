@@ -2,6 +2,7 @@ package com.scarlatti.rxswing.component.usr;
 
 import com.scarlatti.rxswing.Rx;
 import com.scarlatti.rxswing.component.NtvBoundComponent;
+import com.scarlatti.rxswing.component.RxComponent;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -13,7 +14,7 @@ import com.scarlatti.rxswing.component.NtvBoundComponent;
 public interface RxUsrComponent extends NtvBoundComponent {
 
     @Override
-    default String getType() {
+    default Class<? extends RxComponent> getType() {
         return RxUsrComponent.class.getSimpleName();
     }
 

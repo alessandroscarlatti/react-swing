@@ -15,7 +15,7 @@ import static com.scarlatti.rxswing.component.ntv.RxJLabel.TEXT_PROPERTY;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Sunday, 8/26/2018
  */
-public class RxJLabelChgMger implements RxNtvChgMger {
+public class RxJLabelChgMger implements RxChgMger {
     private RxJLabel master;
     private RxJLabel other;
 

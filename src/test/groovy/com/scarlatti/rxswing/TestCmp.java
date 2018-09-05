@@ -23,7 +23,7 @@ public class TestCmp {
         coolComponent = new MyCoolComponent();
         RxJLabel label1 = coolComponent.render();
         panel.add(label1);
-        RdrMger.getInstance().putNtvComp(coolComponent.getNtvRndId(), label1);
+        RdrMger.getInstance().mountComponent(coolComponent.getNtvRndId(), label1);
         upButton.addActionListener(e -> coolComponent.setState(coolComponent.getState() + 1));
         downButton.addActionListener(e -> coolComponent.setState(coolComponent.getState() - 1));
     }

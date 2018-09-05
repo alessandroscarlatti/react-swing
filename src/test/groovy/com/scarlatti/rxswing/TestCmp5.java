@@ -1,7 +1,6 @@
 package com.scarlatti.rxswing;
 
 import com.scarlatti.rxswing.component.ntv.RxJPanel;
-import com.scarlatti.rxswing.component.usr.LottoComponent;
 import com.scarlatti.rxswing.component.usr.LottoComponent2;
 
 import javax.swing.*;
@@ -23,7 +22,7 @@ public class TestCmp5 {
         LottoComponent2 lottoComponent2 = new LottoComponent2();
         RxJPanel jp = lottoComponent2.render();
         panel.add(jp);
-        RdrMger.getInstance().putNtvComp(lottoComponent2.getNtvRndId(), jp);
+        RdrMger.getInstance().mountComponent(lottoComponent2.getNtvRndId(), jp);
 
         // go in opposite directions!!!
         upButton.addActionListener(e -> {

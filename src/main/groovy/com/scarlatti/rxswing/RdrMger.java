@@ -1,15 +1,12 @@
 package com.scarlatti.rxswing;
 
-import com.scarlatti.rxswing.change.RxJButtonChgMger;
-import com.scarlatti.rxswing.change.RxJLabelChgMger;
-import com.scarlatti.rxswing.change.RxJPanelChgMger;
-import com.scarlatti.rxswing.component.ntv.RxJButton;
-import com.scarlatti.rxswing.component.ntv.RxJLabel;
-import com.scarlatti.rxswing.component.ntv.RxJPanel;
-import com.scarlatti.rxswing.component.ntv.RxNtvComponent;
-import com.scarlatti.rxswing.component.usr.RxUsrComponent;
+import com.scarlatti.rxswing.change.DomChangeManager;
+import com.scarlatti.rxswing.component.RxComponent;
+import com.scarlatti.rxswing.component.RxNtvComponent;
+import com.scarlatti.rxswing.inspect.RxDom;
+import com.scarlatti.rxswing.inspect.RxNode;
 
-import java.util.ArrayList;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,11 +20,10 @@ import java.util.Map;
  */
 public class RdrMger {
     private static RdrMger ourInstance = new RdrMger();
-    private static int ntvRndId = 0;
 
-    // this would be replaced by a comprehensive dictionary of all maps???
-    // this is a map by the renderedInstanceId
-    private Map<String, RxNtvComponent> myRdrdNtvs = new HashMap<>();
+    private Map<String, Component> myMtdSwingComps = new HashMap<>();
+    private Map<String, RxComponent> myMtdRxComps = new HashMap<>();
+    private RxDom myDom = new RxDom();
 
     public static RdrMger getInstance() {
         return ourInstance;
@@ -36,50 +32,96 @@ public class RdrMger {
     private RdrMger() {
     }
 
-    public String getNextNtvRndId() {
-        ntvRndId++;
-        return String.valueOf(ntvRndId);
-    }
+    public void pleaseRdr(RxComponent comp) {
 
-    public void putNtvComp(String id, RxNtvComponent label) {
-        myRdrdNtvs.put(id, label);
-    }
+        // get a rxNode tree...
+        RxNode newDom = comp.render();
 
-    public void pleaseRdr(RxUsrComponent comp) {
-        RxNtvComponent prevNtvComponent = myRdrdNtvs.get(comp.getNtvRndId());
-        RxNtvComponent newNtvComponent = (RxNtvComponent) comp.render();
+        // now fully resolve the dom...
+        // we can skip this for the basic implementation with a single layer of component...
+        //////////....
 
-        // todo yes...this is real!
-        // todo don't I need to update the "virtualDom" associated to the
-        // rendered native component?
-        // it's working now, just because I am happening to not suddenly
-        // replace the data. (the state had been 1, and then the text
-        // got changed to 2 (Because there was a difference).  Then the
-        // state gets changed back to 1, and there is no text change
-        // because that's not a different state than the last saved
-        // virtual dom this manager had).
-        // ACTUALLY (9.2.2018) this is not an issue, because the myRdrdNtvs.get() is returning
-        // the ACTUAL swing instance, which, as an RxJLabel, is keeping a map of its Rx data,
-        // which will be updated atomically as the render manager performs the change packet updates.
-        List<Runnable> changes = pleaseMakeChgPktFromAToB(prevNtvComponent, newNtvComponent);
+        // OK.  Now the new dom is fully resolved.
+        // time to create a change manager for it.
+        List<Runnable> changes = new DomChangeManager(myDom.getRoot(), newDom).pleaseCreateChgPkt();
+
+        // now run the changes
         for (Runnable change : changes) {
             change.run();
         }
+
+        // now replace the old dom with the new dom
+        myDom.setRoot(newDom);
     }
 
-    public List<Runnable> pleaseMakeChgPktFromAToB(RxNtvComponent a, RxNtvComponent b) {
-        List<Runnable> changes = new ArrayList<>();
+    // take a partially resolved rxNode tree and finish resolving it...
+    // returns a new RxNode...
+    // Resolve the declarations into concrete components by retrieving or creating them
+    // keep going until the node component type is one of the native components
+    private RxNode fullyRndrRxNodeRcrsv(RxNode rxNode) {
 
-        if (a instanceof RxJLabel)
-            changes = RxJLabelChgMger.getInstance((RxJLabel) a, (RxJLabel) b).pleaseCreateChgPkt();
+        // check to see if this is a native component.
+        // if it is, we're done.  Just return the node.
+        RxComponent comp = myMtdRxComps.putIfAbsent(rxNode.getId(), instantiateRxCompFromNode(rxNode));
+        if (RxNtvComponent.class.isAssignableFrom(rxNode.getType())) {
+            Component swingComp = instantiateRxNtvCompFromNode(comp);
+            myMtdSwingComps.putIfAbsent(rxNode.getId(), swingComp);
+            return rxNode;
+        } else {
+            // modify the tree...
+            // todo what about props???
+            rxNode.setType(comp.getType());
+            return fullyRndrRxNodeRcrsv(rxNode);
+        }
 
-        if (a instanceof RxJButton)
-            changes = RxJButtonChgMger.getInstance((RxJButton) a, (RxJButton) b).pleaseCreateChgPkt();
 
-        if (a instanceof RxJPanel)
-            changes = RxJPanelChgMger.getInstance((RxJPanel) a, (RxJPanel) b).pleaseCreateChgPkt();
+        // but if it's not a native component, we need to resolve it.
+        // this means instantiate it as a component....
 
-        return changes;
+//        for (RxNode child : rxNode.getChildren()) {
+//            // check to see if the the component id is already in the mounted components map
+//            // if not, create it
+//            myMtdRxComps.putIfAbsent(child.getId(), instantiateRxCompFromNode(child));
+//
+//            // now we call render on that component...
+//            RxComponent comp = myMtdRxComps.get(child.getId());
+//            RxNode node = comp.render();
+//            child.
+//        }
     }
 
+    private RxComponent instantiateRxCompFromNode(RxNode n) {
+        try {
+            RxComponent comp = n.getType().newInstance();
+            comp.setProps(n.getProps());
+            return comp;
+        } catch (Exception e) {
+            throw new RuntimeException("Error instantiating component of class " + n.getType().getName(), e);
+        }
+    }
+
+    private Component instantiateRxNtvCompFromNode(RxComponent n) {
+        try {
+            // this could also be done using a "NtvComponentImpl" class.
+            Component comp = ((RxNtvComponent) n).getNtvType().newInstance();
+
+            // ...add swing-specific properties
+            // (maybe using a "ntvComponentImpl" class.
+            return comp;
+        } catch (Exception e) {
+            throw new RuntimeException("Error instantiating component of class " + n.getType().getName(), e);
+        }
+    }
+
+    public Map<String, Component> getMtdSwingComps() {
+        return myMtdSwingComps;
+    }
+
+    public Map<String, RxComponent> getMtdRxComps() {
+        return myMtdRxComps;
+    }
+
+    public RxDom getCurrentDom() {
+        return myDom;
+    }
 }

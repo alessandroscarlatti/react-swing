@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface NtvBoundComponent {
 
-    String getType();
+    Class<? extends RxComponent> getType();
 
     String getNtvRndId();
 

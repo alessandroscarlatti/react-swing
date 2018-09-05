@@ -15,7 +15,7 @@ import java.util.List;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Sunday, 8/26/2018
  */
-public class RxJPanelChgMger implements RxNtvChgMger {
+public class RxJPanelChgMger implements RxChgMger {
     private RxJPanel master;
     private RxJPanel other;
 

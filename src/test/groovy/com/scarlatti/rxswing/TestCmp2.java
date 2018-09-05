@@ -22,11 +22,11 @@ public class TestCmp2 {
         MyCoolComponent coolComponent1 = new MyCoolComponent();
         RxJLabel label1 = coolComponent1.render();
         panel.add(label1);
-        RdrMger.getInstance().putNtvComp(coolComponent1.getNtvRndId(), label1);
+        RdrMger.getInstance().mountComponent(coolComponent1.getNtvRndId(), label1);
 
         MyCoolComponent coolComponent2 = new MyCoolComponent();
         RxJLabel label2 = coolComponent2.render();
-        RdrMger.getInstance().putNtvComp(coolComponent2.getNtvRndId(), label2);
+        RdrMger.getInstance().mountComponent(coolComponent2.getNtvRndId(), label2);
         panel.add(label2);
 
         // go in opposite directions!!!

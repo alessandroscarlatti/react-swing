@@ -22,21 +22,21 @@ public class InspectionUtil {
     private InspectionUtil() {
     }
 
-    public InspectedRxComponent getInspectionTree(NtvBoundComponent component) {
-        InspectedRxComponent root;
+    // this may not be necessary...render will have already created the tree...
+    public RxNode getInspectionTree(NtvBoundComponent component) {
+        RxNode root;
         if (component instanceof RxNtvComponent)
-            root = new InspectedRxComponent();
+            root = new RxNode();
         else
             throw new IllegalStateException("Unrecognized component " + component);
 
         root.setType(component.getType());
-        root.setImplType(component.getClass().getSimpleName());
         root.setId(component.getNtvRndId());
-        root.setData(((RxNtvComponent) component).getData());
+        root.setProps(((RxNtvComponent) component).getData());
 
         if (component instanceof Container) {
             for (NtvBoundComponent child : component.getChildren()) {
-                InspectedRxComponent childInspected = getInspectionTree(child);
+                RxNode childInspected = getInspectionTree(child);
                 root.getChildren().add(childInspected);
             }
         }

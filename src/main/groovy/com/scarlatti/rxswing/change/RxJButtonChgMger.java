@@ -1,7 +1,6 @@
 package com.scarlatti.rxswing.change;
 
 import com.scarlatti.rxswing.component.ntv.RxJButton;
-import com.scarlatti.rxswing.component.ntv.RxJLabel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ import static com.scarlatti.rxswing.component.ntv.RxJLabel.TEXT_PROPERTY;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Sunday, 8/26/2018
  */
-public class RxJButtonChgMger implements RxNtvChgMger {
+public class RxJButtonChgMger implements RxChgMger {
     private RxJButton master;
     private RxJButton other;
 

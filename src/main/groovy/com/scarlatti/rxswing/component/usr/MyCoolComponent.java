@@ -44,6 +44,17 @@ public class MyCoolComponent implements RxUsrComponent {
     }
 
     public RxJLabel render() {
+
+//        new Thread(() -> {
+//            try {
+//                Thread.sleep(2000);
+//                System.out.println("changing state...");
+//                setState(count + 1);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }).start();
+
         return new RxJLabel(String.valueOf(count));
     }
 
