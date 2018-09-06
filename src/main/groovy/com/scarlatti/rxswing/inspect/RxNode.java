@@ -2,9 +2,7 @@ package com.scarlatti.rxswing.inspect;
 
 import com.scarlatti.rxswing.component.RxComponent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -18,8 +16,66 @@ import java.util.function.Predicate;
 public class RxNode {
     private String id;
     private Class<? extends RxComponent> type;
-    private Map<String, Object> props;
+    private Map<String, Object> props = new HashMap<>();
     private List<RxNode> children = new ArrayList<>();
+
+    public RxNode() {
+    }
+
+    public RxNode(Class<? extends RxComponent> clazz) {
+        type = clazz;
+    }
+
+    public RxNode(RxNode other) {
+        this.id = other.id;
+        this.type = other.type;
+        this.props = other.props;
+        this.children = other.children;
+    }
+
+    public RxNode props(String key, Object value) {
+        props.put(key, value);
+        return this;
+    }
+
+    public RxNode child(RxNode child) {
+        children.add(child);
+        return this;
+    }
+
+    public RxNode children(RxNode... children) {
+        for (RxNode child : children) {
+            this.child(child);
+        }
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RxNode rxNode = (RxNode) o;
+        return Objects.equals(id, rxNode.id) &&
+            Objects.equals(type, rxNode.type) &&
+            Objects.equals(props, rxNode.props) &&
+            Objects.equals(children, rxNode.children);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, type, props, children);
+    }
+
+    @Override
+    public String toString() {
+        return "RxNode{" +
+            "id='" + id + '\'' +
+            ", type=" + type +
+            ", props=" + props +
+            ", children=" + children +
+            '}';
+    }
 
     public void walkTree(Consumer<RxNode> consumer) {
         walkTree(new Visitor() {

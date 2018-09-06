@@ -15,7 +15,8 @@ public interface RxUsrComponent extends NtvBoundComponent {
 
     @Override
     default Class<? extends RxComponent> getType() {
-        return RxUsrComponent.class.getSimpleName();
+        return null;
+//        return RxUsrComponent.class.getSimpleName();
     }
 
     String obtainNtvRndId();

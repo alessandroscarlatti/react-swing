@@ -1,6 +1,10 @@
 package com.scarlatti.rxswing;
 
+import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.usr.RxUsrComponent;
+import com.scarlatti.rxswing.inspect.RxNode;
+
+import java.util.function.Consumer;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -10,6 +14,24 @@ import com.scarlatti.rxswing.component.usr.RxUsrComponent;
  * Sunday, 9/2/2018
  */
 public class Rx {
+
+    public static RxNode node(Class<? extends RxComponent> clazz) {
+        RxNode rxNode = new RxNode();
+        rxNode.setType(clazz);
+        return rxNode;
+    }
+
+    public static RxNode node(Class<? extends RxComponent> clazz, Object props) {
+        RxNode rxNode = new RxNode();
+        rxNode.setType(clazz);
+        return rxNode;
+    }
+
+    public static RxNode node(Class<? extends RxComponent> clazz, Consumer<RxNode> consumer) {
+        RxNode node = node(clazz);
+        consumer.accept(node);
+        return node;
+    }
 
     // we can use a lambda overload to allow the user to supply a value if props are required.
     public static RxSwCompDef createElement(Class<? extends RxUsrComponent> clazz) {

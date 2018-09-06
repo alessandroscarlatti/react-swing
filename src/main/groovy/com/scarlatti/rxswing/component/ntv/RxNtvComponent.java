@@ -15,7 +15,7 @@ import java.util.Map;
 public interface RxNtvComponent extends NtvBoundComponent {
     @Override
     default Class<? extends RxComponent> getType() {
-        return RxNtvComponent.class.getSimpleName();
+        return null;  // a hack to get it to compile...
     }
 
     Map<String, Object> getData();

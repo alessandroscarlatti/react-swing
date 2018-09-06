@@ -28,7 +28,8 @@ public class MyCoolComponent implements RxUsrComponent {
 
     @Override
     public String obtainNtvRndId() {
-        return RdrMger.getInstance().getNextNtvRndId();
+        return null;
+//        return RdrMger.getInstance().getNextNtvRndId();
     }
 
     @Override
@@ -40,7 +41,7 @@ public class MyCoolComponent implements RxUsrComponent {
         this.count = count;
 
         // now initiate render.
-        RdrMger.getInstance().pleaseRdr(this);
+//        RdrMger.getInstance().pleaseRdr(this);
     }
 
     public RxJLabel render() {

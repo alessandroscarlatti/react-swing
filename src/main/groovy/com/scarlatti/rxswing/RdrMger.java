@@ -62,6 +62,8 @@ public class RdrMger {
 
         // check to see if this is a native component.
         // if it is, we're done.  Just return the node.
+        // todo this is not OK, because we are actually invoking
+        // the constructors every time!!! in instantiateRxCompFromNode
         RxComponent comp = myMtdRxComps.putIfAbsent(rxNode.getId(), instantiateRxCompFromNode(rxNode));
         if (RxNtvComponent.class.isAssignableFrom(rxNode.getType())) {
             Component swingComp = instantiateRxNtvCompFromNode(comp);

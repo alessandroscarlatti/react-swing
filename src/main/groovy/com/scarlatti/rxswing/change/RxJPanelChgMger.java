@@ -39,12 +39,14 @@ public class RxJPanelChgMger implements RxChgMger {
         for (int i = 0; i < masterChildren.size(); i++) {
             // create a change packet for this component
             // (we are assuming it also exists in the other component)
-            List<Runnable> childChanges = RdrMger.getInstance().pleaseMakeChgPktFromAToB(
-                ((RxNtvComponent) masterChildren.get(i)),
-                ((RxNtvComponent) otherChildren.get(i))
-            );
 
-            chgPkt.addAll(childChanges);
+            // getting it to compile...commenting it all out...
+//            List<Runnable> childChanges = RdrMger.getInstance().pleaseMakeChgPktFromAToB(
+//                ((RxNtvComponent) masterChildren.get(i)),
+//                ((RxNtvComponent) otherChildren.get(i))
+//            );
+
+//            chgPkt.addAll(childChanges);
         }
 
         return chgPkt;

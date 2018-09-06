@@ -30,7 +30,8 @@ public class LottoComponent implements RxUsrComponent {
 
     @Override
     public String obtainNtvRndId() {
-        return RdrMger.getInstance().getNextNtvRndId();
+        return null;
+//        return RdrMger.getInstance().getNextNtvRndId();
     }
 
     @Override
@@ -43,7 +44,7 @@ public class LottoComponent implements RxUsrComponent {
         this.count = count;
 
         // now initiate render.
-        RdrMger.getInstance().pleaseRdr(this);
+//        RdrMger.getInstance().pleaseRdr(this);
     }
 
     @Override

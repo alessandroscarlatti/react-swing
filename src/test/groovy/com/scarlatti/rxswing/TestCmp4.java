@@ -22,7 +22,7 @@ public class TestCmp4 {
         LottoComponent coolComponent1 = new LottoComponent();
         RxJPanel label1 = coolComponent1.render();
         panel.add(label1);
-        RdrMger.getInstance().mountComponent(coolComponent1.getNtvRndId(), label1);
+//        RdrMger.getInstance().mountComponent(coolComponent1.getNtvRndId(), label1);
 
         // go in opposite directions!!!
         upButton.addActionListener(e -> {
