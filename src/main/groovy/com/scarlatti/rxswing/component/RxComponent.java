@@ -5,7 +5,6 @@ import com.scarlatti.rxswing.inspect.RxNode;
 import com.scarlatti.rxswing.inspect.RxNodeRealizer;
 
 import java.util.List;
-import java.util.Objects;
 
 import static com.scarlatti.rxswing.inspect.RxNodeRealizer.formatId;
 
@@ -39,13 +38,13 @@ public class RxComponent {
 
     public class ComponentLifecycleManager {
 
-        private String id;
+        private String myId;
         private ComponentStore mtdCompStre;
         private RxComponent component = RxComponent.this;
 
         public void addToStore(ComponentStore store, String id) {
             mtdCompStre = store;
-            this.id = id;
+            myId = id;
             mtdCompStre.put(id, component);
         }
 
@@ -63,7 +62,7 @@ public class RxComponent {
             RxNode node = component.render();
 
             // assign an id to this node, so we can add it to the component store
-            node.setId(formatId(id, node.getType(), 0));
+            node.setId(formatId(myId, node.getType(), 0));
 
             RxNodeRealizer realizer = new RxNodeRealizer(node, mtdCompStre);
             return realizer.realizeNode();
