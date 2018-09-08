@@ -5,6 +5,7 @@ import com.scarlatti.rxswing.inspect.RxNode;
 import com.scarlatti.rxswing.inspect.RxNodeRealizer;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * ______    __                         __           ____             __     __  __  _

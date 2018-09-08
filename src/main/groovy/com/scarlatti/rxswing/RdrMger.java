@@ -93,14 +93,15 @@ public class RdrMger {
     }
 
     public RxComponent instantiateRxCompFromNode(RxNode n) {
-        try {
-            RxComponent comp = n.getType().newInstance();
-            comp.setProps(n.getProps());
-            comp.getLifecycleManager().addToStore(myMtdRxComps, n.getId());
-            return comp;
-        } catch (Exception e) {
-            throw new RuntimeException("Error instantiating component of class " + n.getType().getName(), e);
-        }
+        return null;
+//        try {
+//            RxComponent comp = n.getType().newInstance();
+//            comp.setProps(n.getProps());
+//            comp.getLifecycleManager().addToStore(myMtdRxComps, n.getId());
+//            return comp;
+//        } catch (Exception e) {
+//            throw new RuntimeException("Error instantiating component of class " + n.getType().getName(), e);
+//        }
     }
 
     private Component instantiateRxNtvCompFromNode(RxComponent n) {

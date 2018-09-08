@@ -38,6 +38,11 @@ public class RxNode {
         return this;
     }
 
+    public RxNode id(String id) {
+        setId(id);
+        return this;
+    }
+
     public RxNode child(RxNode child) {
         children.add(child);
         return this;
@@ -80,19 +85,14 @@ public class RxNode {
     public void walkTree(Consumer<RxNode> consumer) {
         walkTree(new Visitor() {
             @Override
-            public void accept(RxNode rxNode) {
-                consumer.accept(rxNode);
+            protected void visitNode(RxNode node) {
+                consumer.accept(node);
             }
         });
     }
 
     public void walkTree(Visitor visitor) {
-        visitor.accept(this);
-        if (visitor.keepWalking) {
-            for (RxNode child : children) {
-                child.walkTree(visitor);
-            }
-        }
+        visitor.visitNode(this);
     }
 
     public RxNode searchTree(Predicate<RxNode> predicate) {
@@ -102,11 +102,15 @@ public class RxNode {
         return visitor.getResult();
     }
 
-    public static abstract class Visitor implements Consumer<RxNode> {
-        private boolean keepWalking = true;
+    public static abstract class Visitor {
+        protected void visitNode(RxNode node) {
+            for (RxNode child : node.getChildren()) {
+                visitChildNode(child, node);
+            }
+        }
 
-        protected void stopWalking() {
-            keepWalking = false;
+        protected void visitChildNode(RxNode child, RxNode parent) {
+            visitNode(child);
         }
     }
 
@@ -120,11 +124,13 @@ public class RxNode {
         }
 
         @Override
-        public void accept(RxNode rxNode) {
+        public void visitNode(RxNode rxNode) {
             if (predicate.test(rxNode)) {
                 result = rxNode;
-                stopWalking();
+                return;
             }
+
+            super.visitNode(rxNode);
         }
 
         protected RxNode getResult() {

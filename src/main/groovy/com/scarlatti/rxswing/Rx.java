@@ -22,9 +22,7 @@ public class Rx {
     }
 
     public static RxNode node(Class<? extends RxComponent> clazz, Object props) {
-        RxNode rxNode = new RxNode();
-        rxNode.setType(clazz);
-        return rxNode;
+        return node(clazz);
     }
 
     public static RxNode node(Class<? extends RxComponent> clazz, Consumer<RxNode> consumer) {

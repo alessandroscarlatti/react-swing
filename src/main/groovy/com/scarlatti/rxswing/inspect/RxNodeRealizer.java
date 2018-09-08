@@ -1,7 +1,6 @@
 package com.scarlatti.rxswing.inspect;
 
 import com.scarlatti.rxswing.ComponentStore;
-import com.scarlatti.rxswing.RdrMger;
 import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.RxNtvComponent;
 
@@ -44,9 +43,11 @@ public class RxNodeRealizer {
                 // there are children within this node...
                 // realize them...
                 RxNode newNode = new RxNode();
+                newNode.setId(node.getId());
                 newNode.setType(node.getType());
 
                 for (RxNode child : node.getChildren()) {
+                    child.setId(computeChildId(child, newNode));
                     RxNode newChild = realizeNodeRecursive(child);
                     newNode.getChildren().add(newChild);
                 }
@@ -59,13 +60,11 @@ public class RxNodeRealizer {
             // the children are just "data" RxNodes passed to the actual component.
             // they are not actually rendered until they are really needed, if they ever are.
             // at that time they become part of the tree, so they are rendered.
-            RxComponent comp = componentStore.get(node.getId());
-
             // if the component is not already a mounted instance, create one and mount it.
-            if (comp == null) {
-                // create the component instance
-                comp = RdrMger.getInstance().instantiateRxCompFromNode(node);
-            }
+            RxComponent comp = componentStore.putIfAbsent(
+                node.getId(),
+                () -> instantiateRxCompFromNode(node)
+            );
 
             // this is all the props, except for the children!!!
             // we should look at combining those into a RxProps class, perhaps...
@@ -78,7 +77,38 @@ public class RxNodeRealizer {
 
             List<RxNode> nextChildren = node.getChildren();
             RxNode realizedNode = comp.getLifecycleManager().performRender(nextProps, nextChildren);
-            return realizeNodeRecursive(realizedNode);
+            realizedNode.setId(computeChildId(realizedNode, node));
+
+            // the node we have just realized is now to become the single child of this usr component node.
+            RxNode copy = new RxNode(node);
+            copy.child(realizedNode);
+
+            return copy;
+        }
+    }
+
+    private String computeChildId(RxNode child, RxNode newParent) {
+        // find nth-of-type index.
+        long nthOfTypeIndex = newParent.getChildren()
+            .stream()
+            .filter(node -> node.getType() == child.getType())
+            .count();
+
+        return formatId(newParent.getId(), child.getType(), nthOfTypeIndex);
+    }
+
+    public static String formatId(String parentId, Class<? extends RxComponent> childClass, long nthOfTypeIndex) {
+        return parentId + "/" + childClass.getName() + "[" + nthOfTypeIndex + "]";
+    }
+
+    private RxComponent instantiateRxCompFromNode(RxNode n) {
+        try {
+            RxComponent comp = n.getType().newInstance();
+            comp.setProps(n.getProps());
+            comp.getLifecycleManager().addToStore(componentStore, n.getId());
+            return comp;
+        } catch (Exception e) {
+            throw new RuntimeException("Error instantiating component of class " + n.getType().getName(), e);
         }
     }
 }

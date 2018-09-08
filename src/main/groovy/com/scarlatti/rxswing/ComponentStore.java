@@ -4,6 +4,8 @@ import com.scarlatti.rxswing.component.RxComponent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
@@ -18,18 +20,57 @@ public class ComponentStore {
     private Map<String, RxComponent> components = new HashMap<>();
 
     public RxComponent put(String key, RxComponent value) {
-        return components.put(key, value);
+        validateKey(key);
+        return components.putIfAbsent(key, value);
     }
 
     public RxComponent putIfAbsent(String key, RxComponent value) {
+        validateKey(key);
         return components.putIfAbsent(key, value);
     }
 
     public RxComponent putIfAbsent(String key, Supplier<RxComponent> value) {
-        return components.compute(key, (k, v) -> v == null ? value.get() : v);
+        validateKey(key);
+
+        // don't use #compute()! it will mess up the internal state of the map!
+        if (components.containsKey(key)) {
+            return components.get(key);
+        }
+        else {
+            return components.put(key, value.get());
+        }
     }
 
     public RxComponent get(String key) {
         return components.get(key);
+    }
+
+    /**
+     * The id should look like:
+     *
+     * it's a class/index sort of thing, referenced from the root node.
+     *
+     * so for:
+     * <div>
+     *     <MyComp1>
+     *         <div>
+     *              <Button></Button>
+     *              <Button></Button>
+     *         </div>
+     *     </MyComp1>
+     * </div>
+     *
+     * we should have a store with:
+     *
+     * /div[0]
+     * /div[0]/MyComp1[0]
+     * /div[0]/MyComp1[0]/div[0]
+     * /div[0]/MyComp1[0]/div[0]/Button[0]
+     * /div[0]/MyComp1[0]/div[0]/Button[1]
+     *
+     * @param key the key for the component being added to the store.
+     */
+    private void validateKey(String key) {
+        Objects.requireNonNull(key, "Each component in the store must have an id");
     }
 }
