@@ -1,13 +1,10 @@
 package com.scarlatti.rxswing.inspect;
 
-import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.RxNtvComponent;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -26,7 +23,7 @@ public class RxNodeTrimmer {
         this.root = root;
     }
 
-    // retrun a new rxNode...
+    // return a new rxNode...
     public List<RxNode> trim() {
         return internalTrimRecursive(root);
     }

@@ -1,6 +1,10 @@
 package com.scarlatti.rxswing.component;
 
+import com.scarlatti.rxswing.ComponentStore;
 import com.scarlatti.rxswing.inspect.RxNode;
+import com.scarlatti.rxswing.inspect.RxNodeRealizer;
+
+import java.util.List;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -12,6 +16,7 @@ import com.scarlatti.rxswing.inspect.RxNode;
 public class RxComponent {
 
     private Object props;
+    private ComponentLifecycleManager lifecycleManager = new ComponentLifecycleManager();
 
     public Class<? extends RxComponent> getType() {
         return this.getClass();
@@ -23,5 +28,47 @@ public class RxComponent {
 
     public RxNode render() {
         return null;
+    }
+
+    public static RxComponent init(Class<? extends RxComponent> clazz) {
+        try {
+            return clazz.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Error instantiating component of class " + clazz, e);
+        }
+    }
+
+    public ComponentLifecycleManager getLifecycleManager() {
+        return lifecycleManager;
+    }
+
+    public class ComponentLifecycleManager {
+
+        private String id;
+        private ComponentStore mtdCompStre;
+        private RxComponent component = RxComponent.this;
+
+        public void mntInStore(ComponentStore store, String id) {
+            mtdCompStre = store;
+            this.id = id;
+            mtdCompStre.put(id, component);
+        }
+
+        // do this when it's time to render the component instance
+        // does this mean it's a recursive render?  Yes.
+        // the "children" case was where the node is just data that
+        // might never be used.
+        // here we are returning the single rendered child of the
+        // usr component. That means we might reach back to the node realizer.
+        public RxNode performRender(Object nextProps, List<RxNode> children) {
+
+            // need to pass props
+            // for right now, no lifecycle checks.  Just pass in the props.
+            component.setProps(nextProps);
+            RxNode node = component.render();
+
+            RxNodeRealizer realizer = new RxNodeRealizer(node, mtdCompStre);
+            return realizer.realizeNode();
+        }
     }
 }
