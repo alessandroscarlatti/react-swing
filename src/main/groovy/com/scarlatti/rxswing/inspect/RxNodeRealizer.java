@@ -1,6 +1,7 @@
 package com.scarlatti.rxswing.inspect;
 
 import com.scarlatti.rxswing.ComponentStore;
+import com.scarlatti.rxswing.RdrMger;
 import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.RxNtvComponent;
 
@@ -63,8 +64,7 @@ public class RxNodeRealizer {
             // if the component is not already a mounted instance, create one and mount it.
             if (comp == null) {
                 // create the component instance
-                comp = RxComponent.init(node.getType());
-                comp.getLifecycleManager().mntInStore(componentStore, node.getId());
+                comp = RdrMger.getInstance().instantiateRxCompFromNode(node);
             }
 
             // this is all the props, except for the children!!!

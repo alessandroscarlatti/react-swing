@@ -4,6 +4,7 @@ import com.scarlatti.rxswing.component.RxComponent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -18,6 +19,14 @@ public class ComponentStore {
 
     public RxComponent put(String key, RxComponent value) {
         return components.put(key, value);
+    }
+
+    public RxComponent putIfAbsent(String key, RxComponent value) {
+        return components.putIfAbsent(key, value);
+    }
+
+    public RxComponent putIfAbsent(String key, Supplier<RxComponent> value) {
+        return components.compute(key, (k, v) -> v == null ? value.get() : v);
     }
 
     public RxComponent get(String key) {

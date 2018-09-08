@@ -22,7 +22,7 @@ public class RdrMger {
     private static RdrMger ourInstance = new RdrMger();
 
     private Map<String, Component> myMtdSwingComps = new HashMap<>();
-    private Map<String, RxComponent> myMtdRxComps = new HashMap<>();
+    private ComponentStore myMtdRxComps = new ComponentStore();
     private RxDom myDom = new RxDom();
 
     public static RdrMger getInstance() {
@@ -92,10 +92,11 @@ public class RdrMger {
 //        }
     }
 
-    private RxComponent instantiateRxCompFromNode(RxNode n) {
+    public RxComponent instantiateRxCompFromNode(RxNode n) {
         try {
             RxComponent comp = n.getType().newInstance();
             comp.setProps(n.getProps());
+            comp.getLifecycleManager().addToStore(myMtdRxComps, n.getId());
             return comp;
         } catch (Exception e) {
             throw new RuntimeException("Error instantiating component of class " + n.getType().getName(), e);
@@ -119,7 +120,7 @@ public class RdrMger {
         return myMtdSwingComps;
     }
 
-    public Map<String, RxComponent> getMtdRxComps() {
+    public ComponentStore getMtdRxComps() {
         return myMtdRxComps;
     }
 

@@ -30,14 +30,6 @@ public class RxComponent {
         return null;
     }
 
-    public static RxComponent init(Class<? extends RxComponent> clazz) {
-        try {
-            return clazz.newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException("Error instantiating component of class " + clazz, e);
-        }
-    }
-
     public ComponentLifecycleManager getLifecycleManager() {
         return lifecycleManager;
     }
@@ -48,7 +40,7 @@ public class RxComponent {
         private ComponentStore mtdCompStre;
         private RxComponent component = RxComponent.this;
 
-        public void mntInStore(ComponentStore store, String id) {
+        public void addToStore(ComponentStore store, String id) {
             mtdCompStre = store;
             this.id = id;
             mtdCompStre.put(id, component);
