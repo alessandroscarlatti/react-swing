@@ -34,6 +34,14 @@ public class RxNodeRealizer {
     }
 
     private RxNode realizeNodeRecursive(RxNode node) {
+
+        // if the component is not already a mounted instance, create one and mount it.
+        // instantiate usr AND native components into the component store
+        RxComponent comp = componentStore.putIfAbsent(
+            node.getId(),
+            () -> instantiateRxCompFromNode(node)
+        );
+
         if (RxNtvComponent.class.isAssignableFrom(node.getType())) {
             if (node.getChildren().size() == 0) {
                 // this is the tip of the branch.
@@ -60,11 +68,6 @@ public class RxNodeRealizer {
             // the children are just "data" RxNodes passed to the actual component.
             // they are not actually rendered until they are really needed, if they ever are.
             // at that time they become part of the tree, so they are rendered.
-            // if the component is not already a mounted instance, create one and mount it.
-            RxComponent comp = componentStore.putIfAbsent(
-                node.getId(),
-                () -> instantiateRxCompFromNode(node)
-            );
 
             // this is all the props, except for the children!!!
             // we should look at combining those into a RxProps class, perhaps...
@@ -76,6 +79,8 @@ public class RxNodeRealizer {
             // They may never be rendered!!!
 
             List<RxNode> nextChildren = node.getChildren();
+
+            // this realized node would be perhaps a native component that was rendered by a usr component
             RxNode realizedNode = comp.getLifecycleManager().performRender(nextProps, nextChildren);
             realizedNode.setId(computeChildId(realizedNode, node));
 

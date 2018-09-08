@@ -70,7 +70,8 @@ public class RxNodeRealizerTest {
                 .child(Rx.node(Button.class).id(button2)));
 
         assertEquals(expectedNode, realizedNode);
+        assertEquals(5, componentStore.size());
         assertTrue(componentStore.get(comp1_0).getType() == MyComp1.class);
-        assertTrue(componentStore.get(comp1_1).getType() == MyComp1.class);
+        assertTrue(componentStore.get("rootNode").getType() == Div.class);
     }
 }

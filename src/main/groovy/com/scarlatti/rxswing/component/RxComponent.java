@@ -7,6 +7,8 @@ import com.scarlatti.rxswing.inspect.RxNodeRealizer;
 import java.util.List;
 import java.util.Objects;
 
+import static com.scarlatti.rxswing.inspect.RxNodeRealizer.formatId;
+
 /**
  * ______    __                         __           ____             __     __  __  _
  * ___/ _ | / /__ ___ ___ ___ ____  ___/ /______    / __/______ _____/ /__ _/ /_/ /_(_)
@@ -59,6 +61,9 @@ public class RxComponent {
             // for right now, no lifecycle checks.  Just pass in the props.
             component.setProps(nextProps);
             RxNode node = component.render();
+
+            // assign an id to this node, so we can add it to the component store
+            node.setId(formatId(id, node.getType(), 0));
 
             RxNodeRealizer realizer = new RxNodeRealizer(node, mtdCompStre);
             return realizer.realizeNode();

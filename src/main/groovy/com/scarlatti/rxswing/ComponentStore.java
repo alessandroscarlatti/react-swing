@@ -45,6 +45,10 @@ public class ComponentStore {
         return components.get(key);
     }
 
+    public int size() {
+        return components.size();
+    }
+
     /**
      * The id should look like:
      *
