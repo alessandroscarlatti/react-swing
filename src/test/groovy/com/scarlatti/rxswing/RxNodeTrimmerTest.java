@@ -42,6 +42,9 @@ public class RxNodeTrimmerTest {
     private static class MyComp1 extends RxComponent {
     }
 
+    private static class MyComp2 extends RxComponent {
+    }
+
     @Test
     public void trimTree() {
         RxNode original = new RxNode(RxJPanel.class)
@@ -53,38 +56,42 @@ public class RxNodeTrimmerTest {
         RxNode expected = new RxNode(RxJPanel.class)
             .child(new RxNode(RxJButton.class));
 
-        List<RxNode> trimmed = new RxNodeTrimmer(original).trim();
+        RxNode trimmed = new RxNodeTrimmer(original).trim();
 
-        assertEquals(Collections.singletonList(expected), trimmed);
+        assertEquals(expected, trimmed);
     }
 
     @Test
     public void trimTreeWithUsrOuterComponent() {
+        // this...is not a legal example of a fully rendered tree
+        // this is not fully rendered.
         RxNode original =
             new RxNode(MyComp1.class)
-                .child(
-                    new RxNode(RxJPanel.class)
-                        .child(new RxNode(MyComp1.class)
-                            .child(new RxNode(RxJButton.class)
+                .child(Rx.node(RxJPanel.class)
+                    .child(
+                        new RxNode(MyComp2.class)
+                            .child(new RxNode(RxJPanel.class)
+                                .child(new RxNode(RxJButton.class)
+                                )
                             )
-                        )
-                )
-                .child(
-                    new RxNode(RxJPanel.class)
-                        .child(new RxNode(MyComp1.class)
-                            .child(new RxNode(RxJButton.class)
+                    )
+                    .child(
+                        new RxNode(MyComp2.class)
+                            .child(new RxNode(RxJPanel.class)
+                                .child(new RxNode(RxJButton.class)
+                                )
                             )
-                        )
-                );
+                    ));
 
-        List<RxNode> expected = Arrays.asList(
-            new RxNode(RxJPanel.class)
-                .child(new RxNode(RxJButton.class)),
-            new RxNode(RxJPanel.class)
-                .child(new RxNode(RxJButton.class))
-        );
+        RxNode expected = new RxNode(RxJPanel.class)
+            .child(Rx.node(RxJPanel.class)
+                .child(Rx.node(RxJButton.class))
+            )
+            .child(Rx.node(RxJPanel.class)
+                .child(Rx.node(RxJButton.class))
+            );
 
-        List<RxNode> trimmed = new RxNodeTrimmer(original).trim();
+        RxNode trimmed = new RxNodeTrimmer(original).trim();
 
         assertEquals(expected, trimmed);
     }
