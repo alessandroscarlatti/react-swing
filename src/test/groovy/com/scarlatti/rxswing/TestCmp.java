@@ -25,7 +25,7 @@ public class TestCmp {
         panel.add(label1);
 
         // preload into the native component store...will need the right key...
-
+        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("", label1);
 
         upButton.addActionListener(e -> coolComponent.setState(coolComponent.getState() + 1));
         downButton.addActionListener(e -> coolComponent.setState(coolComponent.getState() - 1));

@@ -22,8 +22,8 @@ public class TestCmp3 {
 
     public TestCmp3() {
         MyCoolComponent coolComponent1 = new MyCoolComponent();
-        RxJLabel label1 = coolComponent1.render();
-        panel.add(label1);
+//        RxJLabel label1 = coolComponent1.render();
+//        panel.add(label1);
 //        RdrMger.getInstance().mountComponent(coolComponent1.getNtvRndId(), label1);
 
         MyCoolComponent2 coolComponent2 = new MyCoolComponent2();

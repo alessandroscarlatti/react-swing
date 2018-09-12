@@ -1,7 +1,13 @@
 package com.scarlatti.rxswing.component.usr;
 
 import com.scarlatti.rxswing.RdrMger;
+import com.scarlatti.rxswing.Rx;
+import com.scarlatti.rxswing.component.NtvBoundComponent;
+import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.ntv.RxJLabel;
+import com.scarlatti.rxswing.inspect.RxNode;
+
+import java.time.chrono.JapaneseEra;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -12,63 +18,23 @@ import com.scarlatti.rxswing.component.ntv.RxJLabel;
  */
 // this will eventually include the control buttons AND the label, but for now, just the label.
 // everything else will be simulated from the outside.
-public class MyCoolComponent implements RxUsrComponent {
+public class MyCoolComponent extends RxComponent {
 
     private int count = 0;  // this is the state...
-    private String myNtvRndId;
-    private ChildIdIncrementer idIncrementer = new ChildIdIncrementer();
-
-    public MyCoolComponent() {
-        this.myNtvRndId = obtainNtvRndId();
-    }
-
-    public MyCoolComponent(String myNtvRndId) {
-        this.myNtvRndId = myNtvRndId;
-    }
-
-    @Override
-    public String obtainNtvRndId() {
-        return null;
-//        return RdrMger.getInstance().getNextNtvRndId();
-    }
-
-    @Override
-    public String getNextChildNtvRndId() {
-        return idIncrementer.getNextId();
-    }
 
     public void setState(int count) {
         this.count = count;
 
         // now initiate render.
-//        RdrMger.getInstance().pleaseRdr(this);
+        RdrMger.getInstance().pleaseRdr(this);
     }
 
-    public RxJLabel render() {
-
-//        new Thread(() -> {
-//            try {
-//                Thread.sleep(2000);
-//                System.out.println("changing state...");
-//                setState(count + 1);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }).start();
-
-        return new RxJLabel(String.valueOf(count));
+    public RxNode render() {
+        return Rx.node(RxJLabel.class)
+        .props("text", String.valueOf(count));
     }
 
     public int getState() {
         return count;
-    }
-
-    public String getNtvRndId() {
-        return myNtvRndId;
-    }
-
-    @Override
-    public void setNtvRndId(String id) {
-        myNtvRndId = id;
     }
 }

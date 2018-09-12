@@ -1,15 +1,11 @@
 package com.scarlatti.rxswing;
 
-import com.scarlatti.rxswing.change.DomChangeManager;
+import com.scarlatti.rxswing.change.RxComponentTreeChgMgr;
+import com.scarlatti.rxswing.change.RxNtvCompChgPacket;
 import com.scarlatti.rxswing.component.RxComponent;
-import com.scarlatti.rxswing.component.RxNtvComponent;
 import com.scarlatti.rxswing.inspect.RxDom;
 import com.scarlatti.rxswing.inspect.RxNode;
-
-import java.awt.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.scarlatti.rxswing.inspect.RxNodeRealizer;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -40,80 +36,26 @@ public class RdrMger {
         // now fully resolve the dom...
         // we can skip this for the basic implementation with a single layer of component...
         //////////....
+        newDom = new RxNodeRealizer(newDom, myMtdRxComps).realizeNode();
 
         // OK.  Now the new dom is fully resolved.
         // time to create a change manager for it.
-        List<Runnable> changes = new DomChangeManager(myDom.getRoot(), newDom).pleaseCreateChgPkt();
+        RxNtvCompChgPacket chgPacket = new RxComponentTreeChgMgr(myDom.getRoot(), newDom).createChangePacket();
 
         // now run the changes
-        for (Runnable change : changes) {
-            change.run();
-        }
+        applyChgPacketRecursive(chgPacket);
 
         // now replace the old dom with the new dom
         myDom.setRoot(newDom);
     }
 
-    // take a partially resolved rxNode tree and finish resolving it...
-    // returns a new RxNode...
-    // Resolve the declarations into concrete components by retrieving or creating them
-    // keep going until the node component type is one of the native components
-    private RxNode fullyRndrRxNodeRcrsv(RxNode rxNode) {
-
-        // check to see if this is a native component.
-        // if it is, we're done.  Just return the node.
-        // todo this is not OK, because we are actually invoking
-        // the constructors every time!!! in instantiateRxCompFromNode
-        RxComponent comp = myMtdRxComps.putIfAbsent(rxNode.getId(), instantiateRxCompFromNode(rxNode));
-        if (RxNtvComponent.class.isAssignableFrom(rxNode.getType())) {
-            Component swingComp = instantiateRxNtvCompFromNode(comp);
-            myMtdSwingComps.putIfAbsent(rxNode.getId(), swingComp);
-            return rxNode;
-        } else {
-            // modify the tree...
-            // todo what about props???
-            rxNode.setType(comp.getType());
-            return fullyRndrRxNodeRcrsv(rxNode);
+    private void applyChgPacketRecursive(RxNtvCompChgPacket chgPacket) {
+        for (Runnable change : chgPacket.getChangesForSelf()) {
+            change.run();
         }
 
-
-        // but if it's not a native component, we need to resolve it.
-        // this means instantiate it as a component....
-
-//        for (RxNode child : rxNode.getChildren()) {
-//            // check to see if the the component id is already in the mounted components map
-//            // if not, create it
-//            myMtdRxComps.putIfAbsent(child.getId(), instantiateRxCompFromNode(child));
-//
-//            // now we call render on that component...
-//            RxComponent comp = myMtdRxComps.get(child.getId());
-//            RxNode node = comp.render();
-//            child.
-//        }
-    }
-
-    public RxComponent instantiateRxCompFromNode(RxNode n) {
-        return null;
-//        try {
-//            RxComponent comp = n.getType().newInstance();
-//            comp.setProps(n.getProps());
-//            comp.getLifecycleManager().addToStore(myMtdRxComps, n.getId());
-//            return comp;
-//        } catch (Exception e) {
-//            throw new RuntimeException("Error instantiating component of class " + n.getType().getName(), e);
-//        }
-    }
-
-    private Component instantiateRxNtvCompFromNode(RxComponent n) {
-        try {
-            // this could also be done using a "NtvComponentImpl" class.
-            Component comp = ((RxNtvComponent) n).getNtvType().newInstance();
-
-            // ...add swing-specific properties
-            // (maybe using a "ntvComponentImpl" class.
-            return comp;
-        } catch (Exception e) {
-            throw new RuntimeException("Error instantiating component of class " + n.getType().getName(), e);
+        for (RxNtvCompChgPacket childChgPacket : chgPacket.getChangesForChildren()) {
+            applyChgPacketRecursive(childChgPacket);
         }
     }
 

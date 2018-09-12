@@ -1,6 +1,10 @@
 package com.scarlatti.rxswing.component.ntv;
 
+import com.scarlatti.rxswing.component.RxComponent;
+import com.scarlatti.rxswing.component.RxNtvComponent;
+
 import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,64 +15,10 @@ import java.util.Map;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Sunday, 8/26/2018
  */
-public class RxJLabel extends JLabel implements RxNtvComponent {
-
-    public static final String TEXT_PROPERTY = "text";
-    private Map<String, Object> data;
-    private String ntvRndId;
-    private ChildIdIncrementer idIncrementer = new ChildIdIncrementer();
-
-    public RxJLabel(String text, Icon icon, int horizontalAlignment) {
-        super(text, icon, horizontalAlignment);
-    }
-
-    public RxJLabel(String text, int horizontalAlignment) {
-        super(text, horizontalAlignment);
-    }
-
-    public RxJLabel(String text) {
-        super(text);
-    }
-
-    public RxJLabel(Icon image, int horizontalAlignment) {
-        super(image, horizontalAlignment);
-    }
-
-    public RxJLabel(Icon image) {
-        super(image);
-    }
-
-    public RxJLabel() {
-    }
+public class RxJLabel extends RxComponent implements RxNtvComponent {
 
     @Override
-    public String getNextChildNtvRndId() {
-        return idIncrementer.getNextId();
-    }
-
-    @Override
-    public String getNtvRndId() {
-        return ntvRndId;
-    }
-
-    @Override
-    public void setNtvRndId(String id) {
-        ntvRndId = id;
-    }
-
-    public Map<String, Object> getData() {
-        return data;
-    }
-
-    private void initData() {
-        if (data == null)
-            data = new HashMap<>();
-    }
-
-    @Override
-    public void setText(String text) {
-        super.setText(text);
-        initData();
-        data.put(TEXT_PROPERTY, text);
+    public Class<? extends Component> getNtvType() {
+        return JLabel.class;
     }
 }

@@ -3,12 +3,8 @@ package com.scarlatti.rxswing.change;
 import com.scarlatti.rxswing.inspect.RxNode;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-
-import static com.scarlatti.rxswing.component.ntv.RxJLabel.TEXT_PROPERTY;
 
 /**
  * ______    __                         __           ____             __     __  __  _
