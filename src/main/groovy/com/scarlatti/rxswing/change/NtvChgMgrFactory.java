@@ -1,5 +1,6 @@
 package com.scarlatti.rxswing.change;
 
+import com.scarlatti.rxswing.ComponentStore;
 import com.scarlatti.rxswing.NtvComponentStore;
 import com.scarlatti.rxswing.RdrMger;
 import com.scarlatti.rxswing.component.RxNtvComponent;
@@ -18,14 +19,16 @@ import java.awt.*;
 public class NtvChgMgrFactory {
 
     private NtvComponentStore ntvComponentStore;
+    private ComponentStore componentStore;
 
     public NtvChgMgrFactory() {
         this.ntvComponentStore = RdrMger.getInstance().getNtvComponentStore();
+        this.componentStore = RdrMger.getInstance().getMtdRxComps();
     }
 
     public RxChgMger getChangeManagerFor(RxNode currentNode, RxNode newNode) {
 
-        Class<? extends Component> clazz = ((RxNtvComponent) currentNode).getNtvType();
+        Class<? extends Component> clazz = ((RxNtvComponent) componentStore.get(newNode.getId())).getNtvType();
         Component ntvComponent = ntvComponentStore.get(newNode.getId());
 
         if (clazz == JLabel.class) {
