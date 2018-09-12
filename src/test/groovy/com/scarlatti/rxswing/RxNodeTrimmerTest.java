@@ -7,11 +7,7 @@ import com.scarlatti.rxswing.inspect.RxNodeTrimmer;
 import org.junit.Test;
 
 import javax.swing.*;
-
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 

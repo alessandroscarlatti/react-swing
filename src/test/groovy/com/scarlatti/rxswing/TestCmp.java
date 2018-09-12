@@ -21,9 +21,12 @@ public class TestCmp {
 
     public TestCmp() {
         coolComponent = new MyCoolComponent();
-        RxJLabel label1 = coolComponent.render();
+        JLabel label1 = new JLabel("what");
         panel.add(label1);
-//        RdrMger.getInstance().mountComponent(coolComponent.getNtvRndId(), label1);
+
+        // preload into the native component store...will need the right key...
+
+
         upButton.addActionListener(e -> coolComponent.setState(coolComponent.getState() + 1));
         downButton.addActionListener(e -> coolComponent.setState(coolComponent.getState() - 1));
     }

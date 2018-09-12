@@ -21,7 +21,7 @@ import java.util.Map;
 public class RdrMger {
     private static RdrMger ourInstance = new RdrMger();
 
-    private Map<String, Component> myMtdSwingComps = new HashMap<>();
+    private NtvComponentStore myMtdSwingComps = new NtvComponentStore();
     private ComponentStore myMtdRxComps = new ComponentStore();
     private RxDom myDom = new RxDom();
 
@@ -117,7 +117,7 @@ public class RdrMger {
         }
     }
 
-    public Map<String, Component> getMtdSwingComps() {
+    public NtvComponentStore getNtvComponentStore() {
         return myMtdSwingComps;
     }
 

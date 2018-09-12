@@ -1,7 +1,6 @@
 package com.scarlatti.rxswing;
 
-import com.scarlatti.rxswing.component.RxComponent;
-
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -14,21 +13,21 @@ import java.util.function.Supplier;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Friday, 9/7/2018
  */
-public class ComponentStore {
+public class NtvComponentStore {
 
-    private Map<String, RxComponent> components = new HashMap<>();
+    private Map<String, Component> components = new HashMap<>();
 
-    public RxComponent put(String key, RxComponent value) {
+    public Component put(String key, Component value) {
         validateKey(key);
         return components.putIfAbsent(key, value);
     }
 
-    public RxComponent putIfAbsent(String key, RxComponent value) {
+    public Component putIfAbsent(String key, Component value) {
         validateKey(key);
         return components.putIfAbsent(key, value);
     }
 
-    public RxComponent putIfAbsent(String key, Supplier<RxComponent> value) {
+    public Component putIfAbsent(String key, Supplier<Component> value) {
         validateKey(key);
 
         // don't use #compute()! it will mess up the internal state of the map!
@@ -40,7 +39,7 @@ public class ComponentStore {
         }
     }
 
-    public RxComponent get(String key) {
+    public Component get(String key) {
         return components.get(key);
     }
 

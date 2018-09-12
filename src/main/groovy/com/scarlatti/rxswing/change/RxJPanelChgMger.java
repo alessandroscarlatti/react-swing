@@ -1,11 +1,9 @@
 package com.scarlatti.rxswing.change;
 
-import com.scarlatti.rxswing.RdrMger;
-import com.scarlatti.rxswing.component.NtvBoundComponent;
-import com.scarlatti.rxswing.component.ntv.RxJPanel;
-import com.scarlatti.rxswing.component.ntv.RxNtvComponent;
+import com.scarlatti.rxswing.inspect.RxNode;
 
-import java.util.ArrayList;
+import javax.swing.*;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -16,39 +14,18 @@ import java.util.List;
  * Sunday, 8/26/2018
  */
 public class RxJPanelChgMger implements RxChgMger {
-    private RxJPanel master;
-    private RxJPanel other;
+    private JPanel ntv;
+    private RxNode currentNode;
+    private RxNode newNode;
 
-    public static RxJPanelChgMger getInstance(RxJPanel master, RxJPanel other) {
-        return new RxJPanelChgMger(master, other);
-    }
-
-    private RxJPanelChgMger(RxJPanel master, RxJPanel other) {
-        this.master = master;
-        this.other = other;
+    public RxJPanelChgMger(JPanel ntv, RxNode currentNode, RxNode newNode) {
+        this.ntv = ntv;
+        this.currentNode = currentNode;
+        this.newNode = newNode;
     }
 
     // what will we do here, because this component may contain children...
     public List<Runnable> pleaseCreateChgPkt() {
-
-        List<Runnable> chgPkt = new ArrayList<>();
-        List<NtvBoundComponent> masterChildren = master.getChildren();
-        List<NtvBoundComponent> otherChildren = other.getChildren();
-
-        // tmp limitation only compares existing children
-        for (int i = 0; i < masterChildren.size(); i++) {
-            // create a change packet for this component
-            // (we are assuming it also exists in the other component)
-
-            // getting it to compile...commenting it all out...
-//            List<Runnable> childChanges = RdrMger.getInstance().pleaseMakeChgPktFromAToB(
-//                ((RxNtvComponent) masterChildren.get(i)),
-//                ((RxNtvComponent) otherChildren.get(i))
-//            );
-
-//            chgPkt.addAll(childChanges);
-        }
-
-        return chgPkt;
+        return Collections.emptyList();
     }
 }

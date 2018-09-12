@@ -1,12 +1,10 @@
 package com.scarlatti.rxswing.change;
 
-import com.scarlatti.rxswing.component.ntv.RxJButton;
+import com.scarlatti.rxswing.inspect.RxNode;
 
-import java.util.ArrayList;
+import javax.swing.*;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-
-import static com.scarlatti.rxswing.component.ntv.RxJLabel.TEXT_PROPERTY;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -16,41 +14,20 @@ import static com.scarlatti.rxswing.component.ntv.RxJLabel.TEXT_PROPERTY;
  * Sunday, 8/26/2018
  */
 public class RxJButtonChgMger implements RxChgMger {
-    private RxJButton master;
-    private RxJButton other;
+    private JButton ntv;
+    private RxNode currentNode;
+    private RxNode newNode;
 
-    public static RxJButtonChgMger getInstance(RxJButton master, RxJButton other) {
-        return new RxJButtonChgMger(master, other);
-    }
-
-    private RxJButtonChgMger(RxJButton master, RxJButton other) {
-        this.master = master;
-        this.other = other;
+    public RxJButtonChgMger(JButton ntv, RxNode currentNode, RxNode newNode) {
+        this.ntv = ntv;
+        this.currentNode = currentNode;
+        this.newNode = newNode;
     }
 
     // limitation: using "master" right now, because we aren't replacing components at all...
     public List<Runnable> pleaseCreateChgPkt() {
-
-        List<Runnable> chgPkt = new ArrayList<>();
-        Map<String, Object> crntMap = master.getData();
-        Map<String, Object> otherMap = other.getData();
-
-        // tmp limitation only compares existing properties...
-        for (String key : crntMap.keySet()) {
-            if (otherMap.containsKey(key)) {
-                if (!crntMap.get(key).equals(otherMap.get(key))) {
-                    switch (key) {
-                        case TEXT_PROPERTY:
-                            chgPkt.add(() -> {
-                                master.setText(String.valueOf(otherMap.get(key)));
-                                master.getParent().invalidate();
-                            });
-                            break;
-                    }
-                }
-            }
-        }
-
-        return chgPkt;
+        return Collections.singletonList(() -> {
+            ntv.setText(newNode.getProps().get("text").toString());
+        });
     }
 }
