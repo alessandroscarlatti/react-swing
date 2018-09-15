@@ -5,6 +5,7 @@ import com.scarlatti.rxswing.inspect.RxNode;
 import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -19,6 +20,8 @@ public class RxJLabelChgMger implements RxChgMger {
     private RxNode newNode;
 
     public RxJLabelChgMger(JLabel ntv, RxNode currentNode, RxNode newNode) {
+        Objects.requireNonNull(newNode, "Change Manager requires an RxNode.");
+        Objects.requireNonNull(ntv, "Change Manager must be bound to a Swing component.  No Swing component given for " + newNode);
         this.ntv = ntv;
         this.currentNode = currentNode;
         this.newNode = newNode;

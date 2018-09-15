@@ -27,9 +27,9 @@ public class TestCmp3 {
 //        RdrMger.getInstance().mountComponent(coolComponent1.getNtvRndId(), label1);
 
         MyCoolComponent2 coolComponent2 = new MyCoolComponent2();
-        RxJButton label2 = coolComponent2.render();
+//        RxJButton label2 = coolComponent2.render();
 //        RdrMger.getInstance().mountComponent(coolComponent2.getNtvRndId(), label2);
-        panel.add(label2);
+//        panel.add(label2);
 
         // go in opposite directions!!!
         upButton.addActionListener(e -> {

@@ -1,5 +1,6 @@
 package com.scarlatti.rxswing;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -18,14 +19,18 @@ public class Tests {
         });
     }
 
+    // this will not work because we are only allowing a single root component
     @Test
+    @Ignore
     public void runTestFormWithTwoComponents() {
         TestUtils.displayJPanel(() -> {
             return new TestCmp2().getPanel();
         });
     }
 
+    // this will also not work yet because we are only allowing a single root component
     @Test
+    @Ignore
     public void runTestFormWithTwoTypesOfComponents() {
         TestUtils.displayJPanel(() -> {
             return new TestCmp3().getPanel();
@@ -35,7 +40,7 @@ public class Tests {
     @Test
     public void runTestFormWithWrappedComponent() {
         TestUtils.displayJPanel(() -> {
-            return new TestCmp4().getPanel();
+            return new TestCmp4().getjPanel();
         });
     }
 

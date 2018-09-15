@@ -1,7 +1,9 @@
 package com.scarlatti.rxswing.component.usr;
 
 import com.scarlatti.rxswing.RdrMger;
+import com.scarlatti.rxswing.Rx;
 import com.scarlatti.rxswing.component.ntv.RxJButton;
+import com.scarlatti.rxswing.inspect.RxNode;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -43,8 +45,9 @@ public class MyCoolComponent2 implements RxUsrComponent {
 //        RdrMger.getInstance().pleaseRdr(this);
     }
 
-    public RxJButton render() {
-        return new RxJButton(String.valueOf(count));
+    public RxNode render() {
+        return Rx.node(RxJButton.class)
+            .props("text", String.valueOf(count));
     }
 
     public int getState() {

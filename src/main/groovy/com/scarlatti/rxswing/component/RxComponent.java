@@ -15,9 +15,9 @@ import static com.scarlatti.rxswing.inspect.RxNodeRealizer.formatId;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Tuesday, 9/4/2018
  */
-public class RxComponent {
+public abstract class RxComponent {
 
-    private Object props;
+    protected Object props;
     private ComponentLifecycleManager lifecycleManager = new ComponentLifecycleManager();
 
     public Class<? extends RxComponent> getType() {

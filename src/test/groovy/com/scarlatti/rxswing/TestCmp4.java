@@ -1,5 +1,6 @@
 package com.scarlatti.rxswing;
 
+import com.scarlatti.rxswing.component.ntv.RxJLabel;
 import com.scarlatti.rxswing.component.ntv.RxJPanel;
 import com.scarlatti.rxswing.component.usr.LottoComponent;
 
@@ -14,28 +15,50 @@ import java.awt.*;
  * Saturday, 8/25/2018
  */
 public class TestCmp4 {
-    private JPanel panel;
+    private JPanel jPanel;
     private JButton upButton;
     private JButton downButton;
 
     public TestCmp4() {
-        LottoComponent coolComponent1 = new LottoComponent();
-        RxJPanel label1 = coolComponent1.render();
-        panel.add(label1);
-//        RdrMger.getInstance().mountComponent(coolComponent1.getNtvRndId(), label1);
+        LottoComponent lottoComponent = new LottoComponent();
+        JLabel label1 = new JLabel("what1");
+        JLabel label2 = new JLabel("what2");
 
-        // go in opposite directions!!!
+        jPanel.add(label1);
+        jPanel.add(label2);
+
+        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]", jPanel);
+        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[0]", label1);
+        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[1]", label2);
+
+        lottoComponent.getLifecycleManager().addToStore(RdrMger.getInstance().getMtdRxComps(), "lottoComponent");
+
+        RdrMger.getInstance().getCurrentDom().setRoot(
+            Rx.node(RxJPanel.class)
+                .id("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]")
+                .child(
+                    Rx.node(RxJLabel.class)
+                        .id("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[0]")
+                        .props("text", "0")
+                )
+                .child(
+                    Rx.node(RxJLabel.class)
+                        .id("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[1]")
+                        .props("text", "0")
+                )
+        );
+
         upButton.addActionListener(e -> {
-            coolComponent1.setState(coolComponent1.getState() + 1);
+            lottoComponent.setState(lottoComponent.getState() + 1);
         });
 
         downButton.addActionListener(e -> {
-            coolComponent1.setState(coolComponent1.getState() - 1);
+            lottoComponent.setState(lottoComponent.getState() - 1);
         });
     }
 
-    public JPanel getPanel() {
-        return panel;
+    public JPanel getjPanel() {
+        return jPanel;
     }
 
     {
@@ -53,20 +76,20 @@ public class TestCmp4 {
      * @noinspection ALL
      */
     private void $$$setupUI$$$() {
-        panel = new JPanel();
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        jPanel = new JPanel();
+        jPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         upButton = new JButton();
         upButton.setText("Up");
-        panel.add(upButton);
+        jPanel.add(upButton);
         downButton = new JButton();
         downButton.setText("Down");
-        panel.add(downButton);
+        jPanel.add(downButton);
     }
 
     /**
      * @noinspection ALL
      */
     public JComponent $$$getRootComponent$$$() {
-        return panel;
+        return jPanel;
     }
 }
