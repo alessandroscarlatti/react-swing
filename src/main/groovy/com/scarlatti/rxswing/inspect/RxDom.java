@@ -1,5 +1,7 @@
 package com.scarlatti.rxswing.inspect;
 
+import java.util.Objects;
+
 /**
  * ______    __                         __           ____             __     __  __  _
  * ___/ _ | / /__ ___ ___ ___ ____  ___/ /______    / __/______ _____/ /__ _/ /_/ /_(_)
@@ -13,7 +15,16 @@ public class RxDom {
 
     // search the dom for a node with the given id
     public RxNode resolve(String id) {
-        return root.searchTree(node -> node.getId().equals(id));
+        return root.searchTree(node -> Objects.equals(node.getId(), id));
+    }
+
+    public void replace(String id, RxNode replacement) {
+        if (Objects.equals(root.getId(), id)) {
+            root = replacement;
+        }
+        else {
+            root.replace(id, replacement);
+        }
     }
 
     public RxNode getRoot() {

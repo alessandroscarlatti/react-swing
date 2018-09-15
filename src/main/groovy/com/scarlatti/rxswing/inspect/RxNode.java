@@ -102,6 +102,32 @@ public class RxNode {
         return visitor.getResult();
     }
 
+    public void replace(String id, RxNode replacement) {
+        replaceRecursive(id, replacement);
+    }
+
+    private void replaceRecursive(String id, RxNode replacement) {
+        walkTree(new RxNode.Visitor() {
+
+            @Override
+            protected void visitNode(RxNode node) {
+                for (int i = 0; i < node.getChildren().size(); i++) {
+                    if (Objects.equals(node.getChildren().get(i).getId(), id)) {
+                        node.getChildren().set(i, replacement);
+                        return;
+                    }
+
+                    super.visitNode(node);
+                }
+            }
+
+            @Override
+            protected void visitChildNode(RxNode child, RxNode parent) {
+
+            }
+        });
+    }
+
     public static abstract class Visitor {
         protected void visitNode(RxNode node) {
             for (RxNode child : node.getChildren()) {

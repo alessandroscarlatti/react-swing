@@ -34,6 +34,9 @@ public class RdrMger {
         RxNode newDom = comp.render();
 
         // temporary...
+        // where should this be set?
+        // what about rendering a component that is not the root component?
+        // the actual id would be based on the previous render??
         newDom.setId("jlabel");
 
         // now fully resolve the dom...
@@ -43,13 +46,24 @@ public class RdrMger {
 
         // OK.  Now the new dom is fully resolved.
         // time to create a change manager for it.
+        //
+        // right now we are assuming that we are starting with the root.
+        // this will not always be true.
+        // but we don't have to start with the root.
+        // we can just replace the old node on the tree with the new node.
+        RxNode nodeToReplace = myDom.resolve(newDom.getId());
+
         RxNtvCompChgPacket chgPacket = new RxComponentTreeChgMgr(myDom.getRoot(), newDom).createChangePacket();
 
         // now run the changes
         applyChgPacketRecursive(chgPacket);
 
         // now replace the old dom with the new dom
-        myDom.setRoot(newDom);
+        //
+        // we need to know which piece to replace.
+        // it may not be the root!
+        // and we need to know which child it was...
+        myDom.replace(nodeToReplace.getId(), newDom);
     }
 
     private void applyChgPacketRecursive(RxNtvCompChgPacket chgPacket) {

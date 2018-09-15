@@ -27,8 +27,12 @@ public class TestCmp {
         // preload into the native component store...will need the right key...
         RdrMger.getInstance().getNtvComponentStore().putIfAbsent("jlabel", label1);
 
+        // preload into the component store
+        coolComponent.getLifecycleManager().addToStore(RdrMger.getInstance().getMtdRxComps(), "coolComponent");
+
         RdrMger.getInstance().getCurrentDom().setRoot(
             Rx.node(RxJLabel.class)
+                .id("jlabel")
                 .props("text", "0")
         );
 

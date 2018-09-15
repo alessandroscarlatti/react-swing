@@ -20,14 +20,21 @@ public class TestCmp2 {
 
     public TestCmp2() {
         MyCoolComponent coolComponent1 = new MyCoolComponent();
-//        RxJLabel label1 = coolComponent1.render();
-//        panel.add(label1);
-//        RdrMger.getInstance().mountComponent(coolComponent1.getNtvRndId(), label1);
+        JLabel label1 = new JLabel("Label1");
+        panel.add(label1);
 
         MyCoolComponent coolComponent2 = new MyCoolComponent();
-//        RxJLabel label2 = coolComponent2.render();
-//        RdrMger.getInstance().mountComponent(coolComponent2.getNtvRndId(), label2);
-//        panel.add(label2);
+        JLabel label2 = new JLabel("Label2");
+        panel.add(label2);
+
+        // preload into native component store
+        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("jLabel1", label1);
+        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("jLabel2", label2);
+
+        RdrMger.getInstance().getCurrentDom().setRoot(
+            Rx.node(RxJLabel.class)
+                .props("text", "0")
+        );
 
         // go in opposite directions!!!
         upButton.addActionListener(e -> {
