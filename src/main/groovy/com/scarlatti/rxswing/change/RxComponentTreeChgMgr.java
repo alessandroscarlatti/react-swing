@@ -61,7 +61,7 @@ public class RxComponentTreeChgMgr {
 
         // then compare each of the children...
         Iterator<RxNode> crntNodeIter = currentNode.getChildren().iterator();
-        Iterator<RxNode> newNodeIter = currentNode.getChildren().iterator();
+        Iterator<RxNode> newNodeIter = newNode.getChildren().iterator();
         for (; crntNodeIter.hasNext(); ) {
             RxNode nextCrntNode = crntNodeIter.next();
             RxNode nextNewNode = newNodeIter.next();

@@ -39,12 +39,12 @@ public class TestCmp4 {
                 .child(
                     Rx.node(RxJLabel.class)
                         .id("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[0]")
-                        .props("text", "0")
+                        .props("text", "what")
                 )
                 .child(
                     Rx.node(RxJLabel.class)
                         .id("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[1]")
-                        .props("text", "0")
+                        .props("text", "what")
                 )
         );
 
