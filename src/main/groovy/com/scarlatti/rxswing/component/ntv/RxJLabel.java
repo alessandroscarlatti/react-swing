@@ -2,11 +2,11 @@ package com.scarlatti.rxswing.component.ntv;
 
 import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.RxNtvComponent;
+import com.scarlatti.rxswing.inspect.RxNode;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -20,5 +20,25 @@ public class RxJLabel extends RxComponent implements RxNtvComponent {
     @Override
     public Class<? extends Component> getNtvType() {
         return JLabel.class;
+    }
+
+    public static RxNode jLabel(Consumer<RxJLabelNode> consumer) {
+        RxJLabelNode node = new RxJLabelNode();
+        consumer.accept(node);
+        return node;
+    }
+
+    public static class RxJLabelNode extends RxNode {
+        public RxJLabelNode() {
+            super(RxJLabel.class);
+        }
+
+        public void setText(String text) {
+            set("text", text);
+        }
+
+        public String getText() {
+            return get("text", String.class);
+        }
     }
 }

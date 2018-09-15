@@ -1,11 +1,8 @@
 package com.scarlatti.rxswing
 
-import com.scarlatti.rxswing.component.RxComponent
-import com.scarlatti.rxswing.component.ntv.RxJPanel
-import com.scarlatti.rxswing.inspect.RxNode
 import org.junit.Test
 
-import static com.scarlatti.rxswing.RxNodeGroovySyntaxTest.RxJPanel2.jPanel
+import static com.scarlatti.rxswing.component.ntv.RxJPanel.jPanel
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -16,33 +13,23 @@ import static com.scarlatti.rxswing.RxNodeGroovySyntaxTest.RxJPanel2.jPanel
  */
 class RxNodeGroovySyntaxTest {
 
-    abstract class RxBaseProps {
-        List<RxNode> children = []
-
-        void child(RxNode child) {
-            children.add(child)
-        }
-    }
-
-    class RxJPanel2 extends RxComponent {
-        static RxNode jPanel(@DelegatesTo(value = Props, strategy = Closure.DELEGATE_FIRST) Closure config) {
-            return Rx.node(RxJPanel)
-        }
-
-        static class Props extends RxBaseProps {
-            int count
-        }
-    }
 
     @Test
     void testSyntax() {
         jPanel {
-            count = 1
+            it.set("count", 1)
 
-            child jPanel {
-                count = 1
+            it.child jPanel {
+                it.set("count", 1)
 
-                child jPanel {
+                it.child jPanel {
+                }
+            }
+
+            it.child jPanel {
+                it.set("text", 3)
+                it.set("text", 3)
+                it.child jPanel {
 
                 }
             }

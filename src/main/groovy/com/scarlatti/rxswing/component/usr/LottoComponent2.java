@@ -2,8 +2,10 @@ package com.scarlatti.rxswing.component.usr;
 
 import com.scarlatti.rxswing.RdrMger;
 import com.scarlatti.rxswing.Rx;
+import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.ntv.RxJButton;
 import com.scarlatti.rxswing.component.ntv.RxJPanel;
+import com.scarlatti.rxswing.inspect.RxNode;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -14,49 +16,24 @@ import com.scarlatti.rxswing.component.ntv.RxJPanel;
  *
  * just a wrapper around the same simple jButton example...
  */
-public class LottoComponent2 implements RxUsrComponent {
+public class LottoComponent2 extends RxComponent {
 
     private int count = 0;  // this is the state...
-    private String myNtvRndId;
-    private ChildIdIncrementer idIncrementer = new ChildIdIncrementer();
 
-    public LottoComponent2() {
-        this.myNtvRndId = obtainNtvRndId();
-    }
-
-    @Override
-    public String getNextChildNtvRndId() {
-        return idIncrementer.getNextId();
-    }
-
-    @Override
-    public String obtainNtvRndId() {
-        return null;
-//        return RdrMger.getInstance().getNextNtvRndId();
-    }
-
-    @Override
     public int getState() {
         return count;
     }
 
-    @Override
     public void setState(int count) {
         this.count = count;
 
         // now initiate render.
-//        RdrMger.getInstance().pleaseRdr(this);
+        RdrMger.getInstance().pleaseRdr(this);
     }
 
     @Override
-    public RxJPanel render() {
-        RxJPanel panel = new RxJPanel();
-//        panel.add(new RxJButton(String.valueOf(count)));
-//        panel.add(new RxJButton(String.valueOf(count + 1)));
-////        panel.add(Rx.createElement(MyCoolComponent.class));
-////        panel.add(Rx.createElement(MyCoolComponent.class));
-//        panel.add(this::innerPanel);
-        return panel;
+    public RxNode render() {
+        return Rx.node(RxJPanel.class);
     }
 
     private RxJPanel innerPanel() {
@@ -65,15 +42,5 @@ public class LottoComponent2 implements RxUsrComponent {
 //        innerPanel.add(new RxJButton(String.valueOf(count + 1)));
 ////        innerPanel.add(new MyCoolComponent());
         return innerPanel;
-    }
-
-    @Override
-    public String getNtvRndId() {
-        return myNtvRndId;
-    }
-
-    @Override
-    public void setNtvRndId(String id) {
-        myNtvRndId = id;
     }
 }

@@ -38,6 +38,25 @@ public class RxNode {
         return this;
     }
 
+    public RxNode set(String key, Object value) {
+        props.put(key, value);
+        return this;
+    }
+
+    public Object get(String key) {
+        return props.get(key);
+    }
+
+    @SuppressWarnings("unchecked")
+     public <T> T get(String key, Class<T> clazz) {
+        return (T) props.get(key);
+    }
+
+    public RxNode props(Map<String, Object> props) {
+        this.props = props;
+        return this;
+    }
+
     public RxNode id(String id) {
         setId(id);
         return this;

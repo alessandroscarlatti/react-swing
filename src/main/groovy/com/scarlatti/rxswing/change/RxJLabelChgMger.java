@@ -1,5 +1,6 @@
 package com.scarlatti.rxswing.change;
 
+import com.scarlatti.rxswing.component.ntv.RxJLabel;
 import com.scarlatti.rxswing.inspect.RxNode;
 
 import javax.swing.*;
@@ -30,7 +31,7 @@ public class RxJLabelChgMger implements RxChgMger {
     // limitation: using "master" right now, because we aren't replacing components at all...
     public List<Runnable> pleaseCreateChgPkt() {
         return Collections.singletonList(() -> {
-            ntv.setText(newNode.getProps().get("text").toString());
+            ntv.setText(((RxJLabel.RxJLabelNode) newNode).getText());
         });
     }
 }

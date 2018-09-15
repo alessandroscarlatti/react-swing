@@ -1,15 +1,12 @@
 package com.scarlatti.rxswing.component.ntv;
 
-import com.scarlatti.rxswing.Rx;
 import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.RxNtvComponent;
-import com.scarlatti.rxswing.component.RxPropsBase;
 import com.scarlatti.rxswing.inspect.RxNode;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -25,16 +22,15 @@ public class RxJPanel extends RxComponent implements RxNtvComponent {
         return JPanel.class;
     }
 
-    static RxNode jPanel(@DelegatesTo(value = Props.class, strategy = Closure.DELEGATE_FIRST) Closure config) {
-        RxNode node = Rx.node(RxJPanel.class);
-
-        config.setDelegate(node.getProps());
-        config.setResolveStrategy(Closure.DELEGATE_FIRST);
-        config.call();
-
+    public static RxNode jPanel(Consumer<RxJPanelNode> consumer) {
+        RxJPanelNode node = new RxJPanelNode();
+        consumer.accept(node);
         return node;
     }
 
-    public static class Props extends RxPropsBase {
+    public static class RxJPanelNode extends RxNode {
+        public RxJPanelNode() {
+            super(RxJPanel.class);
+        }
     }
 }

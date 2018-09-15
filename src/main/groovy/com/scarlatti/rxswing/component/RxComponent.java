@@ -1,10 +1,14 @@
 package com.scarlatti.rxswing.component;
 
 import com.scarlatti.rxswing.ComponentStore;
+import com.scarlatti.rxswing.RdrMger;
 import com.scarlatti.rxswing.inspect.RxNode;
 import com.scarlatti.rxswing.inspect.RxNodeRealizer;
+import groovy.lang.Closure;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.scarlatti.rxswing.inspect.RxNodeRealizer.formatId;
 
@@ -26,6 +30,13 @@ public abstract class RxComponent {
 
     public void setProps(Object props) {
         this.props = props;
+    }
+
+    public void setState(Runnable stateChangePacket) {
+        stateChangePacket.run();
+
+        // now initiate render.
+        RdrMger.getInstance().pleaseRdr(this);
     }
 
     public RxNode render() {

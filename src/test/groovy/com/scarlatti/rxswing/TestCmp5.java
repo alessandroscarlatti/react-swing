@@ -20,7 +20,7 @@ public class TestCmp5 {
 
     public TestCmp5() {
         LottoComponent2 lottoComponent2 = new LottoComponent2();
-        RxJPanel jp = lottoComponent2.render();
+//        RxJPanel jp = lottoComponent2.render();
 //        panel.add(jp);
 //        RdrMger.getInstance().mountComponent(lottoComponent2.getNtvRndId(), jp);
 

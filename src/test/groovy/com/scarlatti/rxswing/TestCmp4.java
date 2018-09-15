@@ -49,11 +49,11 @@ public class TestCmp4 {
         );
 
         upButton.addActionListener(e -> {
-            lottoComponent.setState(lottoComponent.getState() + 1);
+            lottoComponent.setStateTemp(lottoComponent.getState() + 1);
         });
 
         downButton.addActionListener(e -> {
-            lottoComponent.setState(lottoComponent.getState() - 1);
+            lottoComponent.setStateTemp(lottoComponent.getState() - 1);
         });
     }
 
