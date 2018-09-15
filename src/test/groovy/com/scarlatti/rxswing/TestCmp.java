@@ -25,14 +25,14 @@ public class TestCmp {
         panel.add(label1);
 
         // preload into the native component store...will need the right key...
-        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("jlabel", label1);
+        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("coolComponent/com.scarlatti.rxswing.component.ntv.RxJLabel[0]", label1);
 
         // preload into the component store
         coolComponent.getLifecycleManager().addToStore(RdrMger.getInstance().getMtdRxComps(), "coolComponent");
 
         RdrMger.getInstance().getCurrentDom().setRoot(
             Rx.node(RxJLabel.class)
-                .id("jlabel")
+                .id("coolComponent/com.scarlatti.rxswing.component.ntv.RxJLabel[0]")
                 .props("text", "0")
         );
 

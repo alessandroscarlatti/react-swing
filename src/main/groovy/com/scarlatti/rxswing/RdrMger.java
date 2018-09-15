@@ -7,6 +7,8 @@ import com.scarlatti.rxswing.inspect.RxDom;
 import com.scarlatti.rxswing.inspect.RxNode;
 import com.scarlatti.rxswing.inspect.RxNodeRealizer;
 
+import java.util.Collections;
+
 /**
  * ______    __                         __           ____             __     __  __  _
  * ___/ _ | / /__ ___ ___ ___ ____  ___/ /______    / __/______ _____/ /__ _/ /_/ /_(_)
@@ -31,13 +33,13 @@ public class RdrMger {
     public void pleaseRdr(RxComponent comp) {
 
         // get a rxNode tree...
-        RxNode newDom = comp.render();
+        RxNode newDom = comp.getLifecycleManager().performRender(null, Collections.emptyList());
 
         // temporary...
         // where should this be set?
         // what about rendering a component that is not the root component?
         // the actual id would be based on the previous render??
-        newDom.setId("jlabel");
+        // newDom.setId("jlabel");
 
         // now fully resolve the dom...
         // we can skip this for the basic implementation with a single layer of component...
@@ -53,7 +55,7 @@ public class RdrMger {
         // we can just replace the old node on the tree with the new node.
         RxNode nodeToReplace = myDom.resolve(newDom.getId());
 
-        RxNtvCompChgPacket chgPacket = new RxComponentTreeChgMgr(myDom.getRoot(), newDom).createChangePacket();
+        RxNtvCompChgPacket chgPacket = new RxComponentTreeChgMgr(nodeToReplace, newDom).createChangePacket();
 
         // now run the changes
         applyChgPacketRecursive(chgPacket);
