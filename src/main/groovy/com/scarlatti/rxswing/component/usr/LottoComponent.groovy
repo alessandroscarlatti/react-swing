@@ -1,11 +1,6 @@
 package com.scarlatti.rxswing.component.usr
 
-import com.scarlatti.rxswing.RdrMger
-import com.scarlatti.rxswing.Rx
 import com.scarlatti.rxswing.component.RxComponent
-import com.scarlatti.rxswing.component.ntv.RxJButton
-import com.scarlatti.rxswing.component.ntv.RxJLabel
-import com.scarlatti.rxswing.component.ntv.RxJPanel
 import com.scarlatti.rxswing.inspect.RxNode
 
 import static com.scarlatti.rxswing.component.ntv.RxJLabel.jLabel

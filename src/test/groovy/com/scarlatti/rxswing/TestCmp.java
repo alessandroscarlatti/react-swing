@@ -1,5 +1,6 @@
 package com.scarlatti.rxswing;
 
+import com.scarlatti.rxswing.component.ntv.RxJPanel;
 import com.scarlatti.rxswing.component.usr.MyCoolComponent;
 import com.scarlatti.rxswing.component.ntv.RxJLabel;
 
@@ -24,11 +25,44 @@ public class TestCmp {
         JLabel label1 = new JLabel("what");
         panel.add(label1);
 
-        // preload into the native component store...will need the right key...
-        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("coolComponent/com.scarlatti.rxswing.component.ntv.RxJLabel[0]", label1);
+        // alright, so what we should do instead is something like:
+        // Rx.render {
+        //     it.child coolComponent()
+        // }
+        //
+        // this render method will do the following:
+        // - create an unrealized rxNode.
+        // - assign it some unique id within the context
+        // of the RdrMgr component store.  This is necessary
+        // so that all child nodes can be named properly.
+        // The first coolComponent would be named coolComponent[0],
+        // coolComponent[1] and so on.
+        // - next, realize the node.  At this point, the component
+        // store is filled with components.
+        //
+        // Now we are in the quasi-change management process.
+        // Because we got here through Rx.render, not RxComponent#setState()
+        // the change management is not built in.  We will have to
+        // initiate it.  That will part of the next major development.
+        // For now, I can fake it by pulling out the component
+        // from the store once it has been instantiated.
 
+        // this is just an example of what the java syntax might look like.
+//        RxJPanel.jPanel(jPanel -> {
+//            jPanel.child(RxJLabel.jLabel(jLabel -> {
+//                jLabel.setText("what");
+//            }));
+//        });
+
+
+        // this will wind up happening first...
+        // there should be a slightly separate method for this initiating process.
+        // that's for the same reasons as using a performAction and performActionRecursive method...I think...
         // preload into the component store
         coolComponent.getLifecycleManager().addToStore(RdrMger.getInstance().getMtdRxComps(), "coolComponent");
+
+        // preload into the native component store...will need the right key...
+        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("coolComponent/com.scarlatti.rxswing.component.ntv.RxJLabel[0]", label1);
 
         RdrMger.getInstance().getCurrentDom().setRoot(
             Rx.node(RxJLabel.class)
