@@ -1,6 +1,5 @@
 package com.scarlatti.rxswing.component.ntv;
 
-import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.RxNtvComponent;
 import com.scarlatti.rxswing.inspect.RxNode;
 
@@ -15,11 +14,16 @@ import java.util.function.Consumer;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Sunday, 8/26/2018
  */
-public class RxJLabel extends RxComponent implements RxNtvComponent {
+public class RxJLabel extends RxNtvComponent {
 
     @Override
     public Class<? extends Component> getNtvType() {
         return JLabel.class;
+    }
+
+    @Override
+    public Component construct() {
+        return new JLabel();
     }
 
     public static RxNode jLabel(Consumer<RxJLabelNode> consumer) {

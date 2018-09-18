@@ -19,19 +19,29 @@ import static org.junit.Assert.assertEquals;
  * Wednesday, 9/5/2018
  */
 public class RxNodeTrimmerTest {
-    private static class RxJPanel extends RxComponent implements RxNtvComponent {
+    private static class RxJPanel extends RxNtvComponent {
 
         @Override
         public Class<? extends Component> getNtvType() {
             return JPanel.class;
         }
+
+        @Override
+        public Component construct() {
+            return null;
+        }
     }
 
-    private static class RxJButton extends RxComponent implements RxNtvComponent {
+    private static class RxJButton extends RxNtvComponent {
 
         @Override
         public Class<? extends Component> getNtvType() {
             return JButton.class;
+        }
+
+        @Override
+        public Component construct() {
+            return null;
         }
     }
 

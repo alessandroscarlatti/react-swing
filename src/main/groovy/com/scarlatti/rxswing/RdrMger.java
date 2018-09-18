@@ -44,7 +44,7 @@ public class RdrMger {
         // now fully resolve the dom...
         // we can skip this for the basic implementation with a single layer of component...
         //////////....
-        newDom = new RxNodeRealizer(newDom, myMtdRxComps).realizeNode();
+        newDom = new RxNodeRealizer(newDom, myMtdRxComps).realize();
 
         // OK.  Now the new dom is fully resolved.
         // time to create a change manager for it.
@@ -82,7 +82,7 @@ public class RdrMger {
         return myMtdSwingComps;
     }
 
-    public ComponentStore getMtdRxComps() {
+    public ComponentStore getComponentStore() {
         return myMtdRxComps;
     }
 

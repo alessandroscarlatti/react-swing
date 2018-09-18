@@ -22,17 +22,27 @@ import static org.junit.Assert.assertTrue;
  */
 public class RxNodeRealizerTest {
 
-    public static class Div extends RxComponent implements RxNtvComponent {
+    public static class Div extends RxNtvComponent {
         @Override
         public Class<? extends Component> getNtvType() {
             return JPanel.class;
         }
+
+        @Override
+        public Component construct() {
+            return null;
+        }
     }
 
-    public static class Button extends RxComponent implements RxNtvComponent {
+    public static class Button extends RxNtvComponent {
         @Override
         public Class<? extends Component> getNtvType() {
             return JButton.class;
+        }
+
+        @Override
+        public Component construct() {
+            return null;
         }
     }
 
@@ -55,7 +65,7 @@ public class RxNodeRealizerTest {
 
         ComponentStore componentStore = new ComponentStore();
         RxNodeRealizer realizer = new RxNodeRealizer(node, componentStore);
-        RxNode realizedNode = realizer.realizeNode();
+        RxNode realizedNode = realizer.realize();
 
         String comp1_0 = formatId("rootNode", MyComp1.class, 0);
         String comp1_1 = formatId("rootNode", MyComp1.class, 1);

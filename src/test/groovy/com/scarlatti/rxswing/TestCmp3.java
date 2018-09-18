@@ -1,9 +1,6 @@
 package com.scarlatti.rxswing;
 
-import com.scarlatti.rxswing.component.ntv.RxJButton;
-import com.scarlatti.rxswing.component.ntv.RxJLabel;
 import com.scarlatti.rxswing.component.usr.MyCoolComponent;
-import com.scarlatti.rxswing.component.usr.MyCoolComponent2;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,20 +23,20 @@ public class TestCmp3 {
 //        panel.add(label1);
 //        RdrMger.getInstance().mountComponent(coolComponent1.getNtvRndId(), label1);
 
-        MyCoolComponent2 coolComponent2 = new MyCoolComponent2();
+//        MyCoolComponent2 coolComponent2 = new MyCoolComponent2();
 //        RxJButton label2 = coolComponent2.render();
 //        RdrMger.getInstance().mountComponent(coolComponent2.getNtvRndId(), label2);
 //        panel.add(label2);
 
         // go in opposite directions!!!
-        upButton.addActionListener(e -> {
-            coolComponent1.setState(coolComponent1.getState() + 1);
-            coolComponent2.setState(coolComponent2.getState() - 1);
-        });
-        downButton.addActionListener(e -> {
-            coolComponent1.setState(coolComponent1.getState() - 1);
-            coolComponent2.setState(coolComponent2.getState() + 1);
-        });
+//        upButton.addActionListener(e -> {
+//            coolComponent1.setState(coolComponent1.getState() + 1);
+//            coolComponent2.setState(coolComponent2.getState() - 1);
+//        });
+//        downButton.addActionListener(e -> {
+//            coolComponent1.setState(coolComponent1.getState() - 1);
+//            coolComponent2.setState(coolComponent2.getState() + 1);
+//        });
     }
 
     public JPanel getPanel() {

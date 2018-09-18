@@ -9,9 +9,11 @@ import java.awt.*;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Tuesday, 9/4/2018
  *
- * Marker interface for "native" level components.
+ * Additional behavior for "native" level components.
  */
-public interface RxNtvComponent {
+public abstract class RxNtvComponent<T extends Component> extends RxComponent {
 
-    Class<? extends Component> getNtvType();
+    public abstract Class<T> getNtvType();
+
+    public abstract T construct();
 }

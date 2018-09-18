@@ -23,7 +23,7 @@ public class NtvChgMgrFactory {
 
     public NtvChgMgrFactory() {
         this.ntvComponentStore = RdrMger.getInstance().getNtvComponentStore();
-        this.componentStore = RdrMger.getInstance().getMtdRxComps();
+        this.componentStore = RdrMger.getInstance().getComponentStore();
     }
 
     public RxChgMger getChangeManagerFor(RxNode currentNode, RxNode newNode) {

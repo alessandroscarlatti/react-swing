@@ -29,7 +29,7 @@ public class RxNodeRealizer {
     // That's when we're done.
     //
     // I guess we should try the reverse strategy!!!
-    public RxNode realizeNode() {
+    public RxNode realize() {
         return realizeNodeRecursive(root);
     }
 
