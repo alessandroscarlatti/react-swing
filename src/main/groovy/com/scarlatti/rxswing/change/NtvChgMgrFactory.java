@@ -1,7 +1,7 @@
 package com.scarlatti.rxswing.change;
 
-import com.scarlatti.rxswing.ComponentStore;
-import com.scarlatti.rxswing.NtvComponentStore;
+import com.scarlatti.rxswing.RxComponentStore;
+import com.scarlatti.rxswing.SwComponentStore;
 import com.scarlatti.rxswing.RdrMger;
 import com.scarlatti.rxswing.component.RxNtvComponent;
 import com.scarlatti.rxswing.inspect.RxNode;
@@ -18,18 +18,18 @@ import java.awt.*;
  */
 public class NtvChgMgrFactory {
 
-    private NtvComponentStore ntvComponentStore;
-    private ComponentStore componentStore;
+    private SwComponentStore swComponentStore;
+    private RxComponentStore componentStore;
 
     public NtvChgMgrFactory() {
-        this.ntvComponentStore = RdrMger.getInstance().getNtvComponentStore();
-        this.componentStore = RdrMger.getInstance().getComponentStore();
+        this.swComponentStore = RdrMger.getInstance().getSwComponentStore();
+        this.componentStore = RdrMger.getInstance().getRxComponentStore();
     }
 
     public RxChgMger getChangeManagerFor(RxNode currentNode, RxNode newNode) {
 
         Class<? extends Component> clazz = ((RxNtvComponent) componentStore.get(newNode.getId())).getNtvType();
-        Component ntvComponent = ntvComponentStore.get(newNode.getId());
+        Component ntvComponent = swComponentStore.get(newNode.getId());
 
         if (clazz == JLabel.class) {
             return new RxJLabelChgMger((JLabel) ntvComponent, currentNode, newNode);

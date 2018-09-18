@@ -11,16 +11,16 @@ import com.scarlatti.rxswing.component.RxNtvComponent;
  * <p>
  * Trim the RxNode down to just NtvNodes...
  */
-public class RxNodeTrimmer {
+public class RxNodeSwingifier {
 
     private RxNode root;
 
-    public RxNodeTrimmer(RxNode root) {
+    public RxNodeSwingifier(RxNode root) {
         this.root = root;
     }
 
     // return a new rxNode...
-    public RxNode trim() {
+    public RxNode swingify() {
         return internalTrimRecursive(root);
     }
 

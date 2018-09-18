@@ -3,10 +3,12 @@ package com.scarlatti.rxswing;
 import com.scarlatti.rxswing.change.RxComponentTreeChgMgr;
 import com.scarlatti.rxswing.change.RxNtvCompChgPacket;
 import com.scarlatti.rxswing.component.RxComponent;
+import com.scarlatti.rxswing.component.RxNtvComponent;
 import com.scarlatti.rxswing.inspect.RxDom;
 import com.scarlatti.rxswing.inspect.RxNode;
 import com.scarlatti.rxswing.inspect.RxNodeRealizer;
 
+import java.awt.*;
 import java.util.Collections;
 
 /**
@@ -19,8 +21,8 @@ import java.util.Collections;
 public class RdrMger {
     private static RdrMger ourInstance = new RdrMger();
 
-    private NtvComponentStore myMtdSwingComps = new NtvComponentStore();
-    private ComponentStore myMtdRxComps = new ComponentStore();
+    private SwComponentStore mySwComps = new SwComponentStore();
+    private RxComponentStore myRxComps = new RxComponentStore();
     private RxDom myDom = new RxDom();
 
     public static RdrMger getInstance() {
@@ -30,7 +32,7 @@ public class RdrMger {
     private RdrMger() {
     }
 
-    public void pleaseRdr(RxComponent comp) {
+    public void pleaseRdrMeExisting(RxComponent comp) {
 
         // get a rxNode tree...
         RxNode newDom = comp.getLifecycleManager().performRender(null, Collections.emptyList());
@@ -44,7 +46,7 @@ public class RdrMger {
         // now fully resolve the dom...
         // we can skip this for the basic implementation with a single layer of component...
         //////////....
-        newDom = new RxNodeRealizer(newDom, myMtdRxComps).realize();
+        newDom = new RxNodeRealizer(newDom, myRxComps).realize();
 
         // OK.  Now the new dom is fully resolved.
         // time to create a change manager for it.
@@ -68,6 +70,38 @@ public class RdrMger {
         myDom.replace(nodeToReplace.getId(), newDom);
     }
 
+    public void pleaseRdrMeFirstTimeTemp(RxNode swingyNode) {
+        // send a visitor through the node tree
+        // and instantiate every swing component!
+        // this is temporary because we definitely want something
+        // far more robust!
+
+        swingyNode.walkTree(new RxNode.Visitor() {
+            @Override
+            protected void visitNode(RxNode node) {
+
+                // this is a swing component.
+                // INSTANTIATE IT!!!
+
+                RxNtvComponent ntvComponent = (RxNtvComponent) RdrMger.getInstance().getRxComponentStore().get(node.getId());
+                Component swComponent = ntvComponent.construct();
+
+                // attach the new swing component to its parent swing component
+                RxNode parent = node.getParent();
+                if (parent != null) {
+                    Container ntvParent = (Container) RdrMger.getInstance().getSwComponentStore().get(node.getId());
+                    ntvParent.add(swComponent);
+                }
+
+                // add it to the store.
+                RdrMger.getInstance().getSwComponentStore().putIfAbsent(node.getId(), swComponent);
+
+                // keep walking the tree
+                super.visitNode(node);
+            }
+        });
+    }
+
     private void applyChgPacketRecursive(RxNtvCompChgPacket chgPacket) {
         for (Runnable change : chgPacket.getChangesForSelf()) {
             change.run();
@@ -78,12 +112,12 @@ public class RdrMger {
         }
     }
 
-    public NtvComponentStore getNtvComponentStore() {
-        return myMtdSwingComps;
+    public SwComponentStore getSwComponentStore() {
+        return mySwComps;
     }
 
-    public ComponentStore getComponentStore() {
-        return myMtdRxComps;
+    public RxComponentStore getRxComponentStore() {
+        return myRxComps;
     }
 
     public RxDom getCurrentDom() {

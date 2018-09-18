@@ -27,11 +27,11 @@ public class TestCmp4 {
         jPanel.add(label1);
         jPanel.add(label2);
 
-        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]", jPanel);
-        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[0]", label1);
-        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[1]", label2);
+        RdrMger.getInstance().getSwComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]", jPanel);
+        RdrMger.getInstance().getSwComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[0]", label1);
+        RdrMger.getInstance().getSwComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[1]", label2);
 
-        lottoComponent.getLifecycleManager().addToStore(RdrMger.getInstance().getComponentStore(), "lottoComponent");
+        lottoComponent.getLifecycleManager().addToStore(RdrMger.getInstance().getRxComponentStore(), "lottoComponent");
 
         RdrMger.getInstance().getCurrentDom().setRoot(
             Rx.node(RxJPanel.class)

@@ -1,7 +1,7 @@
 package com.scarlatti.rxswing;
 
 import com.scarlatti.rxswing.component.usr.MyCoolComponent;
-import com.scarlatti.rxswing.component.ntv.RxJLabel;
+import com.scarlatti.rxswing.inspect.RxNode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,13 +20,14 @@ public class TestCmp {
     private MyCoolComponent coolComponent;
 
     public TestCmp() {
-        coolComponent = new MyCoolComponent();
-        JLabel label1 = new JLabel("what");
-        panel.add(label1);
+//        coolComponent = new MyCoolComponent();
+//        JLabel label1 = new JLabel("what");
+//        panel.add(label1);
 
-
+        Rx.render(() -> Rx.node(MyCoolComponent.class), panel);
 
         // this is just an example of what the java syntax might look like.
+        // for generic node creation, not Rx.render per se.
 //        RxJPanel.jPanel(jPanel -> {
 //            jPanel.child(RxJLabel.jLabel(jLabel -> {
 //                jLabel.setText("what");
@@ -38,16 +39,19 @@ public class TestCmp {
         // there should be a slightly separate method for this initiating process.
         // that's for the same reasons as using a performAction and performActionRecursive method...I think...
         // preload into the component store
-        coolComponent.getLifecycleManager().addToStore(RdrMger.getInstance().getComponentStore(), "coolComponent");
+//        coolComponent.getLifecycleManager().addToStore(RdrMger.getInstance().getRxComponentStore(), "coolComponent");
 
         // preload into the native component store...will need the right key...
-        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("coolComponent/com.scarlatti.rxswing.component.ntv.RxJLabel[0]", label1);
+//        RdrMger.getInstance().getSwComponentStore().putIfAbsent("coolComponent/com.scarlatti.rxswing.component.ntv.RxJLabel[0]", label1);
 
-        RdrMger.getInstance().getCurrentDom().setRoot(
-            Rx.node(RxJLabel.class)
-                .id("coolComponent/com.scarlatti.rxswing.component.ntv.RxJLabel[0]")
-                .props("text", "0")
-        );
+//        RdrMger.getInstance().getCurrentDom().setRoot(
+//            Rx.node(RxJLabel.class)
+//                .id("coolComponent/com.scarlatti.rxswing.component.ntv.RxJLabel[0]")
+//                .props("text", "0")
+//        );
+
+        RxNode domRoot = RdrMger.getInstance().getCurrentDom().getRoot();
+        coolComponent = (MyCoolComponent) RdrMger.getInstance().getRxComponentStore().get(domRoot.getId());
 
         upButton.addActionListener(e -> coolComponent.setState(coolComponent.getState() + 1));
         downButton.addActionListener(e -> coolComponent.setState(coolComponent.getState() - 1));

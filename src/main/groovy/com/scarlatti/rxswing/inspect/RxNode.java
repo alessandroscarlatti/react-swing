@@ -17,7 +17,8 @@ public class RxNode {
     private String id;
     private Class<? extends RxComponent> type;
     private Map<String, Object> props = new HashMap<>();
-    private List<RxNode> children = new ArrayList<>();
+    private List<RxNode> children = new RxNodeChildContainer();
+    private RxNode parent;
 
     public RxNode() {
     }
@@ -48,7 +49,7 @@ public class RxNode {
     }
 
     @SuppressWarnings("unchecked")
-     public <T> T get(String key, Class<T> clazz) {
+    public <T> T get(String key, Class<T> clazz) {
         return (T) props.get(key);
     }
 
@@ -147,6 +148,10 @@ public class RxNode {
         });
     }
 
+    public RxNode getParent() {
+        return parent;
+    }
+
     public static abstract class Visitor {
         protected void visitNode(RxNode node) {
             for (RxNode child : node.getChildren()) {
@@ -179,6 +184,28 @@ public class RxNode {
         }
 
         protected RxNode getResult() {
+            return result;
+        }
+    }
+
+    private class RxNodeChildContainer extends ArrayList<RxNode> {
+        @Override
+        public boolean add(RxNode node) {
+            boolean result = super.add(node);
+            if (result) {
+                node.parent = RxNode.this;
+            }
+            return result;
+        }
+
+        @Override
+        public boolean addAll(Collection<? extends RxNode> c) {
+            boolean result = super.addAll(c);
+            if (result) {
+                for (RxNode node : c) {
+                    node.parent = RxNode.this;
+                }
+            }
             return result;
         }
     }

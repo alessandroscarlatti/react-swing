@@ -28,8 +28,8 @@ public class TestCmp2 {
         panel.add(label2);
 
         // preload into native component store
-        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("jLabel1", label1);
-        RdrMger.getInstance().getNtvComponentStore().putIfAbsent("jLabel2", label2);
+        RdrMger.getInstance().getSwComponentStore().putIfAbsent("jLabel1", label1);
+        RdrMger.getInstance().getSwComponentStore().putIfAbsent("jLabel2", label2);
 
         RdrMger.getInstance().getCurrentDom().setRoot(
             Rx.node(RxJLabel.class)

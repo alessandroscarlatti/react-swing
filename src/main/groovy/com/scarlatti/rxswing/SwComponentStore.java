@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Friday, 9/7/2018
  */
-public class NtvComponentStore {
+public class SwComponentStore {
 
     private Map<String, Component> components = new HashMap<>();
 

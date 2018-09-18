@@ -23,7 +23,7 @@ class MyCoolComponent extends RxComponent {
         this.count = count
 
         // now initiate render.
-        RdrMger.getInstance().pleaseRdr(this)
+        RdrMger.getInstance().pleaseRdrMeExisting(this)
     }
 
     RxNode render() {

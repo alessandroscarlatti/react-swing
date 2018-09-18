@@ -1,6 +1,6 @@
 package com.scarlatti.rxswing.component;
 
-import com.scarlatti.rxswing.ComponentStore;
+import com.scarlatti.rxswing.RxComponentStore;
 import com.scarlatti.rxswing.RdrMger;
 import com.scarlatti.rxswing.inspect.RxNode;
 import com.scarlatti.rxswing.inspect.RxNodeRealizer;
@@ -33,7 +33,7 @@ public abstract class RxComponent {
         stateChangePacket.run();
 
         // now initiate render.
-        RdrMger.getInstance().pleaseRdr(this);
+        RdrMger.getInstance().pleaseRdrMeExisting(this);
     }
 
     public RxNode render() {
@@ -47,10 +47,10 @@ public abstract class RxComponent {
     public class ComponentLifecycleManager {
 
         private String myId;
-        private ComponentStore mtdCompStre;
+        private RxComponentStore mtdCompStre;
         private RxComponent component = RxComponent.this;
 
-        public void addToStore(ComponentStore store, String id) {
+        public void addToStore(RxComponentStore store, String id) {
             mtdCompStre = store;
             myId = id;
             mtdCompStre.put(id, component);

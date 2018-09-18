@@ -3,7 +3,6 @@ package com.scarlatti.rxswing.component.usr;
 import com.scarlatti.rxswing.RdrMger;
 import com.scarlatti.rxswing.Rx;
 import com.scarlatti.rxswing.component.RxComponent;
-import com.scarlatti.rxswing.component.ntv.RxJButton;
 import com.scarlatti.rxswing.component.ntv.RxJPanel;
 import com.scarlatti.rxswing.inspect.RxNode;
 
@@ -28,7 +27,7 @@ public class LottoComponent2 extends RxComponent {
         this.count = count;
 
         // now initiate render.
-        RdrMger.getInstance().pleaseRdr(this);
+        RdrMger.getInstance().pleaseRdrMeExisting(this);
     }
 
     @Override

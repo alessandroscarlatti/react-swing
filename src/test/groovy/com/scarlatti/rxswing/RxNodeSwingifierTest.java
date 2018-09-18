@@ -3,7 +3,7 @@ package com.scarlatti.rxswing;
 import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.RxNtvComponent;
 import com.scarlatti.rxswing.inspect.RxNode;
-import com.scarlatti.rxswing.inspect.RxNodeTrimmer;
+import com.scarlatti.rxswing.inspect.RxNodeSwingifier;
 import org.junit.Test;
 
 import javax.swing.*;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Wednesday, 9/5/2018
  */
-public class RxNodeTrimmerTest {
+public class RxNodeSwingifierTest {
     private static class RxJPanel extends RxNtvComponent {
 
         @Override
@@ -62,7 +62,7 @@ public class RxNodeTrimmerTest {
         RxNode expected = new RxNode(RxJPanel.class)
             .child(new RxNode(RxJButton.class));
 
-        RxNode trimmed = new RxNodeTrimmer(original).trim();
+        RxNode trimmed = new RxNodeSwingifier(original).swingify();
 
         assertEquals(expected, trimmed);
     }
@@ -97,7 +97,7 @@ public class RxNodeTrimmerTest {
                 .child(Rx.node(RxJButton.class))
             );
 
-        RxNode trimmed = new RxNodeTrimmer(original).trim();
+        RxNode trimmed = new RxNodeSwingifier(original).swingify();
 
         assertEquals(expected, trimmed);
     }

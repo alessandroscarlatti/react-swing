@@ -63,7 +63,7 @@ public class RxNodeRealizerTest {
         // from the component instance id.
         node.setId("rootNode");
 
-        ComponentStore componentStore = new ComponentStore();
+        RxComponentStore componentStore = new RxComponentStore();
         RxNodeRealizer realizer = new RxNodeRealizer(node, componentStore);
         RxNode realizedNode = realizer.realize();
 

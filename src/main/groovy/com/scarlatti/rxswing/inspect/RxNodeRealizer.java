@@ -1,6 +1,6 @@
 package com.scarlatti.rxswing.inspect;
 
-import com.scarlatti.rxswing.ComponentStore;
+import com.scarlatti.rxswing.RxComponentStore;
 import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.RxNtvComponent;
 
@@ -16,9 +16,9 @@ import java.util.List;
 public class RxNodeRealizer {
 
     private RxNode root;
-    private ComponentStore componentStore;
+    private RxComponentStore componentStore;
 
-    public RxNodeRealizer(RxNode root, ComponentStore componentStore) {
+    public RxNodeRealizer(RxNode root, RxComponentStore componentStore) {
         this.root = root;
         this.componentStore = componentStore;
     }

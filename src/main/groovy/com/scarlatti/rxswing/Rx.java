@@ -3,7 +3,7 @@ package com.scarlatti.rxswing;
 import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.inspect.RxNode;
 import com.scarlatti.rxswing.inspect.RxNodeRealizer;
-import com.scarlatti.rxswing.inspect.RxNodeTrimmer;
+import com.scarlatti.rxswing.inspect.RxNodeSwingifier;
 
 import java.awt.*;
 import java.util.function.Consumer;
@@ -69,13 +69,23 @@ public class Rx {
 
         // now we will have a realized node
         // any components it had to create have been added to the component store.
-        RxNode realizedNode = new RxNodeRealizer(unrealizedNode, RdrMger.getInstance().getComponentStore()).realize();
+        RxNode realizedNode = new RxNodeRealizer(unrealizedNode, RdrMger.getInstance().getRxComponentStore()).realize();
 
-        // now we have only nodes that are actually swing components.
-        RxNode trimmedNode = new RxNodeTrimmer(realizedNode).trim();
+        // now we will have a node tree that contains ONLY swing components.
+        RxNode swingyNode = new RxNodeSwingifier(realizedNode).swingify();
 
         // Now we would need to apply the change management process to the realized node.
         // with respect to the swing container.
         // But for now, let's just create all the swing objects on the tree.
+        // temporarily, set up the native components
+        RdrMger.getInstance().pleaseRdrMeFirstTimeTemp(swingyNode);
+
+        // now manually attach the rendered swing component
+        // to the swing container that was given us in this method.
+        Component swComponent = RdrMger.getInstance().getSwComponentStore().get(swingyNode.getId());
+        swingContainer.add(swComponent);
+
+        // now set the current DOM root
+        RdrMger.getInstance().getCurrentDom().setRoot(realizedNode);
     }
 }
