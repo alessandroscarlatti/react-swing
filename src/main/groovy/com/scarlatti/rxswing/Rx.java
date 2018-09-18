@@ -46,7 +46,10 @@ public class Rx {
     // so that all child nodes can be named properly.
     // however, it will need to be the same node name upon
     // successive invocations in order to facilitate re-rendering
-    // all the way from the root.
+    // all the way from the root.  This will be accomplished
+    // by creating the root component's unique ID based on the
+    // identity of the Swing Component it is being attached to!!
+    //
     // The first coolComponent would be named coolComponent[0],
     // coolComponent[1] and so on.
     // - next, realize the node.  At this point, the component
