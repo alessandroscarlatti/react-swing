@@ -66,10 +66,12 @@ public class Rx {
     public static void render(Supplier<RxNode> nodeSupplier, Container swingContainer) {
         RxNode unrealizedNode = nodeSupplier.get();
 
-        // set an id for this node.
+        // set a globally unique id for this node.
+        // it is ensured to be globally unique by using fully qualified class name
+        // and system identity hash code.
         // for now, we'll pretend it's all being called only once.
-        // todo after we get this working for a single render, use unique name by the attached swing component
-        unrealizedNode.setId(unrealizedNode.getType().getName());
+        String globallyUniqueSwingContainerId = swingContainer.getClass().getName() + "@" + System.identityHashCode(swingContainer);
+        unrealizedNode.setId(globallyUniqueSwingContainerId);
 
         // now we will have a realized node
         // any components it had to create have been added to the component store.
