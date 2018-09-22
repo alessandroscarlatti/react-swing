@@ -68,6 +68,7 @@ public class Rx {
 
         // set an id for this node.
         // for now, we'll pretend it's all being called only once.
+        // todo after we get this working for a single render, use unique name by the attached swing component
         unrealizedNode.setId(unrealizedNode.getType().getName());
 
         // now we will have a realized node
@@ -85,6 +86,7 @@ public class Rx {
 
         // now manually attach the rendered swing component
         // to the swing container that was given us in this method.
+        // this is the code that actually causes the new swing components to be rendered.
         Component swComponent = RdrMger.getInstance().getSwComponentStore().get(swingyNode.getId());
         swingContainer.add(swComponent);
 

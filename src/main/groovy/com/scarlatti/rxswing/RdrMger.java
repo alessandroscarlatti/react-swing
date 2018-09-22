@@ -89,7 +89,7 @@ public class RdrMger {
                 // attach the new swing component to its parent swing component
                 RxNode parent = node.getParent();
                 if (parent != null) {
-                    Container ntvParent = (Container) RdrMger.getInstance().getSwComponentStore().get(node.getId());
+                    Container ntvParent = (Container) RdrMger.getInstance().getSwComponentStore().get(parent.getId());
                     ntvParent.add(swComponent);
                 }
 
