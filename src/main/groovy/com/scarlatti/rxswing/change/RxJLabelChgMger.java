@@ -31,7 +31,7 @@ public class RxJLabelChgMger implements RxChgMger {
     // limitation: using "master" right now, because we aren't replacing components at all...
     public List<Runnable> pleaseCreateChgPkt() {
         return Collections.singletonList(() -> {
-            ntv.setText(((RxJLabel.RxJLabelNode) newNode).getText());
+            ntv.setText(new RxJLabel.RxJLabelNode(newNode).getText());
         });
     }
 }

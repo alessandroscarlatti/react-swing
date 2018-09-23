@@ -1,5 +1,7 @@
 package com.scarlatti.rxswing.component;
 
+import com.scarlatti.rxswing.inspect.RxNode;
+
 import java.awt.*;
 
 /**
@@ -15,5 +17,5 @@ public abstract class RxNtvComponent<T extends Component> extends RxComponent {
 
     public abstract Class<T> getNtvType();
 
-    public abstract T construct();
+    public abstract T construct(RxNode rxNode);
 }

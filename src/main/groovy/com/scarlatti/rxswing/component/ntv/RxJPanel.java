@@ -1,5 +1,7 @@
 package com.scarlatti.rxswing.component.ntv;
 
+import com.scarlatti.rxswing.Rx;
+import com.scarlatti.rxswing.component.RxNodeWrapper;
 import com.scarlatti.rxswing.component.RxNtvComponent;
 import com.scarlatti.rxswing.inspect.RxNode;
 
@@ -22,19 +24,20 @@ public class RxJPanel extends RxNtvComponent {
     }
 
     @Override
-    public Component construct() {
+    public Component construct(RxNode rxNode) {
         return new JPanel();
     }
 
     public static RxNode jPanel(Consumer<RxJPanelNode> consumer) {
-        RxJPanelNode node = new RxJPanelNode();
-        consumer.accept(node);
-        return node;
+        RxNode rxNode = Rx.node(RxJPanel.class);
+        RxJPanelNode rxNodeWrapper = new RxJPanelNode(rxNode);
+        consumer.accept(rxNodeWrapper);
+        return rxNode;
     }
 
-    public static class RxJPanelNode extends RxNode {
-        public RxJPanelNode() {
-            super(RxJPanel.class);
+    public static class RxJPanelNode extends RxNodeWrapper {
+        public RxJPanelNode(RxNode rxNode) {
+            super(rxNode);
         }
     }
 }

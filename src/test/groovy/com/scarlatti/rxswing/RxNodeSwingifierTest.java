@@ -27,7 +27,7 @@ public class RxNodeSwingifierTest {
         }
 
         @Override
-        public Component construct() {
+        public Component construct(RxNode rxNode) {
             return null;
         }
     }
@@ -40,7 +40,7 @@ public class RxNodeSwingifierTest {
         }
 
         @Override
-        public Component construct() {
+        public Component construct(RxNode rxNode) {
             return null;
         }
     }

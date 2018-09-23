@@ -84,7 +84,7 @@ public class RdrMger {
                 // INSTANTIATE IT!!!
 
                 RxNtvComponent ntvComponent = (RxNtvComponent) RdrMger.getInstance().getRxComponentStore().get(node.getId());
-                Component swComponent = ntvComponent.construct();
+                Component swComponent = ntvComponent.construct(node);
 
                 // attach the new swing component to its parent swing component
                 RxNode parent = node.getParent();

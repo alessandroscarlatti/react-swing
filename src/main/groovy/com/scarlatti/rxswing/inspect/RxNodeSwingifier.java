@@ -21,10 +21,10 @@ public class RxNodeSwingifier {
 
     // return a new rxNode...
     public RxNode swingify() {
-        return internalTrimRecursive(root);
+        return removeNonSwingRecursive(root);
     }
 
-    private RxNode internalTrimRecursive(RxNode node) {
+    private RxNode removeNonSwingRecursive(RxNode node) {
 
         // let's try a strategy of start at the end, and
         // just make sure you don't regress while adding conditions.
@@ -39,11 +39,13 @@ public class RxNodeSwingifier {
                 // this native component has children
                 // we need to find the actual native component children
                 // within each child branch.
+                // todo this will need to not lose the subclass info when copying to a new instance.
+                // todo this also means it will need to copy the value of props
                 RxNode copy = new RxNode();
                 copy.setType(node.getType());
                 copy.setId(node.getId());
                 for (RxNode child : node.getChildren()) {
-                    RxNode actualChild = internalTrimRecursive(child);
+                    RxNode actualChild = removeNonSwingRecursive(child);
                     copy.getChildren().add(actualChild);
                 }
                 return copy;
@@ -68,7 +70,7 @@ public class RxNodeSwingifier {
 
                 // so now we will traverse the first (and only)
                 // child component.
-                return internalTrimRecursive(node.getChildren().get(0));
+                return removeNonSwingRecursive(node.getChildren().get(0));
             }
         }
     }

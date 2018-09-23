@@ -1,6 +1,7 @@
 package com.scarlatti.rxswing;
 
 import com.scarlatti.rxswing.component.usr.MyCoolComponent;
+import com.scarlatti.rxswing.component.usr.MyCoolComponentWButtons;
 import com.scarlatti.rxswing.inspect.RxNode;
 
 import javax.swing.*;
@@ -13,17 +14,15 @@ import java.awt.*;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Saturday, 8/25/2018
  */
-public class TestCmp {
+public class TestCmpWButtons {
     private JPanel panel;
-    private JButton upButton;
-    private JButton downButton;
 
-    public TestCmp() {
+    public TestCmpWButtons() {
 //        coolComponent = new MyCoolComponent();
 //        JLabel label1 = new JLabel("what");
 //        panel.add(label1);
 
-        Rx.render(() -> Rx.node(MyCoolComponent.class), panel);
+        Rx.render(() -> Rx.node(MyCoolComponentWButtons.class), panel);
 
         // this is just an example of what the java syntax might look like.
         // for generic node creation, not Rx.render per se.
@@ -50,7 +49,7 @@ public class TestCmp {
 //        );
 
         RxNode domRoot = RdrMger.getInstance().getCurrentDom().getRoot();
-        MyCoolComponent coolComponent = (MyCoolComponent) RdrMger.getInstance().getRxComponentStore().get(domRoot.getId());
+        MyCoolComponentWButtons coolComponent = (MyCoolComponentWButtons) RdrMger.getInstance().getRxComponentStore().get(domRoot.getId());
 
         // OK... now to get this stuff to be inside the component...
         // we will have to start thinking of it as props of each button component.
@@ -63,8 +62,8 @@ public class TestCmp {
         // Probably should copy this example component so that we can always have this super simple example.
         // At least until controlling the component from the outside is a thing of the past.
         // THEN see about making them do something.
-        upButton.addActionListener(e -> coolComponent.setState(coolComponent.getState() + 1));
-        downButton.addActionListener(e -> coolComponent.setState(coolComponent.getState() - 1));
+//        upButton.addActionListener(e -> coolComponent.setState(coolComponent.getState() + 1));
+//        downButton.addActionListener(e -> coolComponent.setState(coolComponent.getState() - 1));
     }
 
     public JPanel getPanel() {
@@ -88,12 +87,6 @@ public class TestCmp {
     private void $$$setupUI$$$() {
         panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        upButton = new JButton();
-        upButton.setText("Up");
-        panel.add(upButton);
-        downButton = new JButton();
-        downButton.setText("Down");
-        panel.add(downButton);
     }
 
     /**
