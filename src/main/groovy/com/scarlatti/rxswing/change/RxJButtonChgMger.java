@@ -16,19 +16,19 @@ import java.util.List;
  */
 public class RxJButtonChgMger implements RxChgMger {
     private JButton ntv;
-    private RxNode currentNode;
-    private RxNode newNode;
+    private RxJButton.RxJButtonNode currentNode;
+    private RxJButton.RxJButtonNode newNode;
 
     public RxJButtonChgMger(JButton ntv, RxNode currentNode, RxNode newNode) {
         this.ntv = ntv;
-        this.currentNode = currentNode;
-        this.newNode = newNode;
+        this.currentNode = new RxJButton.RxJButtonNode(currentNode);
+        this.newNode = new RxJButton.RxJButtonNode(newNode);
     }
 
     // limitation: using "master" right now, because we aren't replacing components at all...
     public List<Runnable> pleaseCreateChgPkt() {
         return Collections.singletonList(() -> {
-            ntv.setText(new RxJButton.RxJButtonNode(newNode).getText());
+            ntv.setText(newNode.getText());
         });
     }
 }

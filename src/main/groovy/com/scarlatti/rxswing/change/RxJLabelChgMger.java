@@ -17,21 +17,20 @@ import java.util.Objects;
  */
 public class RxJLabelChgMger implements RxChgMger {
     private JLabel ntv;
-    private RxNode currentNode;
-    private RxNode newNode;
+    private RxJLabel.RxJLabelNode currentNode;
+    private RxJLabel.RxJLabelNode newNode;
 
     public RxJLabelChgMger(JLabel ntv, RxNode currentNode, RxNode newNode) {
         Objects.requireNonNull(newNode, "Change Manager requires an RxNode.");
         Objects.requireNonNull(ntv, "Change Manager must be bound to a Swing component.  No Swing component given for " + newNode);
         this.ntv = ntv;
-        this.currentNode = currentNode;
-        this.newNode = newNode;
+        this.currentNode = new RxJLabel.RxJLabelNode(currentNode);
+        this.newNode = new RxJLabel.RxJLabelNode(newNode);
     }
 
-    // limitation: using "master" right now, because we aren't replacing components at all...
     public List<Runnable> pleaseCreateChgPkt() {
         return Collections.singletonList(() -> {
-            ntv.setText(new RxJLabel.RxJLabelNode(newNode).getText());
+            ntv.setText(newNode.getText());
         });
     }
 }

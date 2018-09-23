@@ -27,6 +27,11 @@ public class RxJButton extends RxNtvComponent {
         RxJButtonNode rxNodeWrapper = new RxJButtonNode(rxNode);
         JButton jButton = new JButton();
         jButton.setText(rxNodeWrapper.getText());
+
+        Runnable onClick = rxNodeWrapper.getOnClick();
+        if (onClick != null) {
+            jButton.addActionListener(e -> onClick.run());
+        }
         return jButton;
     }
 
@@ -48,6 +53,14 @@ public class RxJButton extends RxNtvComponent {
 
         public String getText() {
             return get("text", String.class);
+        }
+
+        public void setOnClick(Runnable runnable) {
+            set("onClick", runnable);
+        }
+
+        public Runnable getOnClick() {
+            return get("onClick", Runnable.class);
         }
     }
 }

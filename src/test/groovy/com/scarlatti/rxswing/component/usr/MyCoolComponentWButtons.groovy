@@ -32,6 +32,7 @@ class MyCoolComponentWButtons extends RxComponent {
         return jPanel {
             it.child jButton {
                 it.text = "W Up"
+                it.onClick = { println "what do you know" }
             }
             it.child jButton {
                 it.text = "W Down"
