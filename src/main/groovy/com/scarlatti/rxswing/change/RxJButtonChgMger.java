@@ -4,8 +4,10 @@ import com.scarlatti.rxswing.component.ntv.RxJButton;
 import com.scarlatti.rxswing.inspect.RxNode;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -27,6 +29,16 @@ public class RxJButtonChgMger implements RxChgMger {
 
     // limitation: using "master" right now, because we aren't replacing components at all...
     public List<Runnable> pleaseCreateChgPkt() {
+
+        Runnable onClickChg = () -> {
+            for (ActionListener actionListener : ntv.getActionListeners()) {
+                ntv.removeActionListener(actionListener);
+            }
+
+            ntv.addActionListener(e -> newNode.getOnClick().run());
+        };
+
+
         return Collections.singletonList(() -> {
             ntv.setText(newNode.getText());
         });

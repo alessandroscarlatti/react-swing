@@ -32,10 +32,20 @@ class MyCoolComponentWButtons extends RxComponent {
         return jPanel {
             it.child jButton {
                 it.text = "W Up"
-                it.onClick = { println "what do you know" }
+
+                // this is where it may become necessary to do "batchedUpdates" like react JS by listening
+                // to some indicator on this component to see whether or not an update needs to be called.
+                // Then we would initiate a callback once the re-render has occurred.
+                // This might come into play when components are being removed at runtime due to a state change.
+                it.onClick = {
+                    setState(getState() + 1)
+                }
             }
             it.child jButton {
                 it.text = "W Down"
+                it.onClick = {
+                    setState(getState() - 1)
+                }
             }
             it.child jLabel {
                 it.text = String.valueOf(count)
