@@ -1,5 +1,7 @@
 package com.scarlatti.rxswing.component.ntv;
 
+import com.scarlatti.rxswing.Rx;
+import com.scarlatti.rxswing.component.RxNodeWrapper;
 import com.scarlatti.rxswing.component.RxNtvComponent;
 import com.scarlatti.rxswing.inspect.RxNode;
 
@@ -22,19 +24,31 @@ public class RxJLabel extends RxNtvComponent {
     }
 
     @Override
-    public Component construct() {
-        return new JLabel();
+    public Component construct(RxNode rxNode) {
+        // todo this line throws a class cast exception
+        // because the node has been recreated by this time as a plain node.
+        // This is where the decorator pattern would be useful,
+        // because I could simply decorate the plain old vanilla RxNode
+        // as an RxJLabelNode, or any other node I'll ever need.
+        // This would leave generics out of the change management process
+        // for the time being.  And keep the specific information really
+        // only where it is right next to the UI definitions.
+        RxJLabelNode rxNodeWrapper = new RxJLabelNode(rxNode);
+        JLabel jLabel = new JLabel();
+        jLabel.setText(rxNodeWrapper.getText());
+        return jLabel;
     }
 
     public static RxNode jLabel(Consumer<RxJLabelNode> consumer) {
-        RxJLabelNode node = new RxJLabelNode();
-        consumer.accept(node);
-        return node;
+        RxNode rxNode = Rx.node(RxJLabel.class);
+        RxJLabelNode rxJLabelNode = new RxJLabelNode(rxNode);
+        consumer.accept(rxJLabelNode);
+        return rxNode;
     }
 
-    public static class RxJLabelNode extends RxNode {
-        public RxJLabelNode() {
-            super(RxJLabel.class);
+    public static class RxJLabelNode extends RxNodeWrapper {
+        public RxJLabelNode(RxNode rxNode) {
+            super(rxNode);
         }
 
         public void setText(String text) {

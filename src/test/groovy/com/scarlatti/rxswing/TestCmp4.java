@@ -3,6 +3,8 @@ package com.scarlatti.rxswing;
 import com.scarlatti.rxswing.component.ntv.RxJLabel;
 import com.scarlatti.rxswing.component.ntv.RxJPanel;
 import com.scarlatti.rxswing.component.usr.LottoComponent;
+import com.scarlatti.rxswing.component.usr.MyCoolComponent;
+import com.scarlatti.rxswing.inspect.RxNode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,33 +22,41 @@ public class TestCmp4 {
     private JButton downButton;
 
     public TestCmp4() {
-        LottoComponent lottoComponent = new LottoComponent();
-        JLabel label1 = new JLabel("what1");
-        JLabel label2 = new JLabel("what2");
+//        LottoComponent lottoComponent = new LottoComponent();
+//        JLabel label1 = new JLabel("what1");
+//        JLabel label2 = new JLabel("what2");
+//
+//        jPanel.add(label1);
+//        jPanel.add(label2);
+//
+//        RdrMger.getInstance().getSwComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]", jPanel);
+//        RdrMger.getInstance().getSwComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[0]", label1);
+//        RdrMger.getInstance().getSwComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[1]", label2);
+//
+//        lottoComponent.getLifecycleManager().addToStore(RdrMger.getInstance().getRxComponentStore(), "lottoComponent");
+//
+//        RdrMger.getInstance().getCurrentDom().setRoot(
+//            Rx.node(RxJPanel.class)
+//                .id("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]")
+//                .child(
+//                    Rx.node(RxJLabel.class)
+//                        .id("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[0]")
+//                        .props("text", "what")
+//                )
+//                .child(
+//                    Rx.node(RxJLabel.class)
+//                        .id("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[1]")
+//                        .props("text", "what")
+//                )
+//        );
 
-        jPanel.add(label1);
-        jPanel.add(label2);
+        // so theoretically, all this preparation should be able to removed and replaced with
+        // a single call to Rx.render()
 
-        RdrMger.getInstance().getSwComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]", jPanel);
-        RdrMger.getInstance().getSwComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[0]", label1);
-        RdrMger.getInstance().getSwComponentStore().putIfAbsent("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[1]", label2);
+        Rx.render(() -> Rx.node(LottoComponent.class), jPanel);
 
-        lottoComponent.getLifecycleManager().addToStore(RdrMger.getInstance().getRxComponentStore(), "lottoComponent");
-
-        RdrMger.getInstance().getCurrentDom().setRoot(
-            Rx.node(RxJPanel.class)
-                .id("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]")
-                .child(
-                    Rx.node(RxJLabel.class)
-                        .id("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[0]")
-                        .props("text", "what")
-                )
-                .child(
-                    Rx.node(RxJLabel.class)
-                        .id("lottoComponent/com.scarlatti.rxswing.component.ntv.RxJPanel[0]/com.scarlatti.rxswing.component.ntv.RxJLabel[1]")
-                        .props("text", "what")
-                )
-        );
+        RxNode domRoot = RdrMger.getInstance().getCurrentDom().getRoot();
+        LottoComponent lottoComponent = (LottoComponent) RdrMger.getInstance().getRxComponentStore().get(domRoot.getId());
 
         upButton.addActionListener(e -> {
             lottoComponent.setStateTemp(lottoComponent.getState() + 1);

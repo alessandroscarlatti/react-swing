@@ -19,6 +19,13 @@ public class Tests {
         });
     }
 
+    @Test
+    public void runTestFormWActiveNestedButtons() {
+        TestUtils.displayJPanel(() -> {
+            return new TestCmpWButtons().getPanel();
+        });
+    }
+
     // this will not work because we are only allowing a single root component
     @Test
     @Ignore
