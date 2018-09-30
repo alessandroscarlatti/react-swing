@@ -31,7 +31,10 @@ public class RxNode {
         this.id = other.id;
         this.type = other.type;
         this.props = other.props;
-        this.children = other.children;
+        this.children = new ArrayList<>();
+        for (RxNode node : other.getChildren()) {
+            this.children(new RxNode(node));
+        }
     }
 
     public RxNode props(String key, Object value) {

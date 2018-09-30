@@ -10,7 +10,6 @@ import com.scarlatti.rxswing.inspect.RxNodeRealizer;
 import com.scarlatti.rxswing.inspect.RxNodeSwingifier;
 
 import java.awt.*;
-import java.util.Collections;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -36,7 +35,8 @@ public class RdrMger {
     public void pleaseRdrMeExisting(RxComponent comp) {
 
         // get a rxNode tree...
-        RxNode newNode = comp.getLifecycleManager().performRender(null, Collections.emptyList());
+        // todo here is where we would need to know the props!
+        RxNode newNode = comp.getLifecycleManager().performRender(null);
 
         // temporary...
         // where should this be set?
@@ -45,7 +45,8 @@ public class RdrMger {
         // newDom.setId("jlabel");
 
         // now fully resolve the dom...
-        // todo this appears to be duplicating the jPanel rendered from the DoubleLabel component.
+        // todo do we actually need to do this?
+        // the rxComponent lifecycle manager is already doing this in the previous statement!!!
         newNode = new RxNodeRealizer(newNode, myRxComps).realize();
 
         // OK.  Now the new dom is fully resolved.
@@ -67,12 +68,9 @@ public class RdrMger {
 
         RxNode nodeToReplace = myDom.resolve(newNode.getId());
 
-        // swingify both nodes
+        // swingify both nodes, since the tree change manager expects only swingy nodes.
         RxNode swingyNodeToReplace = new RxNodeSwingifier(nodeToReplace).swingify();
-        RxNode newSwingyNode = new RxNodeSwingifier(nodeToReplace).swingify();
-
-        // it looks like this is assuming a swingy node, which it might not be!
-        // todo before we can work on isertions and deletions, we need to fix this part...
+        RxNode newSwingyNode = new RxNodeSwingifier(newNode).swingify();
         RxSwCompChgPacket chgPacket = new RxComponentTreeChgMgr(swingyNodeToReplace, newSwingyNode).createChangePacket();
 
         // now run the changes

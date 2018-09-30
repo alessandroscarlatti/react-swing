@@ -4,8 +4,6 @@ import com.scarlatti.rxswing.RxComponentStore;
 import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.RxNtvComponent;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -75,16 +73,9 @@ public class RxNodeRealizer {
             // we should look at combining those into a RxProps class, perhaps...
             Object nextProps = node.getProps();
 
-            // now we need to make sure that each child is properly defined.
-            // actually we don't need the fully rendered children.
-            // the data is what we want, not the actual rendering.
-            // They may never be rendered!!!
-
-            List<RxNode> nextChildren = node.getChildren();
-
             // this realized node would be perhaps a native component that was rendered by a usr component
             // but it could also be a user component that was rendered by the usr component
-            RxNode realizedNode = comp.getLifecycleManager().performRender(nextProps, nextChildren);
+            RxNode realizedNode = comp.getLifecycleManager().performRender(nextProps);
 
             // the node we have just realized is now to become the single child of this usr component node.
             // We may have already realized this node, so we want to make sure we OVERRIDE any existing (single)

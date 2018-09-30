@@ -5,8 +5,6 @@ import com.scarlatti.rxswing.RdrMger;
 import com.scarlatti.rxswing.inspect.RxNode;
 import com.scarlatti.rxswing.inspect.RxNodeRealizer;
 
-import java.util.List;
-
 import static com.scarlatti.rxswing.inspect.RxNodeRealizer.formatId;
 
 /**
@@ -62,10 +60,23 @@ public abstract class RxComponent {
         // might never be used.
         // here we are returning the single rendered child of the
         // usr component. That means we might reach back to the node realizer.
-        public RxNode performRender(Object nextProps, List<RxNode> children) {
+        public RxNode performRender(Object nextProps) {
 
             // need to pass props
             // for right now, no lifecycle checks.  Just pass in the props.
+            // todo let's try this--the props are just fields on the component...
+            // The props can be passed in using a props wrapper that can get its
+            // props values from SOMETHING.  Either a map or a hidden RxComponent instance (potentially THIS instance)!
+            //
+            // or what about the values coming from the RxNode?
+            // that is where they are ORIGINALLY.
+            // when this component is created, the wrapper COULD know how to map values in.
+            //
+            // Now I know one reason that the state and props are in separate objects in React.
+            // It allows the lifecycle manager to pass one or the other to the component
+            // lifecycle hooks as separate objects!  This makes it easier to compare
+            // one state to another, rather than FILTERING fields on an object that belong
+            // to the just the state, or filtering just the fields that belong to the props.
             component.setProps(nextProps);
             RxNode node = component.render();
 
