@@ -34,6 +34,11 @@ public class Rx {
         return node;
     }
 
+    // convenience api
+    public static void render(RxNode rxNode, Container swingContainer) {
+        render(() -> rxNode, swingContainer);
+    }
+
     // alright, so what we should do instead is something like:
     // Rx.render({
     //     it.child coolComponent()
@@ -70,7 +75,9 @@ public class Rx {
         // it is ensured to be globally unique by using fully qualified class name
         // and system identity hash code.
         // for now, we'll pretend it's all being called only once.
-        String globallyUniqueSwingContainerId = swingContainer.getClass().getName() + "@" + System.identityHashCode(swingContainer);
+        String globallyUniqueSwingContainerId = unrealizedNode.getType().getSimpleName() + "@" +
+                swingContainer.getClass().getName() +
+                "[" + System.identityHashCode(swingContainer) + "]";
         unrealizedNode.setId(globallyUniqueSwingContainerId);
 
         // now we will have a realized node

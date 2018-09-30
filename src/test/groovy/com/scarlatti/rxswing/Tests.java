@@ -1,7 +1,11 @@
 package com.scarlatti.rxswing;
 
+import com.scarlatti.rxswing.component.usr.ComponentWNestedComponent;
+import com.scarlatti.rxswing.component.usr.MyCoolComponentWButtons;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import javax.swing.*;
 
 /**
  * ______    __                         __           ____             __     __  __  _
@@ -16,13 +20,6 @@ public class Tests {
     public void runTestForm() {
         TestUtils.displayJPanel(() -> {
             return new TestCmp().getPanel();
-        });
-    }
-
-    @Test
-    public void runTestFormWActiveNestedButtons() {
-        TestUtils.displayJPanel(() -> {
-            return new TestCmpWButtons().getPanel();
         });
     }
 
@@ -55,6 +52,28 @@ public class Tests {
     public void runTestFormUsingRxCreateElement() {
         TestUtils.displayJPanel(() -> {
             return new TestCmp5().getPanel();
+        });
+    }
+
+    // this is the most advanced test right now...
+    // the buttons are included in the component!
+    @Test
+    public void runTestFormWActiveNestedButtons() {
+        TestUtils.displayJPanel(() -> {
+            JPanel jPanel = new EmptyDialog().getPanel();
+            Rx.render(Rx.node(MyCoolComponentWButtons.class), jPanel);
+            return jPanel;
+        });
+    }
+
+    // this test should break right now, because we don't
+    // fully support nested user components
+    @Test
+    public void runTestFormWNestedUsrComponent() {
+        TestUtils.displayJPanel(() -> {
+            JPanel jPanel = new EmptyDialog().getPanel();
+            Rx.render(Rx.node(ComponentWNestedComponent.class), jPanel);
+            return jPanel;
         });
     }
 }

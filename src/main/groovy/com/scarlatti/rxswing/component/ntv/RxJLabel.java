@@ -25,10 +25,7 @@ public class RxJLabel extends RxNtvComponent {
 
     @Override
     public Component construct(RxNode rxNode) {
-        // todo this line throws a class cast exception
-        // because the node has been recreated by this time as a plain node.
-        // This is where the decorator pattern would be useful,
-        // because I could simply decorate the plain old vanilla RxNode
+        // I could simply decorate the plain old vanilla RxNode
         // as an RxJLabelNode, or any other node I'll ever need.
         // This would leave generics out of the change management process
         // for the time being.  And keep the specific information really

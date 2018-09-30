@@ -1,12 +1,13 @@
 package com.scarlatti.rxswing;
 
 import com.scarlatti.rxswing.change.RxComponentTreeChgMgr;
-import com.scarlatti.rxswing.change.RxNtvCompChgPacket;
+import com.scarlatti.rxswing.change.RxSwCompChgPacket;
 import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.RxNtvComponent;
 import com.scarlatti.rxswing.inspect.RxDom;
 import com.scarlatti.rxswing.inspect.RxNode;
 import com.scarlatti.rxswing.inspect.RxNodeRealizer;
+import com.scarlatti.rxswing.inspect.RxNodeSwingifier;
 
 import java.awt.*;
 import java.util.Collections;
@@ -35,7 +36,7 @@ public class RdrMger {
     public void pleaseRdrMeExisting(RxComponent comp) {
 
         // get a rxNode tree...
-        RxNode newDom = comp.getLifecycleManager().performRender(null, Collections.emptyList());
+        RxNode newNode = comp.getLifecycleManager().performRender(null, Collections.emptyList());
 
         // temporary...
         // where should this be set?
@@ -44,20 +45,35 @@ public class RdrMger {
         // newDom.setId("jlabel");
 
         // now fully resolve the dom...
-        // we can skip this for the basic implementation with a single layer of component...
-        //////////....
-        newDom = new RxNodeRealizer(newDom, myRxComps).realize();
+        // todo this appears to be duplicating the jPanel rendered from the DoubleLabel component.
+        newNode = new RxNodeRealizer(newNode, myRxComps).realize();
 
         // OK.  Now the new dom is fully resolved.
         // time to create a change manager for it.
         //
-        // right now we are assuming that we are starting with the root.
+        // we cannot assume that we are starting with the root.
         // this will not always be true.
         // but we don't have to start with the root.
         // we can just replace the old node on the tree with the new node.
-        RxNode nodeToReplace = myDom.resolve(newDom.getId());
 
-        RxNtvCompChgPacket chgPacket = new RxComponentTreeChgMgr(nodeToReplace, newDom).createChangePacket();
+        // 9-29-2018 NOW THAT WE ARE WORKING ON INSERTING AND DELETING NODES
+        // we can't expect that "resolving" the newDom's Id in the existing dom
+        // is going to return anything.
+        // If we find a match it will need to be based on the "first child of the parent".
+        // todo should we refactor this stuff so that we are always doing
+        // the tree change manager by comparing the COMPONENT that started the render?
+        // We DO KNOW that that won't be different regardless of whether the type
+        // rendered is the same or different.
+
+        RxNode nodeToReplace = myDom.resolve(newNode.getId());
+
+        // swingify both nodes
+        RxNode swingyNodeToReplace = new RxNodeSwingifier(nodeToReplace).swingify();
+        RxNode newSwingyNode = new RxNodeSwingifier(nodeToReplace).swingify();
+
+        // it looks like this is assuming a swingy node, which it might not be!
+        // todo before we can work on isertions and deletions, we need to fix this part...
+        RxSwCompChgPacket chgPacket = new RxComponentTreeChgMgr(swingyNodeToReplace, newSwingyNode).createChangePacket();
 
         // now run the changes
         applyChgPacketRecursive(chgPacket);
@@ -67,7 +83,7 @@ public class RdrMger {
         // we need to know which piece to replace.
         // it may not be the root!
         // and we need to know which child it was...
-        myDom.replace(nodeToReplace.getId(), newDom);
+        myDom.replace(nodeToReplace.getId(), newNode);
     }
 
     public void pleaseRdrMeFirstTimeTemp(RxNode swingyNode) {
@@ -81,12 +97,12 @@ public class RdrMger {
             protected void visitNode(RxNode node) {
 
                 // this is a swing component.
-                // INSTANTIATE IT!!!
-
+                // INSTANTIATE IT using #construct().
                 RxNtvComponent ntvComponent = (RxNtvComponent) RdrMger.getInstance().getRxComponentStore().get(node.getId());
                 Component swComponent = ntvComponent.construct(node);
 
                 // attach the new swing component to its parent swing component
+                // we use the swing component store to get the parent.
                 RxNode parent = node.getParent();
                 if (parent != null) {
                     Container ntvParent = (Container) RdrMger.getInstance().getSwComponentStore().get(parent.getId());
@@ -102,12 +118,12 @@ public class RdrMger {
         });
     }
 
-    private void applyChgPacketRecursive(RxNtvCompChgPacket chgPacket) {
+    private void applyChgPacketRecursive(RxSwCompChgPacket chgPacket) {
         for (Runnable change : chgPacket.getChangesForSelf()) {
             change.run();
         }
 
-        for (RxNtvCompChgPacket childChgPacket : chgPacket.getChangesForChildren()) {
+        for (RxSwCompChgPacket childChgPacket : chgPacket.getChangesForChildren()) {
             applyChgPacketRecursive(childChgPacket);
         }
     }

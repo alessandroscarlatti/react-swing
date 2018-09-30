@@ -23,15 +23,28 @@ public class RxComponentTreeChgMgr {
      * been rendered to a native component yet.  A change management process
      * will handle that scenario.
      */
-    private NtvChgMgrFactory ntvChgMgrFactory;
+    private SwChgMgrFactory swChgMgrFactory;
 
+    /**
+     * This class represents a change manager for transforming an existing node tree
+     * into a new node tree.
+     *
+     * @param currentNode the root of the tree (or subtree) that will be transformed.
+     *                    The id of this node is expected to match the id of the new node.
+     * @param newNode     The root of the tree (or subtree within the complete current dom)
+     *                    that we hope to attain.
+     *                    This new tree will begin with the component actually returned from rendering
+     *                    the component that initiated a re-render.
+     *                    For example if MySpinnerComponent #render() returns an RxJPanel node,
+     *                    the newNode in this change manager should be that RxJPanel node.
+     */
     public RxComponentTreeChgMgr(RxNode currentNode, RxNode newNode) {
         this.currentNode = currentNode;
         this.newNode = newNode;
-        ntvChgMgrFactory = new NtvChgMgrFactory();
+        swChgMgrFactory = new SwChgMgrFactory();
     }
 
-    public RxNtvCompChgPacket createChangePacket() {
+    public RxSwCompChgPacket createChangePacket() {
         // at this point, each rxNode is expected
         // to have a matching component instance
         // in the component store.
@@ -47,15 +60,18 @@ public class RxComponentTreeChgMgr {
         // find what are its changes.
         // send the changes to the change manager for that node.
 
-        return createChangePacketRecursive(currentNode, newNode);
+        // 9-29-2018 NOW THAT WE ARE WORKING ON BEING ABLE TO INSERT AND DELETE NODES
+        // we'll need to look at the types of each node to see if comparison can be done.
+
+        return createChangePacketRecursiveComparingRxNodes(currentNode, newNode);
     }
 
-    private RxNtvCompChgPacket createChangePacketRecursive(RxNode currentNode, RxNode newNode) {
+    private RxSwCompChgPacket createChangePacketRecursiveComparingRxNodes(RxNode currentNode, RxNode newNode) {
 
-        RxNtvCompChgPacket compositeChgPacket = new RxNtvCompChgPacket();
+        RxSwCompChgPacket compositeChgPacket = new RxSwCompChgPacket();
 
         // compare this node...
-        RxChgMger chgMger = ntvChgMgrFactory.getChangeManagerFor(currentNode, newNode);
+        RxChgMger chgMger = swChgMgrFactory.getChangeManagerFor(currentNode, newNode);
         List<Runnable> selfChgPacket = chgMger.pleaseCreateChgPkt();
         compositeChgPacket.getChangesForSelf().addAll(selfChgPacket);
 
@@ -65,7 +81,7 @@ public class RxComponentTreeChgMgr {
         for (; crntNodeIter.hasNext(); ) {
             RxNode nextCrntNode = crntNodeIter.next();
             RxNode nextNewNode = newNodeIter.next();
-            RxNtvCompChgPacket childChgPacket = createChangePacketRecursive(nextCrntNode, nextNewNode);
+            RxSwCompChgPacket childChgPacket = createChangePacketRecursiveComparingRxNodes(nextCrntNode, nextNewNode);
             compositeChgPacket.getChangesForChildren().add(childChgPacket);
         }
 

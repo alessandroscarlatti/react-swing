@@ -12,12 +12,8 @@ import java.awt.*;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Saturday, 8/25/2018
  */
-public class TestCmpWButtons {
+public class EmptyDialog {
     private JPanel panel;
-
-    public TestCmpWButtons() {
-        Rx.render(() -> Rx.node(MyCoolComponentWButtons.class), panel);
-    }
 
     public JPanel getPanel() {
         return panel;

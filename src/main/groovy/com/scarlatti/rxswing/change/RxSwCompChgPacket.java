@@ -10,15 +10,15 @@ import java.util.List;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Saturday, 9/8/2018
  */
-public class RxNtvCompChgPacket {
+public class RxSwCompChgPacket {
     private List<Runnable> changesForSelf = new ArrayList<>();
-    private List<RxNtvCompChgPacket> changesForChildren = new ArrayList<>();
+    private List<RxSwCompChgPacket> changesForChildren = new ArrayList<>();
 
     public List<Runnable> getChangesForSelf() {
         return changesForSelf;
     }
 
-    public List<RxNtvCompChgPacket> getChangesForChildren() {
+    public List<RxSwCompChgPacket> getChangesForChildren() {
         return changesForChildren;
     }
 }

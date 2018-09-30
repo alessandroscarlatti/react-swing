@@ -16,19 +16,19 @@ import java.awt.*;
  * /_/ |_/_/\__/___/___/\_,_/_//_/\_,_/_/  \___/ /___/\__/\_,_/_/ /_/\_,_/\__/\__/_/
  * Tuesday, 9/11/2018
  */
-public class NtvChgMgrFactory {
+public class SwChgMgrFactory {
 
     private SwComponentStore swComponentStore;
     private RxComponentStore componentStore;
 
-    public NtvChgMgrFactory() {
+    public SwChgMgrFactory() {
         this.swComponentStore = RdrMger.getInstance().getSwComponentStore();
         this.componentStore = RdrMger.getInstance().getRxComponentStore();
     }
 
     public RxChgMger getChangeManagerFor(RxNode currentNode, RxNode newNode) {
 
-        Class<? extends Component> clazz = ((RxNtvComponent) componentStore.get(newNode.getId())).getNtvType();
+        Class<? extends Component> clazz = getNtvComponentType(newNode);
         Component ntvComponent = swComponentStore.get(newNode.getId());
 
         if (clazz == JLabel.class) {
@@ -42,5 +42,13 @@ public class NtvChgMgrFactory {
         }
 
         throw new IllegalStateException("no change manager found for nodes " + currentNode + " and " + newNode);
+    }
+
+    private Class<? extends Component> getNtvComponentType(RxNode node) {
+        try {
+            return ((RxNtvComponent) componentStore.get(node.getId())).getNtvType();
+        } catch (Exception e) {
+            throw new IllegalStateException("RxNode is not a native node. " + node, e);
+        }
     }
 }

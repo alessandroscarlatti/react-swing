@@ -53,6 +53,14 @@ public class RxNodeRealizerTest {
         }
     }
 
+    public static class MyComp2 extends RxComponent {
+        @Override
+        public RxNode render() {
+            return Rx.node(Div.class)
+                .child(Rx.node(MyComp1.class));
+        }
+    }
+
     @Test
     public void testRxNodeCanBeRealized() {
         RxNode node = Rx.node(Div.class)
@@ -83,5 +91,43 @@ public class RxNodeRealizerTest {
         assertEquals(5, componentStore.size());
         assertTrue(componentStore.get(comp1_0).getType() == MyComp1.class);
         assertTrue(componentStore.get("rootNode").getType() == Div.class);
+    }
+
+    @Test
+    public void testRxNodeWithNestedUsrCompsCanBeRealized() {
+        RxNode node = Rx.node(Div.class).id("rootNode")
+            .child(Rx.node(Button.class))
+            .child(Rx.node(MyComp2.class));
+
+        RxComponentStore rxComponentStore = new RxComponentStore();
+        RxNode realizedNode = new RxNodeRealizer(node, rxComponentStore).realize();
+
+        String comp2_0 = formatId("rootNode", MyComp2.class, 0);
+        String button0 = formatId("rootNode", Button.class, 0);
+        String div1 = formatId(comp2_0, Div.class, 0);
+        String comp1_0 = formatId(div1, MyComp1.class, 0);
+        String button1 = formatId(comp1_0, Button.class, 0);
+
+        RxNode expectedNode = Rx.node(Div.class).id("rootNode")
+            .child(
+                Rx.node(Button.class).id(button0)
+            )
+            .child(
+                Rx.node(MyComp2.class).id(comp2_0)
+                    .child(
+                        Rx.node(Div.class).id(div1)
+                            .child(Rx.node(MyComp1.class).id(comp1_0)
+                                .child(Rx.node(Button.class).id(button1)
+                                )
+                            )
+                    )
+            );
+
+        assertEquals(expectedNode, realizedNode);
+        assertEquals(6, rxComponentStore.size());
+
+        RxNode realizedNode2 = new RxNodeRealizer(node, rxComponentStore).realize();
+        assertEquals(expectedNode, realizedNode2);
+        assertEquals(6, rxComponentStore.size());
     }
 }

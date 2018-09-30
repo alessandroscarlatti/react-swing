@@ -4,6 +4,8 @@ import com.scarlatti.rxswing.RxComponentStore;
 import com.scarlatti.rxswing.component.RxComponent;
 import com.scarlatti.rxswing.component.RxNtvComponent;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -81,12 +83,19 @@ public class RxNodeRealizer {
             List<RxNode> nextChildren = node.getChildren();
 
             // this realized node would be perhaps a native component that was rendered by a usr component
+            // but it could also be a user component that was rendered by the usr component
             RxNode realizedNode = comp.getLifecycleManager().performRender(nextProps, nextChildren);
-            realizedNode.setId(computeChildId(realizedNode, node));
 
             // the node we have just realized is now to become the single child of this usr component node.
+            // We may have already realized this node, so we want to make sure we OVERRIDE any existing (single)
+            // child component with the new existing.  We DO NOT want to ADD to the list.  This would cause
+            // there to appear to be two components rendered by the component.  And for the time being
+            // this is illegal.
+            // the component yet.  But if we have, we don't want this to screw things up.
             RxNode copy = new RxNode(node);
-            copy.child(realizedNode);
+            copy.getChildren().clear();  // clear out the children so that the ID is computed properly (since it is an nth-child id)
+            realizedNode.setId(computeChildId(realizedNode, copy));
+            copy.getChildren().add(realizedNode);
 
             return copy;
         }
